@@ -319,7 +319,7 @@ h3 { font-size: 24px; }
 
 
 /* Видео чакыруу бөлүгү */
-.vcards { display: grid; grid-template-columns: repeat(4, minmax(0, 230px)); justify-content: center; gap: 22px; margin: 36px 0 26px; }
+.vcards { display: grid; grid-template-columns: repeat(5, minmax(0, 200px)); justify-content: center; gap: 22px; margin: 36px 0 26px; }
 .vcard { text-decoration: none; text-align: center; color: var(--ink); display: grid; gap: 2px; }
 .vcard b { font: 500 22px "Cormorant Garamond", serif; margin-top: 10px; color: var(--brand); }
 .vcard > span { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
@@ -332,7 +332,7 @@ h3 { font-size: 24px; }
 @media (max-width: 1100px) { .prices { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 920px) {
   .prices { grid-template-columns: 1fr; }
-  .vcards { grid-template-columns: repeat(4, 62vw); justify-content: start; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 20px 14px; margin-left: -20px; margin-right: -20px; scrollbar-width: none; }
+  .vcards { grid-template-columns: repeat(5, 62vw); justify-content: start; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 20px 14px; margin-left: -20px; margin-right: -20px; scrollbar-width: none; }
   .vcards::-webkit-scrollbar { display: none; }
   .vcard { scroll-snap-align: center; }
 }

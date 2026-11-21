@@ -39,6 +39,17 @@ Panelde sağda **"Видео-приглашение"** kartında link çıkar �
 - En iyi sonuç güncel **Chrome / Android**. Eski tarayıcı WebM üretirse uyarı gösterir.
 - Müzik için mp3 dosyası `music/` klasöründe olmalı (ya da CORS'a izin veren bir link).
 
+### Video stilleri
+Panelde **"Стиль видео"**:
+- **Жибек (önerilen):** krem/zümrüt/bordo/lacivert **ipek kumaş** zemin, altın Kırgız oyma çerçeve, medalyon deseni, altın gradyanlı yazılar. Sahneler: başlık → büyük isim/yaş → dua (toy türüne göre hazır metin) → davet metni → tarih → mekân → kapanış.
+- **Klasik:** davetiyenin teması (12 tema) ile aynı görünüm.
+
+Alanlar: `vstyle` (`silk`/`classic`), `vpalette` (`cream`/`emerald`/`burgundy`/`navy`), `age` (jübile için büyük yaş rakamı), `poem` (isteğe bağlı: kendi dua metni), `type` (toy türü — dua ve etiketi belirler).
+- Yaş rakamı sadece `type: yubiley` ve `age` doluysa çıkar; diğer türlerde isimler büyük altın el yazısıyla görünür.
+- **Fotoğraf sahneleri:** `photos` listesindeki 1. fotoğraf mekân sahnesinin üstünde, 2. fotoğraf kapanış sahnesinin altında görünür (örnekteki çadır/sofra fotoğrafları gibi). Boşsa madalyon çıkar.
+- `cover` (arka plan fotoğrafı) doluysa ipek yerine o fotoğraf, üstüne yarı saydam renk katmanıyla kullanılır.
+- Süre ~38 sn. Uzun metinler otomatik küçülür.
+
 ### Kendi fotoğrafını arka plan yapma (`cover`)
 Panelde **"Фото для фона"** kutusuna fotoğrafın yolunu yaz (örn. `photos/cover.jpg`). Fotoğraf hem **davetiyenin açılış ekranında** hem **videonun arka planında** görünür; yazılar otomatik beyaza döner, üstüne koyu bir katman biner.
 - Dikey, yüksek kaliteli fotoğraf kullan (genişlik 1080 px ve üzeri iyi).

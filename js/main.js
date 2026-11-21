@@ -57,16 +57,17 @@
   }
 
   var VIDEOS = [
-    { id: "demo-kyz", t: "gul", type: "kyz-uzatuu" },
-    { id: "demo", t: "altyn", type: "uylonuu" },
-    { id: "demo-sunnot", t: "asman", type: "sunnot" },
-    { id: "demo-beshik", t: "balalyk", type: "beshik" }
+    { id: "demo-yubiley", vp: "cream", type: "yubiley" },
+    { id: "demo", vp: "emerald", type: "uylonuu" },
+    { id: "demo-kyz", vp: "burgundy", type: "kyz-uzatuu" },
+    { id: "demo-sunnot", vp: "navy", type: "sunnot" },
+    { id: "demo-beshik", vp: "cream", type: "beshik" }
   ];
   function renderVideos() {
     var box = document.getElementById("vcards");
     if (!box) return;
     box.innerHTML = VIDEOS.map(function (v) {
-      var q = "id=" + v.id + "&t=" + v.t + "&lang=" + lang;
+      var q = "id=" + v.id + "&vs=silk&vp=" + v.vp + "&lang=" + lang;
       return '<a class="vcard" href="video.html?' + q + '&from=site">' +
         '<span class="vc-frame"><iframe src="video.html?' + q + '&preview=1" loading="lazy" tabindex="-1" aria-hidden="true" title=""></iframe><span class="vc-play">▶</span></span>' +
         "<b>" + esc(tr("type." + v.type)) + "</b><span>" + esc(tr("cta.view")) + "</span></a>";

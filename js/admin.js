@@ -103,6 +103,8 @@
     put("music", $("music").value);
     var photos = $("photos").value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 6);
     put("photos", photos);
+    d.vstyle = $("vstyle").value; d.vpalette = $("vpal").value;
+    put("age", $("age").value.replace(/\D/g, ""));
     put("cover", $("cover").value);
     put("video", $("video").value);
     put("album", $("album").value);
@@ -129,6 +131,7 @@
     $("music").value = d.music || "";
     $("photos").value = (d.photos || []).join("\n");
     $("cover").value = d.cover || "";
+    $("vstyle").value = d.vstyle || "classic"; $("vpal").value = d.vpalette || "cream"; $("age").value = d.age || "";
     $("video").value = d.video || "";
     $("album").value = d.album || "";
     setTheme(d.theme || "ak-kuu");
@@ -229,7 +232,7 @@
     if (!fresh) { try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); } catch (e) {} }
     if (draft) { fill(draft); }
     else {
-      fill({ lang: "ky", type: "uylonuu", theme: "ak-kuu", names: [], rsvpWhatsapp: S.whatsapp });
+      fill({ lang: "ky", type: "uylonuu", theme: "ak-kuu", names: [], rsvpWhatsapp: S.whatsapp, vstyle: "silk", vpalette: "cream" });
       applyPresets(true);
     }
     $("guestList").innerHTML = ""; $("guests").value = ""; $("importLink").value = "";

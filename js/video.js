@@ -59,7 +59,10 @@
     document.documentElement.lang = lang;
     var theme = (qs.get("t") || d.theme || "ak-kuu").replace(/[^a-z0-9-]/gi, "");
     document.body.setAttribute("data-theme", theme);
-    var fontsReady = window.loadThemeFonts ? window.loadThemeFonts(theme) : Promise.resolve();
+    var vstyle = qs.get("vs") || d.vstyle || "classic";
+    var silkMode = vstyle === "silk" && !!window.VideoSilk;
+    var vpal = qs.get("vp") || d.vpalette || "cream";
+    var fontsReady = silkMode ? window.VideoSilk.loadFonts() : (window.loadThemeFonts ? window.loadThemeFonts(theme) : Promise.resolve());
 
     var names = (Array.isArray(d.names) ? d.names : []).map(String).filter(Boolean);
     var m = String(d.date).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
@@ -76,27 +79,30 @@
     // Өз сүрөтүңүз фон болсо: тексттер ак түскө өтөт
     var coverUrl = safeUrl(d.cover), coverImg = null;
     if (coverUrl) { T.ink = "#ffffff"; T.muted = "rgba(255,255,255,.82)"; T.accent = "#f1dba6"; }
-    var coverReady = new Promise(function (res) {
-      if (!coverUrl) return res();
-      var im = new Image();
-      try { if (/^https?:/i.test(coverUrl) && new URL(coverUrl, location.href).origin !== location.origin) im.crossOrigin = "anonymous"; } catch (e) {}
-      im.onload = function () { coverImg = im; res(); };
-      im.onerror = function () { res(); };
-      im.src = coverUrl;
-      setTimeout(res, 8000);
-    });
+    function loadImg(url) {
+      return new Promise(function (res) {
+        if (!url) return res(null);
+        var im = new Image();
+        try { if (/^https?:/i.test(url) && new URL(url, location.href).origin !== location.origin) im.crossOrigin = "anonymous"; } catch (e) {}
+        im.onload = function () { res(im); };
+        im.onerror = function () { res(null); };
+        im.src = url;
+        setTimeout(function () { res(null); }, 8000);
+      });
+    }
+    var coverReady = loadImg(coverUrl).then(function (im) { coverImg = im; });
     var UP = !!(window.THEME_UPPER && window.THEME_UPPER[theme]);
     function nm(s) { return UP ? s.toUpperCase() : s; }
 
     // ---------- Шрифтерди күтүү ----------
     var fontsDone = fontsReady.then(function () {
       var loads = [];
-      [T.fn, T.fh, T.fb].forEach(function (f) {
+      (silkMode ? window.VideoSilk.families : [T.fn, T.fh, T.fb]).forEach(function (f) {
         ["400 40px ", "italic 400 40px ", "500 40px "].forEach(function (p) { try { loads.push(document.fonts.load(p + f, "АаӨөҮүҢңAa")); } catch (e) {} });
       });
       return Promise.all(loads);
     });
-    Promise.race([Promise.all([fontsDone, coverReady]), new Promise(function (r) { setTimeout(r, 9000); })]).then(ready);
+    var silkReady = Promise.resolve();
 
     // ---------- Сызуу жардамчылары ----------
     function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
@@ -153,11 +159,12 @@
       });
     }
 
-    function drawCover(t) {
+    function drawCover(t, wash) {
       var iw = coverImg.naturalWidth, ih = coverImg.naturalHeight;
       var z = 1.04 + 0.07 * Math.min(1, t / DUR);                     // жай жакындоо (Ken Burns)
       var sc = Math.max(W / iw, H / ih) * z, dw = iw * sc, dh = ih * sc;
       ctx.globalAlpha = 1; ctx.drawImage(coverImg, (W - dw) / 2, (H - dh) / 2 - 14 * Math.min(1, t / DUR), dw, dh);
+      if (wash) { ctx.fillStyle = wash; ctx.fillRect(0, 0, W, H); return; }
       var g = ctx.createLinearGradient(0, 0, 0, H);
       g.addColorStop(0, "rgba(0,0,0,.55)"); g.addColorStop(0.4, "rgba(0,0,0,.34)"); g.addColorStop(1, "rgba(0,0,0,.68)");
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
@@ -241,8 +248,8 @@
       spacing(0);
       // белги
       ctx.save(); ctx.globalAlpha = clamp(a * rev(t, 0.1, 0.8)); ctx.fillStyle = T.accent; ctx.translate(W / 2, H * 0.25);
-      ctx.beginPath(); ctx.arc(0, -8, 22, Math.PI * 0.85, Math.PI * 0.15, false); ctx.lineTo(0, 34); ctx.closePath(); ctx.fill();
-      ctx.globalCompositeOperation = "destination-out"; ctx.beginPath(); ctx.arc(0, -8, 8, 0, 7); ctx.fill(); ctx.restore();
+      ctx.beginPath(); ctx.arc(0, -8, 22, Math.PI * 0.85, Math.PI * 0.15, false); ctx.lineTo(0, 34); ctx.closePath();
+      ctx.moveTo(8, -8); ctx.arc(0, -8, 8, 0, Math.PI * 2, true); ctx.fill("evenodd"); ctx.restore();
       var y = H * 0.44;
       if (vn.name) {
         font(T.ns, 400, 66 * T.k, T.fn);
@@ -274,21 +281,34 @@
       font("normal", 500, 20, T.fb); spacing(8); txt(U.brand.toUpperCase(), W / 2, H * 0.92, T.muted, a * 0.8 * rev(t, 2.2, 0.8)); spacing(0);
     }
 
-    var scenes = [{ f: scene1, d: 4.4 }, { f: scene2, d: 5.6 }, { f: scene3, d: 4.4 }];
-    if (d.venue && (d.venue.name || d.venue.address)) scenes.push({ f: scene4, d: 4.4 });
-    scenes.push({ f: scene5, d: 4.2, last: true });
+    var scenes, bgFn = background, fgFn = null;
+    if (silkMode) {
+      var SK = window.VideoSilk.create({
+        ctx: ctx, W: W, H: H, d: d, lang: lang, U: U, names: names, year: year, mon: mon, day: day, timeStr: timeStr, weekday: weekday,
+        palette: vpal, type: d.type || "uylonuu",
+        clamp: clamp, eo: eo, rev: rev, font: font, spacing: spacing, wrap: wrap, fitSize: fitSize, loadImg: loadImg, safeUrl: safeUrl,
+        cover: function () { return coverImg; }, drawCover: drawCover
+      });
+      scenes = SK.scenes; bgFn = SK.background; fgFn = SK.foreground; silkReady = SK.ready;
+    } else {
+      scenes = [{ f: scene1, d: 4.4 }, { f: scene2, d: 5.6 }, { f: scene3, d: 4.4 }];
+      if (d.venue && (d.venue.name || d.venue.address)) scenes.push({ f: scene4, d: 4.4 });
+      scenes.push({ f: scene5, d: 4.2, last: true });
+    }
     var acc = 0;
     scenes.forEach(function (s) { s.s = acc; s.e = acc + s.d; acc = s.e - 0.6; });
     var DUR = scenes[scenes.length - 1].e;
+    Promise.race([Promise.all([fontsDone, coverReady, silkReady]), new Promise(function (r) { setTimeout(r, 10000); })]).then(ready);
 
     function draw(t) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      background(t);
+      bgFn(t);
       scenes.forEach(function (s) {
         var a = clamp((t - s.s) / 0.6) * (s.last ? 1 : clamp((s.e - t) / 0.6));
         if (a > 0.001) { ctx.save(); s.f(a, t - s.s); ctx.restore(); }
       });
+      if (fgFn) { ctx.save(); fgFn(t); ctx.restore(); }
       ctx.globalAlpha = 1;
     }
 
@@ -376,6 +396,6 @@
       if (preview) { play(); return; }
       draw(Math.min(DUR - 1, 6.2)); // постер: аттары көрүнгөн кадр
     }
-    window.__video = { draw: draw, duration: function () { return DUR; }, ready: fontsDone }; // сыноо үчүн
+    window.__video = { draw: draw, duration: function () { return DUR; }, ready: Promise.all([fontsDone, silkReady]) }; // сыноо үчүн
   }
 })();

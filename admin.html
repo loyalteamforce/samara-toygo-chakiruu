@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=8">
-<link rel="stylesheet" href="css/admin.css?v=8">
+<link rel="stylesheet" href="css/style.css?v=9">
+<link rel="stylesheet" href="css/admin.css?v=9">
 </head>
 <body class="adm gated">
 
@@ -105,6 +105,25 @@
     <section class="card">
       <h2><span>6</span> Дизайн</h2>
       <div class="themes" id="themes"></div>
+      <div class="row2">
+        <label>Стиль видео
+          <select id="vstyle">
+            <option value="silk">Жибек — шёлк и золотой орнамент</option>
+            <option value="classic">Как у приглашения (тема)</option>
+          </select>
+        </label>
+        <label>Цвет видео <small>(для «Жибек»)</small>
+          <select id="vpal">
+            <option value="cream">Кремовый</option>
+            <option value="emerald">Изумрудный</option>
+            <option value="burgundy">Бордовый</option>
+            <option value="navy">Тёмно-синий</option>
+          </select>
+        </label>
+      </div>
+      <label>Возраст <small>(только для юбилея — большая цифра в видео)</small>
+        <input id="age" inputmode="numeric" maxlength="3" placeholder="60">
+      </label>
     </section>
 
     <section class="card">
@@ -177,8 +196,8 @@
   </aside>
 </main>
 
-<script src="js/config.js?v=8"></script>
-<script src="js/codec.js?v=8"></script>
-<script src="js/admin.js?v=8"></script>
+<script src="js/config.js?v=9"></script>
+<script src="js/codec.js?v=9"></script>
+<script src="js/admin.js?v=9"></script>
 </body>
 </html>
