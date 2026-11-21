@@ -7,8 +7,8 @@ window.SITE = {
   tagline: "Той чакыруу",
 
   // WhatsApp номери: + жана боштуксуз / без + и пробелов
-  whatsapp: "996700000000",
-  instagram: "https://www.instagram.com/",
+  whatsapp: "996550481989",
+  instagram: "https://www.instagram.com/priglasitelny.samara/",
 
   // Баалар (сом) / Цены (сом)
   prices: {
