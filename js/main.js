@@ -30,13 +30,13 @@
     document.getElementById("tplGrid").innerHTML = list.map(function (t) {
       var demo = t.demo || "demo";
       var names = DEMO_NAMES[demo] || DEMO_NAMES.demo;
-      var view = "davet.html?id=" + demo + "&t=" + t.id + "&lang=" + lang;
+      var view = "davet.html?id=" + demo + "&t=" + t.id + "&lang=" + lang + "&from=site&n=" + encodeURIComponent(t.name);
       var nameStyle = "font-family:" + t.font + (t.italic ? ";font-style:italic" : ";font-style:normal") +
         (t.upper ? ";text-transform:uppercase" : "") + (t.small ? ";font-size:24px" : "");
       var tags = t.types.map(function (k) { return tr("type." + k); }).join(" · ");
       return (
         '<article class="tpl">' +
-          '<a class="tpl-preview tp-' + t.id + '" href="' + view + '" target="_blank" rel="noopener" style="--tb:' + t.bg + ";--ti:" + t.ink + ";--ta:" + t.accent + '">' +
+          '<a class="tpl-preview tp-' + t.id + '" href="' + view + '" style="--tb:' + t.bg + ";--ti:" + t.ink + ";--ta:" + t.accent + '">' +
             '<span class="tp-frame"></span>' +
             '<span class="tp-eyebrow">' + (lang === "ky" ? "ТОЙГО ЧАКЫРУУ" : "ПРИГЛАШЕНИЕ") + "</span>" +
             (t.isNew ? '<span class="tp-new">' + esc(tr("tpl.new")) + "</span>" : "") +
@@ -47,7 +47,7 @@
           '<div class="tpl-info">' +
             "<div><h3>" + esc(t.name) + "</h3><p>" + esc(tags) + "</p></div>" +
             '<div class="tpl-actions">' +
-              '<a class="btn btn-sm btn-ghost" href="' + view + '" target="_blank" rel="noopener">' + esc(tr("cta.view")) + "</a>" +
+              '<a class="btn btn-sm btn-ghost" href="' + view + '">' + esc(tr("cta.view")) + "</a>" +
               '<a class="btn btn-sm btn-solid" href="' + waUrl(tr("wa.tpl").replace("{t}", t.name)) + '" target="_blank" rel="noopener">' + esc(tr("cta.orderShort")) + "</a>" +
             "</div>" +
           "</div>" +
@@ -91,4 +91,22 @@
   });
 
   applyLang();
+
+  // «Көрүү» басканда турган жерди эстеп, артка кайтканда ошол жерге алып келебиз
+  try { history.scrollRestoration = "manual"; } catch (e) {}
+  document.addEventListener("click", function (e) {
+    if (e.target.closest('.tpl a[href^="davet.html"]')) {
+      try { sessionStorage.setItem("samara-y", String(Math.round(window.scrollY))); } catch (err) {}
+    }
+  }, true);
+  try {
+    var y = sessionStorage.getItem("samara-y");
+    var nav = performance.getEntriesByType("navigation")[0];
+    if (y && nav && nav.type === "back_forward") {
+      document.documentElement.style.scrollBehavior = "auto";
+      window.scrollTo(0, +y);
+      document.documentElement.style.scrollBehavior = "";
+    }
+    sessionStorage.removeItem("samara-y");
+  } catch (e) {}
 })();

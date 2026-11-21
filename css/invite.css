@@ -379,3 +379,20 @@ body[data-theme="balalyk"] .invite {
 body[data-theme="balalyk"] .corner { display: none; }
 body[data-theme="balalyk"] .block { border: 0; border-radius: 26px; box-shadow: 0 8px 24px rgba(35,68,59,.08); }
 body[data-theme="balalyk"] .cd-cell { background: var(--bg2); border: 0; }
+
+/* Сайттан келгенде: артка / заказ тилкеси */
+.sitebar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 70;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: calc(8px + env(safe-area-inset-top)) 12px 8px;
+  background: rgba(8, 28, 23, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(224,184,102,.3);
+}
+.sitebar button, .sitebar a {
+  font: 600 12px/1 "Montserrat", sans-serif; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; cursor: pointer;
+  padding: 10px 16px; border-radius: 999px; border: 1px solid rgba(224,184,102,.6); background: transparent; color: #f1dba6;
+}
+.sitebar a { background: #e0b866; border-color: #e0b866; color: #0b231d; }
+body.has-sitebar .invite { padding-top: 52px; }
+body.has-sitebar .hero { min-height: calc(100svh - 52px); }
+body.has-sitebar .music-btn { bottom: 16px; }

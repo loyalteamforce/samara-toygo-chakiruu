@@ -13,6 +13,7 @@
       open: "Ачуу үчүн басыңыз",
       dear: "Урматтуу",
       dearGuests: "Кадырлуу коноктор!",
+      back: "Артка", orderBtn: "Заказ",
       calendar: "Той күнү",
       addCal: "Күнтизбеге кошуу",
       at: "саат",
@@ -47,6 +48,7 @@
       open: "Нажмите, чтобы открыть",
       dear: "Уважаемый(ая)",
       dearGuests: "Дорогие гости!",
+      back: "Назад", orderBtn: "Заказать",
       calendar: "Дата торжества",
       addCal: "Добавить в календарь",
       at: "в",
@@ -291,7 +293,21 @@
         '<audio id="audio" src="' + esc(safeUrl(d.music)) + '" loop preload="none"></audio>';
     }
 
+    // Сайттан «Көрүү» басканда: артка кайтуу жана заказ берүү тилкеси
+    if (qs.get("from") === "site") {
+      var wa = window.SITE && window.SITE.whatsapp;
+      var tname = (qs.get("n") || "").slice(0, 40);
+      var msg = lang === "ru" ? "Здравствуйте! Хочу заказать приглашение с шаблоном «" + tname + "»." : "Саламатсызбы! «" + tname + "» шаблону менен чакыруу заказ кылгым келет.";
+      html += '<div class="sitebar"><button type="button" id="sbBack">← ' + t.back + "</button>" +
+        (wa ? '<a href="https://wa.me/' + esc(wa) + "?text=" + encodeURIComponent(msg) + '" target="_blank" rel="noopener">' + t.orderBtn + "</a>" : "") + "</div>";
+      document.body.classList.add("has-sitebar");
+    }
     app.innerHTML = html;
+    var sb = document.getElementById("sbBack");
+    if (sb) sb.addEventListener("click", function () {
+      var same = document.referrer && document.referrer.indexOf(location.host) > -1;
+      if (same && history.length > 1) history.back(); else location.href = "index.html#templates";
+    });
     if (!preview) document.body.classList.add("locked");
 
     setupEnvelope();
