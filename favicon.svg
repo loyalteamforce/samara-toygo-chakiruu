@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="31" fill="#7a1f2b"/><circle cx="32" cy="32" r="27" fill="none" stroke="#d9b36a" stroke-width="1.5"/><text x="32" y="45" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="40" fill="#f3dfb9">S</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="g" cx="50%" cy="35%" r="80%"><stop offset="0" stop-color="#1f5a4c"/><stop offset="1" stop-color="#0b231d"/></radialGradient></defs><rect width="64" height="64" rx="14" fill="url(#g)"/><g transform="translate(32 32) scale(.215)"><g fill="none" stroke="#e0b866" stroke-linecap="round">
+<path d="M84.0 0.0L120.0 0.0M77.6 32.1L92.4 38.3M59.4 59.4L84.9 84.9M32.1 77.6L38.3 92.4M0.0 84.0L0.0 120.0M-32.1 77.6L-38.3 92.4M-59.4 59.4L-84.9 84.9M-77.6 32.1L-92.4 38.3M-84.0 0.0L-120.0 0.0M-77.6 -32.1L-92.4 -38.3M-59.4 -59.4L-84.9 -84.9M-32.1 -77.6L-38.3 -92.4M-0.0 -84.0L-0.0 -120.0M32.1 -77.6L38.3 -92.4M59.4 -59.4L84.9 -84.9M77.6 -32.1L92.4 -38.3" stroke-width="8"/>
+<circle r="76" stroke-width="5"/>
+<circle r="70" stroke-width="10"/>
+<clipPath id="c"><circle r="70"/></clipPath>
+<g clip-path="url(#c)" stroke-width="8">
+<path d="M-29.4 -70 Q-50.0 0 -29.4 70 M-16.8 -70 Q-28.6 0 -16.8 70 M29.4 -70 Q50.0 0 29.4 70 M16.8 -70 Q28.6 0 16.8 70"/>
+<path d="M-70 -29.4 Q0 -50.0 70 -29.4 M-70 -16.8 Q0 -28.6 70 -16.8 M-70 29.4 Q0 50.0 70 29.4 M-70 16.8 Q0 28.6 70 16.8"/>
+</g></g></g></svg>
