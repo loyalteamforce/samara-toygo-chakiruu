@@ -39,6 +39,11 @@ Panelde sağda **"Видео-приглашение"** kartında link çıkar �
 - En iyi sonuç güncel **Chrome / Android**. Eski tarayıcı WebM üretirse uyarı gösterir.
 - Müzik için mp3 dosyası `music/` klasöründe olmalı (ya da CORS'a izin veren bir link).
 
+### Kendi fotoğrafını arka plan yapma (`cover`)
+Panelde **"Фото для фона"** kutusuna fotoğrafın yolunu yaz (örn. `photos/cover.jpg`). Fotoğraf hem **davetiyenin açılış ekranında** hem **videonun arka planında** görünür; yazılar otomatik beyaza döner, üstüne koyu bir katman biner.
+- Dikey, yüksek kaliteli fotoğraf kullan (genişlik 1080 px ve üzeri iyi).
+- Dosyayı GitHub'da `photos/` klasörüne yükle. Aynı siteden gelen dosyalar sorunsuz çalışır. Başka siteden link verirsen, o site izin vermiyorsa video kaydı çalışmaz (tarayıcı güvenliği).
+
 ### Davetiyeye ek alanlar
 - **`video`**: YouTube linki → davetiyede video oynatıcı.
 - **`album`**: Google Fotoğraflar (ortak albüm) veya Google Drive (düzenleyici) linki → "Тойдун сүрөттөрү / Фото с торжества" düğmesi. Misafirler fotoğrafları oraya yükler. Sunucu olmadığı için fotoğraf doğrudan sitede saklanmaz.

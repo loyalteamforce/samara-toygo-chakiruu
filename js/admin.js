@@ -103,6 +103,7 @@
     put("music", $("music").value);
     var photos = $("photos").value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 6);
     put("photos", photos);
+    put("cover", $("cover").value);
     put("video", $("video").value);
     put("album", $("album").value);
     return d;
@@ -127,6 +128,7 @@
     $("rsvpWa").value = d.rsvpWhatsapp || "";
     $("music").value = d.music || "";
     $("photos").value = (d.photos || []).join("\n");
+    $("cover").value = d.cover || "";
     $("video").value = d.video || "";
     $("album").value = d.album || "";
     setTheme(d.theme || "ak-kuu");

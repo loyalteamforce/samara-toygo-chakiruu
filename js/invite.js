@@ -177,7 +177,7 @@
     // ---------- Башкы бөлүк ----------
     html +=
       '<article class="invite">' +
-      '<section class="hero">' +
+      '<section class="hero' + (safeUrl(d.cover) ? " has-cover" : "") + '">' +
         '<span class="corner tl">' + O.corner + '</span><span class="corner tr">' + O.corner + "</span>" +
         '<p class="eyebrow reveal">' + esc(d.heading) + "</p>" +
         '<h1 class="names reveal" style="--nl:' + Math.max(8, Math.max.apply(null, names.map(function (n) { return n.length; }).concat([0]))) + '">' + names.map(esc).join('<span class="amp">&amp;</span>') + "</h1>" +
@@ -313,6 +313,9 @@
       if (same && history.length > 1) history.back(); else location.href = "index.html#templates";
     });
     if (!preview) document.body.classList.add("locked");
+
+    var coverUrl = safeUrl(d.cover), heroEl = document.querySelector(".hero.has-cover");
+    if (coverUrl && heroEl) heroEl.style.setProperty("--cover", 'url("' + new URL(coverUrl, location.href).href.replace(/["\\\n]/g, encodeURIComponent) + '")');
 
     setupEnvelope();
     setupCountdown(date, t);

@@ -73,6 +73,18 @@
       bg: v("--bg"), bg2: v("--bg2"), ink: v("--ink"), muted: v("--muted"), accent: v("--accent"),
       fn: v("--f-names"), fh: v("--f-head"), fb: v("--f-body"), ns: v("--names-style") || "normal", k: parseFloat(v("--names-k")) || 1
     };
+    // Өз сүрөтүңүз фон болсо: тексттер ак түскө өтөт
+    var coverUrl = safeUrl(d.cover), coverImg = null;
+    if (coverUrl) { T.ink = "#ffffff"; T.muted = "rgba(255,255,255,.82)"; T.accent = "#f1dba6"; }
+    var coverReady = new Promise(function (res) {
+      if (!coverUrl) return res();
+      var im = new Image();
+      try { if (/^https?:/i.test(coverUrl) && new URL(coverUrl, location.href).origin !== location.origin) im.crossOrigin = "anonymous"; } catch (e) {}
+      im.onload = function () { coverImg = im; res(); };
+      im.onerror = function () { res(); };
+      im.src = coverUrl;
+      setTimeout(res, 8000);
+    });
     var UP = !!(window.THEME_UPPER && window.THEME_UPPER[theme]);
     function nm(s) { return UP ? s.toUpperCase() : s; }
 
@@ -84,7 +96,7 @@
       });
       return Promise.all(loads);
     });
-    Promise.race([fontsDone, new Promise(function (r) { setTimeout(r, 6000); })]).then(ready);
+    Promise.race([Promise.all([fontsDone, coverReady]), new Promise(function (r) { setTimeout(r, 9000); })]).then(ready);
 
     // ---------- Сызуу жардамчылары ----------
     function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
@@ -141,7 +153,23 @@
       });
     }
 
+    function drawCover(t) {
+      var iw = coverImg.naturalWidth, ih = coverImg.naturalHeight;
+      var z = 1.04 + 0.07 * Math.min(1, t / DUR);                     // жай жакындоо (Ken Burns)
+      var sc = Math.max(W / iw, H / ih) * z, dw = iw * sc, dh = ih * sc;
+      ctx.globalAlpha = 1; ctx.drawImage(coverImg, (W - dw) / 2, (H - dh) / 2 - 14 * Math.min(1, t / DUR), dw, dh);
+      var g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "rgba(0,0,0,.55)"); g.addColorStop(0.4, "rgba(0,0,0,.34)"); g.addColorStop(1, "rgba(0,0,0,.68)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    }
+
     function background(t) {
+      if (coverImg) {
+        drawCover(t);
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 2; ctx.globalAlpha = 0.6; ctx.strokeRect(24, 24, W - 48, H - 48);
+        ctx.lineWidth = 1; ctx.globalAlpha = 0.3; ctx.strokeRect(34, 34, W - 68, H - 68);
+        corners(); return;
+      }
       var g = ctx.createRadialGradient(W * 0.5, H * 0.28, 40, W * 0.5, H * 0.42, H * 0.85);
       g.addColorStop(0, T.bg2); g.addColorStop(1, T.bg);
       ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);

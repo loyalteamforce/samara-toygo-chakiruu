@@ -406,3 +406,14 @@ body.has-sitebar .music-btn { bottom: 16px; }
 .agency h3 { font-family: var(--f-head); font-weight: 500; font-size: 32px; margin: 4px 0 10px; color: var(--ink); }
 .agency p:not(.ag-k) { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
 .agency .btn { display: block; max-width: 260px; margin: 10px auto 0; }
+
+/* Өз сүрөтүңүздү фон кылуу (cover) */
+.hero.has-cover {
+  --ink: #ffffff; --muted: rgba(255,255,255,.86); --accent: #f1dba6; --line: rgba(255,255,255,.35);
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.52) 0%, rgba(0,0,0,.30) 38%, rgba(0,0,0,.62) 100%),
+    var(--cover) center / cover no-repeat;
+}
+.hero.has-cover .names, .hero.has-cover .hd-day, .hero.has-cover .hero-sub, .hero.has-cover .hero-city, .hero.has-cover .eyebrow { text-shadow: 0 2px 18px rgba(0,0,0,.45); }
+.hero.has-cover .hd-side { border-color: rgba(255,255,255,.45); }

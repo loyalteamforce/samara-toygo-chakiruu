@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=7">
-<link rel="stylesheet" href="css/admin.css?v=7">
+<link rel="stylesheet" href="css/style.css?v=8">
+<link rel="stylesheet" href="css/admin.css?v=8">
 </head>
 <body class="adm gated">
 
@@ -109,6 +109,10 @@
 
     <section class="card">
       <h2><span>7</span> Музыка и фото <small>(необязательно)</small></h2>
+      <label>Фото для фона <small>(обложка приглашения и видео)</small>
+        <input id="cover" inputmode="url" placeholder="photos/cover.jpg">
+      </label>
+      <p class="hint">Вертикальное фото хорошего качества (лучше от 1080 px в ширину). Положите файл в папку <code>photos/</code> репозитория и впишите путь. Текст поверх фото автоматически становится белым.</p>
       <label>Ссылка на mp3 <input id="music" inputmode="url" placeholder="music/song.mp3 или https://..."></label>
       <label>Ссылки на фото <small>(по одной в строке, до 6)</small>
         <textarea id="photos" rows="3" placeholder="photos/1.jpg"></textarea>
@@ -173,8 +177,8 @@
   </aside>
 </main>
 
-<script src="js/config.js?v=7"></script>
-<script src="js/codec.js?v=7"></script>
-<script src="js/admin.js?v=7"></script>
+<script src="js/config.js?v=8"></script>
+<script src="js/codec.js?v=8"></script>
+<script src="js/admin.js?v=8"></script>
 </body>
 </html>
