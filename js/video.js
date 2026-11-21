@@ -320,8 +320,15 @@
     // ---------- Ойнотуу ----------
     var music = safeUrl(d.music), audio = null;
     if (music && !preview) {
-      audio = new Audio(music); audio.preload = "auto";
-      try { if (/^https?:/i.test(music) && new URL(music, location.href).origin !== location.origin) audio.crossOrigin = "anonymous"; } catch (e) {}
+      var crossAudio = false;
+      try { crossAudio = /^https?:/i.test(music) && new URL(music, location.href).origin !== location.origin; } catch (e) {}
+      var makeAudio = function (useCors) {
+        var a = new Audio(); a.preload = "auto";
+        if (useCors) a.crossOrigin = "anonymous";
+        a.addEventListener("error", function () { if (useCors && audio === a) { audio = makeAudio(false); } });
+        a.src = music; return a;
+      };
+      audio = makeAudio(crossAudio);
     }
     var playing = false, t0 = 0, loop = preview, rec = null, chunks = [], blob = null, ext = "mp4", recording = false;
 

@@ -135,7 +135,7 @@
     $("video").value = d.video || "";
     $("album").value = d.album || "";
     setTheme(d.theme || "ak-kuu");
-    renderThumbs();
+    renderThumbs(); if (typeof renderMusic === "function") renderMusic();
   }
 
   // ---------- Сүрөттөр: галереядан тандоо ----------
@@ -163,7 +163,7 @@
   }
   var STORAGE_OK = !!(P && P.enabled());
   document.querySelectorAll('[data-need="storage"]').forEach(function (el) { if (!STORAGE_OK) el.classList.add("off"); });
-  if (!STORAGE_OK) { $("coverMore").open = true; $("photoMore").open = true; }
+  if (!STORAGE_OK) { $("coverMore").open = true; $("photoMore").open = true; $("musicMore").open = true; }
   function errText(e) { return "Не удалось загрузить фото. Проверьте интернет и попробуйте ещё раз." + (e && e.message ? " (" + e.message + ")" : ""); }
 
   $("coverFile").addEventListener("change", function () {
@@ -190,6 +190,31 @@
       });
     }, Promise.resolve()).then(function () { if (!$("pickStatus").classList.contains("err")) status(cut ? "Добавлены первые " + room + " фото — максимум " + MAXPH + " ✓" : "Фото добавлены ✓"); });
   });
+  // ---------- Музыка ----------
+  function renderMusic() {
+    var u = $("music").value.trim(), row = $("musicRow");
+    row.hidden = !u;
+    if (u) { var pl = $("musicPlayer"); if (pl.getAttribute("src") !== u) { pl.pause(); pl.setAttribute("src", u); } }
+    else $("musicPlayer").removeAttribute("src");
+  }
+  function musicErr(e) {
+    if (e && e.message === "format") return "Формат не подходит. Выберите файл mp3, m4a или aac.";
+    if (e && e.message === "size") return "Файл больше " + e.maxMB + " МБ. Выберите более короткую запись или mp3 меньшего размера.";
+    return "Не удалось загрузить музыку. Проверьте интернет и попробуйте ещё раз." + (e && e.message ? " (" + e.message + ")" : "");
+  }
+  $("musicFile").addEventListener("change", function () {
+    var f = this.files[0]; this.value = "";
+    if (!f) return;
+    var bar = $("musicBar"), fill = bar.firstElementChild;
+    bar.hidden = false; fill.style.width = "3%"; status("Загрузка музыки…");
+    P.music(f, function (p) { fill.style.width = Math.max(3, Math.round(p * 100)) + "%"; })
+      .then(function (url) { $("music").value = url; status("Музыка добавлена ✓"); })
+      .catch(function (e) { status(musicErr(e), true); })
+      .then(function () { bar.hidden = true; renderMusic(); schedule(); });
+  });
+  $("musicDel").addEventListener("click", function () { $("music").value = ""; renderMusic(); schedule(); });
+  $("music").addEventListener("input", renderMusic);
+
   $("cover").addEventListener("input", renderThumbs);
   $("photos").addEventListener("input", renderThumbs);
 

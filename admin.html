@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=10">
-<link rel="stylesheet" href="css/admin.css?v=10">
+<link rel="stylesheet" href="css/style.css?v=11">
+<link rel="stylesheet" href="css/admin.css?v=11">
 </head>
 <body class="adm gated">
 
@@ -148,8 +148,19 @@
       </div>
       <p class="hint" id="pickStatus" aria-live="polite"></p>
 
-      <label>Ссылка на mp3 <input id="music" inputmode="url" placeholder="music/song.mp3 или https://..."></label>
-      <p class="hint">Музыку (mp3) пока нужно положить в папку <code>music/</code> репозитория и указать путь.</p>
+      <div class="pick">
+        <div class="pick-head"><b>Музыка</b> <small>играет в приглашении и записывается в видео</small></div>
+        <div class="music-row" id="musicRow" hidden>
+          <audio id="musicPlayer" controls preload="none"></audio>
+          <button type="button" class="btn btn-sm btn-ghost" id="musicDel">Удалить</button>
+        </div>
+        <label class="btn btn-sm btn-ghost pick-btn" data-need="storage">🎵 Выбрать музыку с телефона<input type="file" id="musicFile" accept="audio/*,.mp3,.m4a,.aac" hidden></label>
+        <div class="bar" id="musicBar" hidden><i></i></div>
+        <details id="musicMore"><summary>или вставить ссылку</summary>
+          <input id="music" inputmode="url" placeholder="https://... или music/song.mp3">
+        </details>
+        <p class="hint">Форматы mp3, m4a, aac — до 8 МБ. Песню можно взять из «Файлов» или «Загрузок» телефона. Используйте музыку, на которую у вас есть права.</p>
+      </div>
       <label>Видео с YouTube <small>(ссылка)</small>
         <input id="video" inputmode="url" placeholder="https://youtu.be/...">
       </label>
@@ -209,9 +220,9 @@
   </aside>
 </main>
 
-<script src="js/config.js?v=10"></script>
-<script src="js/codec.js?v=10"></script>
-<script src="js/photos.js?v=10"></script>
-<script src="js/admin.js?v=10"></script>
+<script src="js/config.js?v=11"></script>
+<script src="js/codec.js?v=11"></script>
+<script src="js/photos.js?v=11"></script>
+<script src="js/admin.js?v=11"></script>
 </body>
 </html>

@@ -44,7 +44,8 @@ Panelde **"Выбрать из галереи / Добавить из галер
 - Ayarlar `js/config.js` → `storage` (url, anahtar, bucket, maxSide). `storage` boşaltılırsa seçici gizlenir, link yapıştırma kalır.
 - Depo: Supabase projesi `mbyyuovlipbpioxtkjcp`, bucket **`samara-photos`** (herkese açık okuma). Anonim kullanıcı **sadece** `u/` klasörüne, **jpg/png/webp**, **en fazla 3 MB** dosya **ekleyebilir**; listeleyemez, değiştiremez, silemez. Diğer bucket ve tablolara dokunulmaz.
 - ⚠️ Bu proje başka bir canlı uygulamayla paylaşılıyor (ücretsiz planda 2 proje sınırı). Müşteriye devrederken fotoğraflar için **ayrı bir Supabase projesi** açıp aynı bucket + kuralı oraya kurmak ve `config.js`'i güncellemek gerekir. Mevcut fotoğraf linkleri eski adreste çalışmaya devam eder.
-- Müzik (mp3) henüz galeriden seçilemez.
+- **Müzik:** panelde **"Выбрать музыку с телефона"** → mp3 / m4a / aac, **en fazla 8 MB**, ilerleme çubuğu ve çalar önizlemesiyle. Ayrı bucket: **`samara-music`** (aynı kurallar: sadece `u/` klasörüne ekleme, ses dosyaları, 8 MB). Tek müzik hem davetiyede (zarf açılınca) hem videoda (kayda girer) çalar.
+- Telif: müşteri yalnızca hakkı olduğu müziği kullanmalı.
 
 ### Video stilleri
 Panelde **"Стиль видео"**:

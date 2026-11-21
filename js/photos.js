@@ -48,20 +48,39 @@
     return Math.random().toString(36).slice(2) + Date.now().toString(36) + Math.random().toString(36).slice(2);
   }
 
-  function upload(blob) {
-    var name = "u/" + rid() + ".jpg";
-    return fetch(S.url + "/storage/v1/object/" + S.bucket + "/" + name, {
-      method: "POST",
-      headers: { apikey: S.key, Authorization: "Bearer " + S.key, "Content-Type": "image/jpeg", "x-upsert": "false" },
-      body: blob
-    }).then(function (r) {
-      if (!r.ok) throw new Error("upload " + r.status);
-      return S.url + "/storage/v1/object/public/" + S.bucket + "/" + name;
+  // Жүктөө (прогресс менен): XHR, анткени fetch жүктөө прогрессин бербейт
+  function put(bucket, name, blob, type, onProgress) {
+    return new Promise(function (res, rej) {
+      var x = new XMLHttpRequest();
+      x.open("POST", S.url + "/storage/v1/object/" + bucket + "/" + name);
+      x.setRequestHeader("apikey", S.key); x.setRequestHeader("Authorization", "Bearer " + S.key);
+      x.setRequestHeader("Content-Type", type); x.setRequestHeader("x-upsert", "false");
+      if (onProgress && x.upload) x.upload.onprogress = function (e) { if (e.lengthComputable) onProgress(e.loaded / e.total); };
+      x.onload = function () { x.status >= 200 && x.status < 300 ? res(S.url + "/storage/v1/object/public/" + bucket + "/" + name) : rej(new Error("upload " + x.status)); };
+      x.onerror = function () { rej(new Error("network")); };
+      x.send(blob);
     });
   }
+  function upload(blob) { return put(S.bucket, "u/" + rid() + ".jpg", blob, "image/jpeg"); }
 
   // Бир файл: кичирейтүү + жүктөө → URL
   function add(file) { return compress(file).then(upload); }
 
-  window.Photos = { enabled: enabled, add: add, compress: compress };
+  // Музыка: mp3 / m4a / aac (кичирейтилбейт, өлчөмү текшерилет)
+  function audioKind(file) {
+    var n = (file.name || "").toLowerCase(), t = (file.type || "").toLowerCase();
+    if (/\.mp3$/.test(n) || t === "audio/mpeg" || t === "audio/mp3") return { ext: "mp3", type: "audio/mpeg" };
+    if (/\.(m4a|mp4)$/.test(n) || t === "audio/mp4" || t === "audio/x-m4a" || t === "audio/m4a") return { ext: "m4a", type: "audio/mp4" };
+    if (/\.aac$/.test(n) || t === "audio/aac") return { ext: "aac", type: "audio/aac" };
+    return null;
+  }
+  function music(file, onProgress) {
+    var k = audioKind(file);
+    if (!k) return Promise.reject(new Error("format"));
+    var maxMB = S.maxMusicMB || 8;
+    if (file.size > maxMB * 1024 * 1024) { var e = new Error("size"); e.maxMB = maxMB; return Promise.reject(e); }
+    return put(S.musicBucket || "samara-music", "u/" + rid() + "." + k.ext, file, k.type, onProgress);
+  }
+
+  window.Photos = { enabled: enabled, add: add, compress: compress, music: music };
 })();

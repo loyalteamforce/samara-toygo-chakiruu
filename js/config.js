@@ -19,7 +19,9 @@ window.SITE = {
     url: "https://mbyyuovlipbpioxtkjcp.supabase.co",
     key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ieXl1b3ZsaXBicGlveHRramNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MjEzMjgsImV4cCI6MjEwNjI5NzMyOH0.3AVwWygymHYldwIhhYW-wfEm2XSxx4ChSCAazirofAg",
     bucket: "samara-photos",
-    maxSide: 1600
+    maxSide: 1600,
+    musicBucket: "samara-music",   // музыка (mp3/m4a/aac)
+    maxMusicMB: 8
   },
 
   // Баалар (сом) / Цены (сом)
