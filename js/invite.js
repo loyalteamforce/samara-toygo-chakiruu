@@ -14,6 +14,7 @@
       dear: "Урматтуу",
       dearGuests: "Кадырлуу коноктор!",
       calendar: "Той күнү",
+      addCal: "Күнтизбеге кошуу",
       at: "саат",
       countdown: "Тойго чейин калды",
       days: "күн", hours: "саат", minutes: "мүнөт", seconds: "секунд",
@@ -47,6 +48,7 @@
       dear: "Уважаемый(ая)",
       dearGuests: "Дорогие гости!",
       calendar: "Дата торжества",
+      addCal: "Добавить в календарь",
       at: "в",
       countdown: "До тоя осталось",
       days: "дней", hours: "часов", minutes: "минут", seconds: "секунд",
@@ -111,11 +113,22 @@
     });
   }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
+  // Шилтемелер: http(s) же салыштырмалуу жол гана (javascript: ж.б. жок)
+  function safeUrl(u) {
+    u = String(u || "").trim();
+    if (/^[a-z][a-z0-9+.-]*:/i.test(u) && !/^https?:/i.test(u)) return "";
+    return u;
+  }
+  function icsEsc(x) { return String(x || "").replace(/[\\;,]/g, function (c) { return "\\" + c; }).replace(/\n/g, "\\n"); }
 
   var id = (qs.get("id") || "demo").replace(/[^a-z0-9_-]/gi, "");
 
-  fetch("data/" + id + ".json", { cache: "no-cache" })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+  var dParam = qs.get("d");
+  var loading = dParam
+    ? window.CODEC.decode(dParam)
+    : fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+
+  loading
     .then(render)
     .catch(function () {
       app.innerHTML = '<p class="loading">' + L.ky.notFound + "<br>" + L.ru.notFound + "</p>";
@@ -130,7 +143,7 @@
     document.body.setAttribute("data-theme", theme);
     loadFonts(theme);
 
-    var names = d.names || [];
+    var names = (Array.isArray(d.names) ? d.names : []).map(String).filter(Boolean);
     var title = names.join(" & ");
     var initials = names.map(function (n) { return n.charAt(0); }).join("&");
     document.title = (d.heading || "") + " · " + title;
@@ -138,6 +151,7 @@
     // Күн/саат JSONдо кандай жазылса, ошондой көрсөтүлөт (Кыргызстан убактысы).
     var date = new Date(d.date); // эсептөө үчүн гана (обратный отсчёт)
     var m = String(d.date).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (!m || !names.length) { app.innerHTML = '<p class="loading">' + L.ky.notFound + "<br>" + L.ru.notFound + "</p>"; return; }
     var year = +m[1], mon = +m[2] - 1, day = +m[3];
     var timeStr = m[4] + ":" + m[5];
     var local = new Date(Date.UTC(year, mon, day)); // жуманын күнү / календарь үчүн
@@ -191,7 +205,8 @@
 
     // ---------- Календарь ----------
     html += '<section class="block reveal"><h2>' + t.calendar + "</h2>" + calendar(year, mon, day, lang, t) +
-      '<p class="cal-caption">' + t.wd[local.getDay()] + ", " + day + " " + L[lang].months[mon] + " " + year + " · " + timeStr + "</p></section>";
+      '<p class="cal-caption">' + t.wd[local.getDay()] + ", " + day + " " + L[lang].months[mon] + " " + year + " · " + timeStr + "</p>" +
+      '<button type="button" class="btn cal-add" id="addCal">' + t.addCal + "</button></section>";
 
     // ---------- Обратный отсчёт ----------
     html +=
@@ -218,22 +233,23 @@
         '<section class="block reveal"><h2>' + t.venue + "</h2>" +
           '<p class="venue-name">' + esc(d.venue.name) + "</p>" +
           '<p class="venue-addr">' + esc(d.venue.address) + "</p>" +
-          (d.venue.map ? '<a class="btn" href="' + esc(d.venue.map) + '" target="_blank" rel="noopener">' + t.openMap + "</a>" : "") +
+          (safeUrl(d.venue.map) ? '<a class="btn" href="' + esc(safeUrl(d.venue.map)) + '" target="_blank" rel="noopener">' + t.openMap + "</a>" : "") +
         "</section>";
     }
 
     // ---------- Сүрөттөр ----------
-    if (d.photos && d.photos.length) {
+    var photos = (Array.isArray(d.photos) ? d.photos : []).map(safeUrl).filter(Boolean);
+    if (photos.length) {
       html += '<section class="block reveal"><h2>' + t.gallery + '</h2><div class="gallery">' +
-        d.photos.map(function (src) { return '<img loading="lazy" src="' + esc(src) + '" alt="">'; }).join("") +
+        photos.map(function (src) { return '<img loading="lazy" src="' + esc(src) + '" alt="">'; }).join("") +
         "</div></section>";
     }
 
     // ---------- Дресс-код ----------
     if (d.dresscode) {
       html += '<section class="block reveal"><h2>' + t.dress + '</h2><p class="body-text">' + esc(d.dresscode) + "</p>" +
-        (d.dressColors ? '<div class="swatches">' + d.dressColors.map(function (c) {
-          return '<span style="background:' + esc(c) + '"></span>';
+        (Array.isArray(d.dressColors) && d.dressColors.length ? '<div class="swatches">' + d.dressColors.filter(function (c) { return /^#[0-9a-f]{3,8}$/i.test(c); }).map(function (c) {
+          return '<span style="background:' + c + '"></span>';
         }).join("") + "</div>" : "") + "</section>";
     }
 
@@ -270,9 +286,9 @@
       "</article>";
 
     // ---------- Музыка ----------
-    if (d.music) {
+    if (safeUrl(d.music)) {
       html += '<button class="music-btn" id="musicBtn" aria-label="' + t.music + '" aria-pressed="false">♪</button>' +
-        '<audio id="audio" src="' + esc(d.music) + '" loop preload="none"></audio>';
+        '<audio id="audio" src="' + esc(safeUrl(d.music)) + '" loop preload="none"></audio>';
     }
 
     app.innerHTML = html;
@@ -282,6 +298,7 @@
     setupCountdown(date, t);
     setupRsvp(d, t, title);
     setupMusic();
+    setupCal(date, d, title);
     setupReveal();
   }
 
@@ -359,6 +376,21 @@
       if (wish) lines.push("💐 " + t.msgWish + ": " + wish);
       var url = "https://wa.me/" + String(d.rsvpWhatsapp).replace(/\D/g, "") + "?text=" + encodeURIComponent(lines.join("\n"));
       window.open(url, "_blank", "noopener");
+    });
+  }
+
+  function setupCal(date, d, title) {
+    var b = document.getElementById("addCal");
+    if (!b || isNaN(date)) return;
+    b.addEventListener("click", function () {
+      function f(x) { return x.getUTCFullYear() + pad(x.getUTCMonth() + 1) + pad(x.getUTCDate()) + "T" + pad(x.getUTCHours()) + pad(x.getUTCMinutes()) + "00Z"; }
+      var venue = d.venue ? (d.venue.name || "") + (d.venue.address ? ", " + d.venue.address : "") : "";
+      var ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Samara//KG", "BEGIN:VEVENT",
+        "UID:" + date.getTime() + "@samara", "DTSTAMP:" + f(new Date()), "DTSTART:" + f(date), "DTEND:" + f(new Date(date.getTime() + 4 * 3600000)),
+        "SUMMARY:" + icsEsc((d.heading || "Той") + " — " + title), "LOCATION:" + icsEsc(venue), "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+      a.download = "toy.ics"; document.body.appendChild(a); a.click(); a.remove();
     });
   }
 

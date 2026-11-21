@@ -141,6 +141,8 @@ h1, h2, .hd-day, .venue-name { font-family: var(--f-head); font-weight: 500; }
 .cal-day.is-day b { position: relative; }
 .cal-caption { margin-top: 16px; font-size: 14px; color: var(--muted); }
 
+.cal-add { margin-top: 16px; padding: 11px 20px; font-size: 11px; }
+
 /* Countdown */
 .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .cd-cell { border: 1px solid var(--line); border-radius: 12px; padding: 12px 2px; }
