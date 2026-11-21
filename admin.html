@@ -9,10 +9,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/admin.css?v=4">
 </head>
-<body class="adm">
+<body class="adm gated">
+
+<div class="gate" id="gate">
+  <form class="gate-box" id="gateForm">
+    <img src="logo/mark.svg" alt="">
+    <h1>SAMARA</h1>
+    <p>Конструктор приглашений.<br>Введите код доступа.</p>
+    <input id="gatePin" type="password" inputmode="text" autocomplete="current-password" placeholder="Код доступа" required>
+    <p class="gate-err" id="gateErr" hidden>Неверный код</p>
+    <button class="btn btn-solid" type="submit">Войти</button>
+  </form>
+</div>
+
 
 <header class="adm-top">
   <div class="wrap adm-top-in">
@@ -143,8 +155,8 @@
   </aside>
 </main>
 
-<script src="js/config.js"></script>
-<script src="js/codec.js"></script>
-<script src="js/admin.js"></script>
+<script src="js/config.js?v=4"></script>
+<script src="js/codec.js?v=4"></script>
+<script src="js/admin.js?v=4"></script>
 </body>
 </html>

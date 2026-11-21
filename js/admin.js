@@ -225,5 +225,19 @@
     $("guestList").innerHTML = ""; $("guests").value = ""; $("importLink").value = "";
     update();
   }
-  init(false);
+  // ---------- Кирүү коду ----------
+  function openGate() { document.body.classList.remove("gated"); $("gate").hidden = true; }
+  var pin = S.adminPin, ok = false;
+  try { ok = !pin || localStorage.getItem("samara-admin-ok") === pin; } catch (e) { ok = !pin; }
+  if (ok) { openGate(); init(false); }
+  else {
+    $("gateForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      if ($("gatePin").value.trim() === pin) {
+        try { localStorage.setItem("samara-admin-ok", pin); } catch (err) {}
+        openGate(); init(false);
+      } else { $("gateErr").hidden = false; $("gatePin").value = ""; $("gatePin").focus(); }
+    });
+    $("gatePin").focus();
+  }
 })();

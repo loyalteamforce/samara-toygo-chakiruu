@@ -2,7 +2,7 @@
   "use strict";
   var S = window.SITE, I = window.I18N;
   var TYPES = ["uylonuu", "kyz-uzatuu", "nikah", "sunnot", "beshik", "tushoo", "yubiley", "tuulgan-kun", "kuda"];
-  var lang = "ru", filter = "all";
+  var lang = "ky", filter = "all";
 
   try { var saved = localStorage.getItem("samara-lang"); if (saved === "ky" || saved === "ru") lang = saved; } catch (e) {}
 

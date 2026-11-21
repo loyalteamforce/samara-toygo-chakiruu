@@ -1,5 +1,5 @@
 .adm { background: var(--bg); }
-.adm-top { position: sticky; top: 0; z-index: 30; background: rgba(250,246,239,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.adm-top { position: sticky; top: 0; z-index: 30; background: rgba(242,246,241,.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .adm-top-in { display: flex; align-items: center; justify-content: space-between; height: 62px; }
 
 .adm-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; padding-top: 28px; padding-bottom: 80px; align-items: start; }
@@ -86,3 +86,17 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--b
 }
 .adm-actions .btn { white-space: nowrap; padding: 10px 14px; }
 @media (max-width: 520px) { .adm-top .logo small { display: none; } }
+
+/* Кирүү коду */
+.gate { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 20px;
+  background: radial-gradient(70% 80% at 80% 15%, rgba(46,125,104,.5), transparent 70%), linear-gradient(165deg, #0f3329, #071a15); }
+.gate[hidden] { display: none; }
+.gate-box { width: 100%; max-width: 360px; text-align: center; color: #e9f1ec; display: grid; gap: 14px; }
+.gate-box img { width: 96px; height: 96px; margin: 0 auto; }
+.gate-box h1 { font-size: 34px; letter-spacing: .2em; font-family: "Forum", serif; font-weight: 400; color: #f1dba6; }
+.gate-box p { color: #a9c3b6; font-size: 14px; }
+.gate-box input { text-align: center; letter-spacing: .15em; background: rgba(255,255,255,.08); border-color: rgba(224,184,102,.45); color: #fff; }
+.gate-box input::placeholder { color: #7f9a8c; letter-spacing: .05em; }
+.gate-box .btn { background: #e0b866; border-color: #e0b866; color: #0b231d; }
+.gate-err { color: #ffb4a8; font-size: 13px; }
+body.gated .adm-top, body.gated main { display: none; }

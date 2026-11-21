@@ -1,13 +1,13 @@
 :root {
-  --bg: #faf6ef;
-  --bg-alt: #f3ebdf;
-  --ink: #2b211b;
-  --muted: #76665a;
+  --bg: #f2f6f1;
+  --bg-alt: #e2ece4;
+  --ink: #12241d;
+  --muted: #546b61;
   --brand: #17493d;
   --brand-dark: #0d2e26;
   --gold: #b8945a;
   --line: rgba(23, 73, 61, .16);
-  --card: #fffdf9;
+  --card: #fbfdfa;
   --radius: 18px;
   --shadow: 0 10px 30px rgba(60, 30, 20, .08);
 }
@@ -264,3 +264,55 @@ h3 { font-size: 24px; }
   html { scroll-behavior: auto; }
   * { transition: none !important; }
 }
+
+
+/* ============================================================
+   Жашыл багытындагы дизайн (изумруд + алтын)
+   ============================================================ */
+.topbar { background: rgba(8, 28, 23, .96); border-bottom: 1px solid rgba(224,184,102,.25); }
+.topbar .logo b { color: #f1dba6; }
+.topbar .logo small, .footer .logo small { color: #e0b866; }
+.topbar .nav a { color: #c5d8cd; }
+.topbar .nav a:hover { color: #f1dba6; }
+.topbar .lang { border-color: rgba(224,184,102,.4); }
+.topbar .lang button { color: #cfe0d6; }
+.topbar .lang button[aria-pressed="true"] { background: #e0b866; color: #0b231d; }
+.logo b { font-size: 19px; letter-spacing: .24em; }
+.logo small { font-size: 10.5px; letter-spacing: .26em; color: #e0b866; margin-top: 5px; }
+.footer .logo b { color: #f1dba6; }
+
+.hero {
+  color: #e9f1ec; padding: 64px 0 84px;
+  background:
+    radial-gradient(60% 80% at 82% 20%, rgba(46,125,104,.55), transparent 70%),
+    radial-gradient(40% 50% at 0% 100%, rgba(224,184,102,.10), transparent 70%),
+    linear-gradient(165deg, #0f3329 0%, #08211b 100%);
+}
+.hero .kicker { color: #e0b866; }
+.hero h1 { color: #f6e6b8; }
+.hero .lead { color: #bcd2c6; }
+.hero .btn-solid { background: #e0b866; border-color: #e0b866; color: #0b231d; }
+.hero .btn-solid:hover { background: #f0cd80; box-shadow: 0 8px 22px rgba(224,184,102,.3); }
+.hero .btn-ghost { color: #e0b866; border-color: rgba(224,184,102,.7); }
+.hero .btn-ghost:hover { background: #e0b866; color: #0b231d; }
+.hero-stats b { color: #f1dba6; }
+.hero-stats span { color: #a9c3b6; }
+.phone { box-shadow: 0 30px 70px rgba(0,0,0,.5), inset 0 0 0 2px #3a4a43; }
+.orn-strip { background-color: #08211b; opacity: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 18'%3E%3Cpath d='M0 9 L10 2 L20 9 L10 16 Z M20 9 L30 2 L40 9 L30 16 Z' fill='none' stroke='%23e0b866' stroke-width='1.1'/%3E%3Ccircle cx='10' cy='9' r='1.5' fill='%23e0b866'/%3E%3Ccircle cx='30' cy='9' r='1.5' fill='%23e0b866'/%3E%3C/svg%3E"); }
+
+.kicker { color: #9a7a35; }
+.section.alt { background: var(--bg-alt); }
+.type-card, .tpl, .feat, .steps li, .faq details { background: #fbfdfa; }
+.type-card b { color: var(--brand); }
+.final-cta { background: radial-gradient(60% 90% at 100% 0%, rgba(224,184,102,.16), transparent 70%), linear-gradient(165deg, #0f3329, #08211b); }
+.final-cta h2 { color: #f6e6b8; }
+.btn-light { background: #e0b866; border-color: #e0b866; color: #0b231d; }
+.price-card.featured { background: linear-gradient(165deg, #17493d, #0d2e26); }
+.badge { background: #e0b866; color: #0b231d; }
+.footer { background: #071a15; }
+.foot-links { flex-wrap: wrap; }
+.foot-links .admin-link { color: #8fa89b; font-size: 13px; }
+.brand-kg { margin-top: 12px; font: 400 15px "Forum", serif; letter-spacing: .12em; color: #e0b866; }
+.wa-float { background: #25d366; }
+@media (max-width: 920px) { .hero { padding-top: 40px; } }

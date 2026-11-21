@@ -10,6 +10,9 @@ window.SITE = {
   whatsapp: "996550481989",
   instagram: "https://www.instagram.com/priglasitelny.samara/",
 
+  // Конструкторго (admin.html) кирүү коду. Бош калтырса — код сурабайт.
+  adminPin: "samara2026",
+
   // Баалар (сом) / Цены (сом)
   prices: {
     site: 300,      // сайт-чакыруу / сайт-приглашение
