@@ -13,6 +13,15 @@ window.SITE = {
   // Конструкторго (admin.html) кирүү коду. Бош калтырса — код сурабайт.
   adminPin: "samara2026",
 
+  // Сүрөт сактагыч (Supabase Storage). Бош калтырса — сүрөт жүктөө жашырылат.
+  // Бул ачык (publishable) ачкыч — коопсуз, укуктары RLS менен чектелген.
+  storage: {
+    url: "https://mbyyuovlipbpioxtkjcp.supabase.co",
+    key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ieXl1b3ZsaXBicGlveHRramNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MjEzMjgsImV4cCI6MjEwNjI5NzMyOH0.3AVwWygymHYldwIhhYW-wfEm2XSxx4ChSCAazirofAg",
+    bucket: "samara-photos",
+    maxSide: 1600
+  },
+
   // Баалар (сом) / Цены (сом)
   prices: {
     site: 300,      // сайт-чакыруу / сайт-приглашение

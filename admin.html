@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=9">
-<link rel="stylesheet" href="css/admin.css?v=9">
+<link rel="stylesheet" href="css/style.css?v=10">
+<link rel="stylesheet" href="css/admin.css?v=10">
 </head>
 <body class="adm gated">
 
@@ -128,15 +128,28 @@
 
     <section class="card">
       <h2><span>7</span> Музыка и фото <small>(необязательно)</small></h2>
-      <label>Фото для фона <small>(обложка приглашения и видео)</small>
-        <input id="cover" inputmode="url" placeholder="photos/cover.jpg">
-      </label>
-      <p class="hint">Вертикальное фото хорошего качества (лучше от 1080 px в ширину). Положите файл в папку <code>photos/</code> репозитория и впишите путь. Текст поверх фото автоматически становится белым.</p>
+      <div class="pick">
+        <div class="pick-head"><b>Фото для фона</b> <small>обложка приглашения и видео</small></div>
+        <div class="thumbs" id="coverThumb"></div>
+        <label class="btn btn-sm btn-ghost pick-btn" data-need="storage">📷 Выбрать из галереи<input type="file" id="coverFile" accept="image/*" hidden></label>
+        <details id="coverMore"><summary>или вставить ссылку</summary>
+          <input id="cover" inputmode="url" placeholder="https://... или photos/cover.jpg">
+        </details>
+        <p class="hint">Лучше вертикальное фото хорошего качества. Текст поверх фото автоматически становится белым.</p>
+      </div>
+
+      <div class="pick">
+        <div class="pick-head"><b>Фотографии</b> <small>до 6 · в видео: 1-е — сцена места, 2-е — финал</small></div>
+        <div class="thumbs" id="photoThumbs"></div>
+        <label class="btn btn-sm btn-ghost pick-btn" data-need="storage">📷 Добавить из галереи<input type="file" id="photoFile" accept="image/*" multiple hidden></label>
+        <details id="photoMore"><summary>или вставить ссылки</summary>
+          <textarea id="photos" rows="3" placeholder="https://... (по одной в строке)"></textarea>
+        </details>
+      </div>
+      <p class="hint" id="pickStatus" aria-live="polite"></p>
+
       <label>Ссылка на mp3 <input id="music" inputmode="url" placeholder="music/song.mp3 или https://..."></label>
-      <label>Ссылки на фото <small>(по одной в строке, до 6)</small>
-        <textarea id="photos" rows="3" placeholder="photos/1.jpg"></textarea>
-      </label>
-      <p class="hint">Файлы mp3 и фото кладутся в папки <code>music/</code> и <code>photos/</code> репозитория, затем здесь пишется путь.</p>
+      <p class="hint">Музыку (mp3) пока нужно положить в папку <code>music/</code> репозитория и указать путь.</p>
       <label>Видео с YouTube <small>(ссылка)</small>
         <input id="video" inputmode="url" placeholder="https://youtu.be/...">
       </label>
@@ -196,8 +209,9 @@
   </aside>
 </main>
 
-<script src="js/config.js?v=9"></script>
-<script src="js/codec.js?v=9"></script>
-<script src="js/admin.js?v=9"></script>
+<script src="js/config.js?v=10"></script>
+<script src="js/codec.js?v=10"></script>
+<script src="js/photos.js?v=10"></script>
+<script src="js/admin.js?v=10"></script>
 </body>
 </html>

@@ -39,6 +39,13 @@ Panelde sağda **"Видео-приглашение"** kartında link çıkar �
 - En iyi sonuç güncel **Chrome / Android**. Eski tarayıcı WebM üretirse uyarı gösterir.
 - Müzik için mp3 dosyası `music/` klasöründe olmalı (ya da CORS'a izin veren bir link).
 
+### Fotoğrafı galeriden seçme (Supabase Storage)
+Panelde **"Выбрать из галереи / Добавить из галереи"** düğmeleri: müşteri telefonun galerisinden fotoğraf seçer, tarayıcı fotoğrafı **1600 px / ~700 KB**'a küçültür ve depoya yükler; link otomatik doldurulur. GitHub'a yükleme gerekmez.
+- Ayarlar `js/config.js` → `storage` (url, anahtar, bucket, maxSide). `storage` boşaltılırsa seçici gizlenir, link yapıştırma kalır.
+- Depo: Supabase projesi `mbyyuovlipbpioxtkjcp`, bucket **`samara-photos`** (herkese açık okuma). Anonim kullanıcı **sadece** `u/` klasörüne, **jpg/png/webp**, **en fazla 3 MB** dosya **ekleyebilir**; listeleyemez, değiştiremez, silemez. Diğer bucket ve tablolara dokunulmaz.
+- ⚠️ Bu proje başka bir canlı uygulamayla paylaşılıyor (ücretsiz planda 2 proje sınırı). Müşteriye devrederken fotoğraflar için **ayrı bir Supabase projesi** açıp aynı bucket + kuralı oraya kurmak ve `config.js`'i güncellemek gerekir. Mevcut fotoğraf linkleri eski adreste çalışmaya devam eder.
+- Müzik (mp3) henüz galeriden seçilemez.
+
 ### Video stilleri
 Panelde **"Стиль видео"**:
 - **Жибек (önerilen):** krem/zümrüt/bordo/lacivert **ipek kumaş** zemin, altın Kırgız oyma çerçeve, medalyon deseni, altın gradyanlı yazılar. Sahneler: başlık → büyük isim/yaş → dua (toy türüne göre hazır metin) → davet metni → tarih → mekân → kapanış.

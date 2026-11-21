@@ -135,7 +135,63 @@
     $("video").value = d.video || "";
     $("album").value = d.album || "";
     setTheme(d.theme || "ak-kuu");
+    renderThumbs();
   }
+
+  // ---------- Сүрөттөр: галереядан тандоо ----------
+  var P = window.Photos, MAXPH = 6;
+  function status(msg, err) { var e = $("pickStatus"); e.textContent = msg || ""; e.className = "hint" + (err ? " err" : ""); }
+  function photoList() { return $("photos").value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean); }
+  function thumb(src, onX, n, busy) {
+    var d = document.createElement("div"); d.className = "thumb" + (busy ? " busy" : "");
+    if (src) { var im = document.createElement("img"); im.src = src; im.alt = ""; im.loading = "lazy"; d.appendChild(im); }
+    if (n) { var b = document.createElement("span"); b.className = "n"; b.textContent = n; d.appendChild(b); }
+    if (onX) { var x = document.createElement("button"); x.type = "button"; x.className = "x"; x.setAttribute("aria-label", "Удалить"); x.textContent = "×"; x.addEventListener("click", onX); d.appendChild(x); }
+    return d;
+  }
+  var pendingCover = 0, pendingPhotos = 0;
+  function renderThumbs() {
+    var ct = $("coverThumb"); ct.innerHTML = "";
+    var cv = $("cover").value.trim();
+    if (cv) ct.appendChild(thumb(cv, function () { $("cover").value = ""; renderThumbs(); schedule(); }));
+    if (pendingCover) ct.appendChild(thumb("", null, 0, true));
+    var pt = $("photoThumbs"); pt.innerHTML = "";
+    photoList().forEach(function (u, i) {
+      pt.appendChild(thumb(u, function () { var l = photoList(); l.splice(i, 1); $("photos").value = l.join("\n"); renderThumbs(); schedule(); }, i + 1));
+    });
+    for (var k = 0; k < pendingPhotos; k++) pt.appendChild(thumb("", null, 0, true));
+  }
+  var STORAGE_OK = !!(P && P.enabled());
+  document.querySelectorAll('[data-need="storage"]').forEach(function (el) { if (!STORAGE_OK) el.classList.add("off"); });
+  if (!STORAGE_OK) { $("coverMore").open = true; $("photoMore").open = true; }
+  function errText(e) { return "Не удалось загрузить фото. Проверьте интернет и попробуйте ещё раз." + (e && e.message ? " (" + e.message + ")" : ""); }
+
+  $("coverFile").addEventListener("change", function () {
+    var f = this.files[0]; this.value = "";
+    if (!f) return;
+    pendingCover = 1; renderThumbs(); status("Загрузка фото…");
+    P.add(f).then(function (url) { $("cover").value = url; status("Фото добавлено ✓"); })
+      .catch(function (e) { status(errText(e), true); })
+      .then(function () { pendingCover = 0; renderThumbs(); schedule(); });
+  });
+  $("photoFile").addEventListener("change", function () {
+    var files = Array.prototype.slice.call(this.files); this.value = "";
+    var room = MAXPH - photoList().length;
+    if (room <= 0) { status("Максимум " + MAXPH + " фото. Удалите лишние.", true); return; }
+    var cut = files.length > room;
+    if (cut) files = files.slice(0, room);
+    status(cut ? "Добавляю только первые " + room + " фото (максимум " + MAXPH + ")…" : "Загрузка фото…");
+    pendingPhotos = files.length; renderThumbs();
+    files.reduce(function (chain, f) {
+      return chain.then(function () {
+        return P.add(f).then(function (url) { var l = photoList(); l.push(url); $("photos").value = l.join("\n"); })
+          .catch(function (e) { status(errText(e), true); })
+          .then(function () { pendingPhotos--; renderThumbs(); schedule(); });
+      });
+    }, Promise.resolve()).then(function () { if (!$("pickStatus").classList.contains("err")) status(cut ? "Добавлены первые " + room + " фото — максимум " + MAXPH + " ✓" : "Фото добавлены ✓"); });
+  });
+  $("cover").addEventListener("input", renderThumbs);
+  $("photos").addEventListener("input", renderThumbs);
 
   // ---------- Обновление ----------
   function toast(msg) {

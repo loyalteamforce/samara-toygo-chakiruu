@@ -82,11 +82,16 @@
     function loadImg(url) {
       return new Promise(function (res) {
         if (!url) return res(null);
-        var im = new Image();
-        try { if (/^https?:/i.test(url) && new URL(url, location.href).origin !== location.origin) im.crossOrigin = "anonymous"; } catch (e) {}
-        im.onload = function () { res(im); };
-        im.onerror = function () { res(null); };
-        im.src = url;
+        var cross = false;
+        try { cross = /^https?:/i.test(url) && new URL(url, location.href).origin !== location.origin; } catch (e) {}
+        function go(useCors) {
+          var im = new Image();
+          if (useCors) im.crossOrigin = "anonymous";
+          im.onload = function () { res(im); };
+          im.onerror = function () { if (useCors) go(false); else res(null); };
+          im.src = url;
+        }
+        go(cross);
         setTimeout(function () { res(null); }, 8000);
       });
     }
@@ -350,7 +355,8 @@
 
     function startRecording() {
       if (!window.MediaRecorder || !cv.captureStream) { $("hint").textContent = U.noRec; return; }
-      var stream = cv.captureStream(30);
+      var stream;
+      try { stream = cv.captureStream(30); } catch (e) { $("hint").textContent = U.noRec; return; }
       if (audio) { try { var as = (audio.captureStream || audio.mozCaptureStream).call(audio); as.getAudioTracks().forEach(function (tr) { stream.addTrack(tr); }); } catch (e) {} }
       var mime = pickMime(), opts = { videoBitsPerSecond: 4000000 };
       if (mime) opts.mimeType = mime;
