@@ -138,6 +138,20 @@ h3 { font-size: 24px; }
 .tp-names { font: italic 500 32px/1.1 "Cormorant Garamond", serif; }
 .tp-names i { color: var(--ta); font-style: normal; }
 .tp-orn { width: 150px; color: var(--ta); }
+.tp-new {
+  position: absolute; top: 24px; right: 24px; z-index: 2; background: var(--ta); color: var(--tb);
+  font: 600 10px "Montserrat", sans-serif; letter-spacing: .14em; text-transform: uppercase; padding: 5px 9px; border-radius: 999px;
+}
+.tp-names { max-width: 100%; overflow-wrap: anywhere; }
+/* Карточкалардагы теманын өзгөчөлүктөрү */
+.tp-ayim::before { content: ""; position: absolute; top: 36px; left: 36px; width: 26px; height: 26px; border-radius: 50%; box-shadow: 6px -4px 0 0 var(--ta); }
+.tp-ayim { background-image: radial-gradient(1px 1px at 20% 30%, #fff, transparent), radial-gradient(1px 1px at 80% 20%, #fff, transparent), radial-gradient(1.4px 1.4px at 70% 80%, #ffe9b0, transparent), radial-gradient(1px 1px at 30% 85%, #fff, transparent), radial-gradient(120% 70% at 50% 0%, #1a2650, #0d1630) !important; }
+.tp-altyn .tp-frame { border-color: #d6b06a; opacity: .9; }
+.tp-minimal .tp-frame, .tp-balalyk .tp-frame { display: none; }
+.tp-minimal .tp-orn { display: none; }
+.tp-balalyk { background: radial-gradient(circle at 18% 20%, #f6b5c4 0 7px, transparent 8px), radial-gradient(circle at 84% 26%, #9fd8ff 0 9px, transparent 10px), radial-gradient(circle at 78% 82%, #ffd66b 0 6px, transparent 7px), radial-gradient(circle at 16% 78%, #8fd3bd 0 8px, transparent 9px), #f2fbf7 !important; }
+.tp-gul .tp-frame { border-style: dashed; }
+.tp-boz-uy .tp-frame { border-width: 2px; border-style: dashed; }
 .tp-date { font-size: 12px; letter-spacing: .25em; opacity: .8; }
 .tpl-info { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; flex-wrap: wrap; }
 .tpl-info h3 { font-size: 24px; }
@@ -233,6 +247,8 @@ h3 { font-size: 24px; }
   .prices { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) {
+  .wa-float { width: 48px; height: 48px; right: 12px; bottom: 12px; }
+  .wa-float svg { width: 24px; height: 24px; }
   .section { padding: 64px 0; }
   .hero { padding-top: 36px; }
   .hero-cta .btn { width: 100%; }

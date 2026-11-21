@@ -10,7 +10,7 @@
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function waUrl(text) { return "https://wa.me/" + S.whatsapp + "?text=" + encodeURIComponent(text); }
 
-  function demoFor(t) { return t.id === "beshik" ? "demo-beshik" : "demo"; }
+  var DEMO_NAMES = { "demo": "Санжар <i>&amp;</i> Нурайым", "demo-beshik": "Айсулуу", "demo-sunnot": "Нурсултан" };
 
   function renderTypes() {
     document.getElementById("typeList").innerHTML = TYPES.map(function (k) {
@@ -28,15 +28,19 @@
   function renderTemplates() {
     var list = S.templates.filter(function (t) { return filter === "all" || t.types.indexOf(filter) > -1; });
     document.getElementById("tplGrid").innerHTML = list.map(function (t) {
-      var names = t.id === "beshik" ? "Айсулуу" : "Санжар <i>&amp;</i> Нурайым";
-      var view = "davet.html?id=" + demoFor(t) + "&t=" + t.id + "&lang=" + lang;
+      var demo = t.demo || "demo";
+      var names = DEMO_NAMES[demo] || DEMO_NAMES.demo;
+      var view = "davet.html?id=" + demo + "&t=" + t.id + "&lang=" + lang;
+      var nameStyle = "font-family:" + t.font + (t.italic ? ";font-style:italic" : ";font-style:normal") +
+        (t.upper ? ";text-transform:uppercase" : "") + (t.small ? ";font-size:24px" : "");
       var tags = t.types.map(function (k) { return tr("type." + k); }).join(" · ");
       return (
         '<article class="tpl">' +
-          '<a class="tpl-preview" href="' + view + '" target="_blank" rel="noopener" style="--tb:' + t.bg + ";--ti:" + t.ink + ";--ta:" + t.accent + '">' +
+          '<a class="tpl-preview tp-' + t.id + '" href="' + view + '" target="_blank" rel="noopener" style="--tb:' + t.bg + ";--ti:" + t.ink + ";--ta:" + t.accent + '">' +
             '<span class="tp-frame"></span>' +
             '<span class="tp-eyebrow">' + (lang === "ky" ? "ТОЙГО ЧАКЫРУУ" : "ПРИГЛАШЕНИЕ") + "</span>" +
-            '<span class="tp-names">' + names + "</span>" +
+            (t.isNew ? '<span class="tp-new">' + esc(tr("tpl.new")) + "</span>" : "") +
+            '<span class="tp-names" style="' + nameStyle + '">' + names + "</span>" +
             '<svg class="tp-orn" viewBox="0 0 240 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M120 30 C120 16 108 8 98 12 C88 16 90 30 100 28 C106 27 106 20 101 20"/><path d="M120 30 C120 16 132 8 142 12 C152 16 150 30 140 28 C134 27 134 20 139 20"/><path d="M86 22 H30 M154 22 H210"/></svg>' +
             '<span class="tp-date">19 · XII · 2026</span>' +
           "</a>" +

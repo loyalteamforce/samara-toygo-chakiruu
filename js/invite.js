@@ -78,6 +78,29 @@
     }
   };
 
+  // Ар бир теманын Google шрифттери (кыргыз тамгаларын колдойт)
+  var THEME_FONTS = {
+    "shyrdak": ["Philosopher:wght@400;700"],
+    "bordo":   ["Prata"],
+    "zumurut": ["EB+Garamond:ital,wght@0,400;1,400"],
+    "asman":   ["Lora:ital,wght@0,400;0,500;1,400"],
+    "beshik":  ["Comfortaa:wght@400;600", "Bad+Script"],
+    "altyn":   ["Forum"],
+    "gul":     ["Lora:ital,wght@0,400;0,500;1,400", "Bad+Script"],
+    "ayim":    ["Yeseva+One"],
+    "boz-uy":  ["Philosopher:wght@400;700"],
+    "minimal": ["Oswald:wght@400;600"],
+    "balalyk": ["Comfortaa:wght@400;600", "Pacifico"]
+  };
+  function loadFonts(theme) {
+    var f = THEME_FONTS[theme];
+    if (!f) return;
+    var l = document.createElement("link");
+    l.rel = "stylesheet";
+    l.href = "https://fonts.googleapis.com/css2?family=" + f.join("&family=") + "&display=swap";
+    document.head.appendChild(l);
+  }
+
   var qs = new URLSearchParams(location.search);
   var app = document.getElementById("app");
   var O = window.ORNAMENT || {};
@@ -105,6 +128,7 @@
 
     var theme = (qs.get("t") || d.theme || "ak-kuu").replace(/[^a-z0-9-]/gi, "");
     document.body.setAttribute("data-theme", theme);
+    loadFonts(theme);
 
     var names = d.names || [];
     var title = names.join(" & ");
@@ -145,7 +169,7 @@
       '<section class="hero">' +
         '<span class="corner tl">' + O.corner + '</span><span class="corner tr">' + O.corner + "</span>" +
         '<p class="eyebrow reveal">' + esc(d.heading) + "</p>" +
-        '<h1 class="names reveal">' + names.map(esc).join('<span class="amp">&amp;</span>') + "</h1>" +
+        '<h1 class="names reveal" style="--nl:' + Math.max(8, Math.max.apply(null, names.map(function (n) { return n.length; }).concat([0]))) + '">' + names.map(esc).join('<span class="amp">&amp;</span>') + "</h1>" +
         '<div class="ornament reveal">' + O.divider + "</div>" +
         '<div class="hero-date reveal">' +
           '<span class="hd-side">' + t.wd[local.getDay()] + "</span>" +

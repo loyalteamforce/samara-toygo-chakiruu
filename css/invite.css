@@ -32,12 +32,19 @@ body[data-theme="beshik"] {
   --card: rgba(255,255,255,.6); --env: #f1d2cc; --env2: #e9bfb7; --seal: #c97b7b;
 }
 
+/* Темалардын шрифттери (демейки) */
+:root {
+  --f-names: "Cormorant Garamond", Georgia, serif; --names-style: italic; --names-k: 1;
+  --f-head: "Cormorant Garamond", Georgia, serif;
+  --f-body: "Montserrat", system-ui, sans-serif;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: "Montserrat", system-ui, sans-serif;
+  font-family: var(--f-body);
   font-weight: 400;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -56,10 +63,8 @@ body.locked { overflow: hidden; height: 100vh; }
   overflow: hidden;
 }
 
-h1, h2, .names, .hd-day, .monogram, .venue-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-weight: 500;
-}
+h1, h2, .hd-day, .venue-name { font-family: var(--f-head); font-weight: 500; }
+.names, .monogram, .env-guest, .hosts strong, .venue-name { font-family: var(--f-names); font-style: var(--names-style); font-weight: 400; }
 
 /* ---------- Hero ---------- */
 .hero {
@@ -74,13 +79,15 @@ h1, h2, .names, .hd-day, .monogram, .venue-name {
   font-weight: 500;
 }
 .names {
-  font-size: clamp(48px, 15vw, 68px);
+  /* --nl = эң узун аттын тамга саны (JS коёт) — узун аттар кичирейет */
+  font-size: calc(min(68px, 15vw, 150vw / var(--nl, 8), 720px / var(--nl, 8)) * var(--names-k));
   line-height: 1.05;
-  font-style: italic;
+  overflow-wrap: anywhere;
+  max-width: 100%;
   margin: 22px 0 8px;
   display: flex; flex-direction: column; align-items: center;
 }
-.names .amp { font-size: .55em; color: var(--accent); margin: 4px 0; font-style: normal; }
+.names .amp { font-size: .55em; line-height: 1; color: var(--accent); margin: .22em 0; font-style: normal; }
 .ornament { color: var(--accent); width: 220px; margin: 14px auto; }
 .orn-divider { width: 100%; height: auto; display: block; }
 .hero-date {
@@ -118,7 +125,7 @@ h1, h2, .names, .hd-day, .monogram, .venue-name {
 .greet { font-size: 30px; }
 .body-text { font-size: 15px; color: var(--ink); }
 .hosts { margin-top: 18px; font-size: 14px; color: var(--muted); }
-.hosts strong { font-family: "Cormorant Garamond", serif; font-size: 22px; font-style: italic; font-weight: 500; color: var(--ink); }
+.hosts strong { font-size: calc(22px * var(--names-k)); color: var(--ink); }
 
 /* Calendar */
 .calendar { max-width: 300px; margin: 0 auto; }
@@ -137,7 +144,7 @@ h1, h2, .names, .hd-day, .monogram, .venue-name {
 /* Countdown */
 .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .cd-cell { border: 1px solid var(--line); border-radius: 12px; padding: 12px 2px; }
-.cd-num { display: block; font-family: "Cormorant Garamond", serif; font-size: 34px; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.cd-num { display: block; font-family: var(--f-head); font-size: 34px; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
 .cd-label { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
 /* Program */
@@ -152,7 +159,7 @@ h1, h2, .names, .hd-day, .monogram, .venue-name {
 .p-info small { color: var(--muted); font-size: 13px; }
 
 /* Venue */
-.venue-name { font-size: 26px; font-style: italic; }
+.venue-name { font-size: calc(26px * var(--names-k)); }
 .venue-addr { color: var(--muted); font-size: 14px; margin: 4px 0 20px; }
 
 /* Buttons */
@@ -177,7 +184,7 @@ h1, h2, .names, .hd-day, .monogram, .venue-name {
 .rsvp { display: grid; gap: 16px; text-align: left; margin-top: 18px; }
 .rsvp label { display: grid; gap: 6px; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .rsvp input:not([type=radio]), .rsvp select, .rsvp textarea {
-  font: 400 16px "Montserrat", sans-serif; color: var(--ink); text-transform: none; letter-spacing: 0;
+  font: 400 16px var(--f-body); color: var(--ink); text-transform: none; letter-spacing: 0;
   background: transparent; border: 0; border-bottom: 1px solid var(--line); padding: 8px 2px; border-radius: 0; width: 100%;
 }
 .rsvp select { appearance: none; }
@@ -198,7 +205,7 @@ h1, h2, .names, .hd-day, .monogram, .venue-name {
 
 /* Finale */
 .finale { text-align: center; padding: 40px 28px 30px; }
-.monogram { font-size: 56px; font-style: italic; color: var(--accent); line-height: 1; margin: 6px 0 10px; }
+.monogram { font-size: calc(56px * var(--names-k)); color: var(--accent); line-height: 1; margin: 6px 0 10px; }
 .finale h2 { font-size: 36px; }
 .made { text-align: center; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); padding: 10px 0 36px; opacity: .7; }
 
@@ -232,7 +239,7 @@ h1, h2, .names, .hd-day, .monogram, .venue-name {
 .env-body { position: relative; z-index: 3; text-align: center; color: var(--ink); padding: 24px; margin-top: 18vh; }
 body[data-theme="shyrdak"] .env-body, body[data-theme="asman"] .env-body { color: #fff; }
 .env-heading { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; opacity: .85; }
-.env-guest { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 28px; margin-top: 6px; }
+.env-guest { font-size: calc(28px * var(--names-k)); margin-top: 6px; overflow-wrap: anywhere; }
 .seal {
   width: 92px; height: 92px; margin: 22px auto; border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--seal) 70%, #fff), var(--seal) 60%);
@@ -241,7 +248,7 @@ body[data-theme="shyrdak"] .env-body, body[data-theme="asman"] .env-body { color
   animation: pulse 2.2s ease-in-out infinite;
 }
 .env-body { display: flex; flex-direction: column; align-items: center; }
-.seal span { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 30px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.seal span { font-family: var(--f-names); font-style: var(--names-style); font-size: calc(30px * var(--names-k)); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.3); }
 .env-hint { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; opacity: .8; animation: blink 2s ease-in-out infinite; }
 @keyframes pulse { 50% { transform: scale(1.06); } }
 @keyframes blink { 50% { opacity: .35; } }
@@ -256,3 +263,117 @@ body[data-theme="shyrdak"] .env-body, body[data-theme="asman"] .env-body { color
   .reveal { opacity: 1; transform: none; transition: none; }
   .seal, .env-hint, .music-btn.on { animation: none; }
 }
+
+/* ============================================================
+   Темалардын шрифттери жана жаңы темалар
+   ============================================================ */
+body[data-theme="shyrdak"] { --f-head: "Philosopher", sans-serif; --f-names: "Philosopher", sans-serif; --names-style: normal; --names-k: .82; }
+body[data-theme="bordo"]   { --f-head: "Prata", serif; --f-names: "Prata", serif; --names-style: normal; --names-k: .78; }
+body[data-theme="zumurut"] { --f-head: "EB Garamond", serif; --f-names: "EB Garamond", serif; --names-style: italic; --names-k: .9; }
+body[data-theme="asman"]   { --f-head: "Lora", serif; --f-names: "Lora", serif; --names-style: italic; --names-k: .86; }
+body[data-theme="beshik"]  { --f-head: "Comfortaa", sans-serif; --f-names: "Bad Script", cursive; --names-style: normal; --names-k: .95; --f-body: "Comfortaa", sans-serif; }
+
+/* Алтын — кара жана алтын */
+body[data-theme="altyn"] {
+  --bg: #0e0c0a; --bg2: #1d1812; --ink: #f1e6cf; --muted: #b5a585;
+  --accent: #d6b06a; --accent-ink: #0e0c0a; --line: rgba(214,176,106,.32);
+  --card: rgba(214,176,106,.04); --env: #15110d; --env2: #221b13; --seal: #c99b4f;
+  --f-head: "Forum", serif; --f-names: "Forum", serif; --names-style: normal; --names-k: .78;
+}
+body[data-theme="altyn"] .names { text-transform: uppercase; letter-spacing: .08em; }
+body[data-theme="altyn"] .names .amp { font-family: "Cormorant Garamond", serif; font-style: italic; text-transform: none; }
+body[data-theme="altyn"] .block { border-radius: 0; border-image: linear-gradient(135deg, #f6e3b0, #a67a35, #f0d696) 1; }
+body[data-theme="altyn"] .eyebrow, body[data-theme="altyn"] .hd-day, body[data-theme="altyn"] .cd-num {
+  background: linear-gradient(135deg, #fbe9b9, #c99b4f 50%, #f0d696); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* Гүл — гүлдүү, назик */
+body[data-theme="gul"] {
+  --bg: #fff7f3; --bg2: #fde7df; --ink: #4d2f2c; --muted: #94706a;
+  --accent: #d0806f; --accent-ink: #fff; --line: rgba(208,128,111,.3);
+  --card: rgba(255,255,255,.7); --env: #f8d9cf; --env2: #f2c4b6; --seal: #c46a5a;
+  --f-head: "Lora", serif; --f-names: "Bad Script", cursive; --names-style: normal; --names-k: .95;
+}
+body[data-theme="gul"] .corner svg { display: none; }
+body[data-theme="gul"] .corner {
+  width: 120px; height: 120px; opacity: .9;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg transform='translate(34 34)'%3E%3Cg fill='%23f2b8a8'%3E%3Cellipse rx='9' ry='17' transform='translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(72) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(144) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(216) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(288) translate(0 -14)'/%3E%3C/g%3E%3Ccircle r='7' fill='%23d0806f'/%3E%3C/g%3E%3Cg transform='translate(78 22) scale(.55)'%3E%3Cg fill='%23f6cdbf'%3E%3Cellipse rx='9' ry='17' transform='translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(72) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(144) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(216) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(288) translate(0 -14)'/%3E%3C/g%3E%3Ccircle r='7' fill='%23e39a88'/%3E%3C/g%3E%3Cg transform='translate(24 80) scale(.5)'%3E%3Cg fill='%23f6cdbf'%3E%3Cellipse rx='9' ry='17' transform='translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(72) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(144) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(216) translate(0 -14)'/%3E%3Cellipse rx='9' ry='17' transform='rotate(288) translate(0 -14)'/%3E%3C/g%3E%3Ccircle r='7' fill='%23e39a88'/%3E%3C/g%3E%3Cg fill='%2391a98a'%3E%3Cellipse cx='62' cy='50' rx='5' ry='12' transform='rotate(-40 62 50)'/%3E%3Cellipse cx='50' cy='64' rx='5' ry='12' transform='rotate(-50 50 64)'/%3E%3Cellipse cx='14' cy='56' rx='4' ry='10' transform='rotate(30 14 56)'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+}
+body[data-theme="gul"] .corner.tl { top: -6px; left: -6px; }
+body[data-theme="gul"] .corner.tr { top: -6px; right: -6px; }
+body[data-theme="gul"] .corner.bl { bottom: -6px; left: -6px; }
+body[data-theme="gul"] .corner.br { bottom: -6px; right: -6px; }
+
+/* Айым — түнкү асман, жылдыздар (никах үчүн) */
+body[data-theme="ayim"] {
+  --bg: #0d1630; --bg2: #1a2650; --ink: #eef0fa; --muted: #a8b1d4;
+  --accent: #e7c77d; --accent-ink: #0d1630; --line: rgba(231,199,125,.3);
+  --card: rgba(255,255,255,.04); --env: #111c3d; --env2: #1a2852; --seal: #e7c77d;
+  --f-head: "Yeseva One", serif; --f-names: "Cormorant Garamond", serif; --names-style: italic; --names-k: 1.02;
+}
+body[data-theme="ayim"] .invite {
+  background:
+    radial-gradient(1.2px 1.2px at 12% 8%, #fff, transparent), radial-gradient(1px 1px at 82% 14%, #fff, transparent),
+    radial-gradient(1.4px 1.4px at 64% 4%, #ffe9b0, transparent), radial-gradient(1px 1px at 30% 22%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 90% 36%, #fff, transparent), radial-gradient(1px 1px at 6% 40%, #ffe9b0, transparent),
+    radial-gradient(1px 1px at 48% 30%, #fff, transparent), radial-gradient(1.3px 1.3px at 22% 58%, #fff, transparent),
+    radial-gradient(1px 1px at 76% 62%, #fff, transparent), radial-gradient(1.2px 1.2px at 40% 76%, #ffe9b0, transparent),
+    radial-gradient(1px 1px at 86% 84%, #fff, transparent), radial-gradient(1px 1px at 10% 92%, #fff, transparent),
+    radial-gradient(120% 50% at 50% 0%, var(--bg2), transparent 70%), var(--bg);
+  background-size: 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 900px, 100% 100%, auto;
+}
+body[data-theme="ayim"] .hero::before {
+  content: ""; position: absolute; top: 9%; left: 50%; width: 54px; height: 54px; transform: translateX(-50%);
+  border-radius: 50%; box-shadow: 10px -6px 0 0 var(--accent); opacity: .9;
+}
+body[data-theme="ayim"] .corner { opacity: .45; }
+
+/* Боз үй — кийиз түстөрү, түндүк */
+body[data-theme="boz-uy"] {
+  --bg: #f4ead9; --bg2: #e9d7bb; --ink: #3a2418; --muted: #7a5a44;
+  --accent: #b5502f; --accent-ink: #fff; --line: rgba(58,36,24,.2);
+  --card: rgba(255,255,255,.4); --env: #2f3b63; --env2: #26315a; --seal: #b5502f;
+  --f-head: "Philosopher", sans-serif; --f-names: "Philosopher", sans-serif; --names-style: normal; --names-k: .8;
+}
+body[data-theme="boz-uy"] .names { text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+body[data-theme="boz-uy"] .hero::before {
+  content: ""; position: absolute; inset: 50% auto auto 50%; width: 420px; height: 420px; transform: translate(-50%, -54%);
+  opacity: .09; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-110 -110 220 220' fill='none' stroke='%233a2418' stroke-width='5'%3E%3Ccircle r='100'/%3E%3Ccircle r='70'/%3E%3CclipPath id='c'%3E%3Ccircle r='70'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23c)'%3E%3Cpath d='M-30 -80 Q-48 0 -30 80 M-18 -80 Q-34 0 -18 80 M30 -80 Q48 0 30 80 M18 -80 Q34 0 18 80 M-80 -30 Q0 -48 80 -30 M-80 -18 Q0 -34 80 -18 M-80 30 Q0 48 80 30 M-80 18 Q0 34 80 18'/%3E%3C/g%3E%3Cg stroke-width='3'%3E%3Cpath d='M0 -72 V-98 M0 72 V98 M-72 0 H-98 M72 0 H98 M51 51 L69 69 M-51 51 L-69 69 M51 -51 L69 -69 M-51 -51 L-69 -69'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+}
+body[data-theme="boz-uy"] .block { border-width: 2px; border-style: dashed; }
+body[data-theme="boz-uy"] .env-body { color: #f4ead9; }
+
+/* Минимал — ак-кара, заманбап */
+body[data-theme="minimal"] {
+  --bg: #ffffff; --bg2: #f4f4f2; --ink: #111111; --muted: #6b6b6b;
+  --accent: #111111; --accent-ink: #fff; --line: rgba(0,0,0,.14);
+  --card: #fafaf9; --env: #f4f4f2; --env2: #e9e9e6; --seal: #111111;
+  --f-head: "Oswald", sans-serif; --f-names: "Oswald", sans-serif; --names-style: normal; --names-k: .9;
+}
+body[data-theme="minimal"] .corner, body[data-theme="minimal"] .ornament { display: none; }
+body[data-theme="minimal"] .names { text-transform: uppercase; font-weight: 600; letter-spacing: .02em; }
+body[data-theme="minimal"] .names .amp { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: .8em; text-transform: none; color: var(--muted); }
+body[data-theme="minimal"] .block { border-radius: 0; border-width: 0 0 1px; background: transparent; }
+body[data-theme="minimal"] .block h2 { font-size: 20px; text-transform: uppercase; letter-spacing: .08em; }
+body[data-theme="minimal"] .hd-day { font-size: 72px; }
+
+/* Балалык — балдар тойлору үчүн, түстүү */
+body[data-theme="balalyk"] {
+  --bg: #f2fbf7; --bg2: #ddf4ea; --ink: #23443b; --muted: #5d7d73;
+  --accent: #f0a63a; --accent-ink: #fff; --line: rgba(35,68,59,.16);
+  --card: #ffffff; --env: #8fd3bd; --env2: #74c4aa; --seal: #f0a63a;
+  --f-head: "Comfortaa", sans-serif; --f-names: "Pacifico", cursive; --names-style: normal; --names-k: .82;
+  --f-body: "Comfortaa", sans-serif;
+}
+body[data-theme="balalyk"] .invite {
+  background:
+    radial-gradient(circle at 10% 6%, #f6b5c4 0 6px, transparent 7px), radial-gradient(circle at 88% 10%, #9fd8ff 0 8px, transparent 9px),
+    radial-gradient(circle at 78% 30%, #ffd66b 0 5px, transparent 6px), radial-gradient(circle at 16% 34%, #8fd3bd 0 7px, transparent 8px),
+    radial-gradient(circle at 92% 70%, #f6b5c4 0 6px, transparent 7px), radial-gradient(circle at 6% 78%, #ffd66b 0 6px, transparent 7px),
+    radial-gradient(120% 50% at 50% 0%, var(--bg2), transparent 70%), var(--bg);
+  background-size: 100% 820px, 100% 820px, 100% 820px, 100% 820px, 100% 820px, 100% 820px, 100% 100%, auto;
+}
+body[data-theme="balalyk"] .corner { display: none; }
+body[data-theme="balalyk"] .block { border: 0; border-radius: 26px; box-shadow: 0 8px 24px rgba(35,68,59,.08); }
+body[data-theme="balalyk"] .cd-cell { background: var(--bg2); border: 0; }

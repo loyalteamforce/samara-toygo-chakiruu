@@ -14,7 +14,7 @@ Hepsi tek dosyada: **`js/config.js`**
 1. `data/demo.json` dosyasını kopyala, yeni isim ver: `data/sanjar-nurayim.json`
 2. İçini doldur:
    - `lang`: `"ky"` (Kırgızca) veya `"ru"` (Rusça)
-   - `theme`: `ak-kuu`, `shyrdak`, `bordo`, `zumurut`, `asman`, `beshik`
+   - `theme`: `ak-kuu`, `altyn`, `gul`, `ayim`, `boz-uy`, `shyrdak`, `bordo`, `zumurut`, `minimal`, `asman`, `balalyk`, `beshik`
    - `names`: `["Санжар", "Нурайым"]` (tek kişi için tek isim)
    - `date`: `"2026-12-19T17:00:00+06:00"` → saat Bişkek saatiyle aynen yazılır
    - `venue.map`: 2GIS'ten "Paylaş" linki
@@ -38,3 +38,8 @@ Sonuna `&g=` + isim ekle → davetiye "Урматтуу Асан байке!" di
 python3 -m http.server 8000
 ```
 Sonra tarayıcıda `http://localhost:8000` aç.
+
+## Fontlar hakkında not
+
+Kırgız harflerini (Ө ө Ү ү Ң ң) gerçekten çizen fontlar kullanıldı. Yeni font eklerken mutlaka
+"Өмүрбек Үмүтай Ң ң" yazıp kontrol et — Great Vibes, Unbounded, Playfair Display gibi fontlarda bu harfler YOK.
