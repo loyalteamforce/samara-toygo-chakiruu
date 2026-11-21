@@ -56,6 +56,23 @@
     }).join("");
   }
 
+  var VIDEOS = [
+    { id: "demo-kyz", t: "gul", type: "kyz-uzatuu" },
+    { id: "demo", t: "altyn", type: "uylonuu" },
+    { id: "demo-sunnot", t: "asman", type: "sunnot" },
+    { id: "demo-beshik", t: "balalyk", type: "beshik" }
+  ];
+  function renderVideos() {
+    var box = document.getElementById("vcards");
+    if (!box) return;
+    box.innerHTML = VIDEOS.map(function (v) {
+      var q = "id=" + v.id + "&t=" + v.t + "&lang=" + lang;
+      return '<a class="vcard" href="video.html?' + q + '&from=site">' +
+        '<span class="vc-frame"><iframe src="video.html?' + q + '&preview=1" loading="lazy" tabindex="-1" aria-hidden="true" title=""></iframe><span class="vc-play">▶</span></span>' +
+        "<b>" + esc(tr("type." + v.type)) + "</b><span>" + esc(tr("cta.view")) + "</span></a>";
+    }).join("");
+  }
+
   function renderFaq() {
     document.getElementById("faqList").innerHTML = tr("faq").map(function (q) {
       return "<details><summary>" + esc(q[0]) + "</summary><p>" + esc(q[1]) + "</p></details>";
@@ -70,7 +87,7 @@
       a.href = waUrl(tr("wa." + (a.getAttribute("data-wa") || "general")));
       a.target = "_blank"; a.rel = "noopener";
     });
-    renderTypes(); renderFilter(); renderTemplates(); renderFaq();
+    renderTypes(); renderFilter(); renderTemplates(); renderVideos(); renderFaq();
   }
 
   document.querySelectorAll("[data-price]").forEach(function (el) { el.textContent = S.prices[el.getAttribute("data-price")]; });
@@ -95,7 +112,7 @@
   // «Көрүү» басканда турган жерди эстеп, артка кайтканда ошол жерге алып келебиз
   try { history.scrollRestoration = "manual"; } catch (e) {}
   document.addEventListener("click", function (e) {
-    if (e.target.closest('.tpl a[href^="davet.html"]')) {
+    if (e.target.closest('.tpl a[href^="davet.html"], .vcard')) {
       try { sessionStorage.setItem("samara-y", String(Math.round(window.scrollY))); } catch (err) {}
     }
   }, true);

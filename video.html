@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ky">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Видео чакыруу · Samara</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#08211b">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/invite.css?v=7">
+<link rel="stylesheet" href="css/video.css?v=7">
+</head>
+<body>
+<main class="vpage" id="vpage">
+  <div class="vstage" id="stage">
+    <canvas id="cv" width="720" height="1280" aria-label="Видео чакыруу"></canvas>
+    <button class="vbig" id="bigPlay" type="button" aria-label="Play"><span>▶</span></button>
+    <div class="vbar"><i id="prog"></i></div>
+    <button class="vback" id="vback" type="button" hidden></button>
+  </div>
+  <div class="vui" id="ui">
+    <div class="vbtns">
+      <button type="button" class="vb" id="btnReplay"></button>
+      <button type="button" class="vb vb-solid" id="btnRec"></button>
+      <button type="button" class="vb" id="btnShare" hidden></button>
+    </div>
+    <p class="vhint" id="hint"></p>
+  </div>
+</main>
+<script src="js/config.js?v=7"></script>
+<script src="js/codec.js?v=7"></script>
+<script src="js/themes.js?v=7"></script>
+<script src="js/video.js?v=7"></script>
+</body>
+</html>

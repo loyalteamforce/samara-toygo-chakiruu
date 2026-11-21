@@ -33,6 +33,17 @@ Taslak tarayıcıda otomatik kaydedilir.
 Temalar: `ak-kuu`, `altyn`, `gul`, `ayim`, `boz-uy`, `shyrdak`, `bordo`, `zumurut`, `minimal`, `asman`, `balalyk`, `beshik`.
 Boş bırakılan alanların bölümü davetiyede görünmez. Müzik/foto için dosyaları `music/` ve `photos/` klasörüne koy.
 
+### Video davetiye (WhatsApp durumu için)
+Panelde sağda **"Видео-приглашение"** kartında link çıkar → telefonda aç → **"Скачать видео"**. Aynı animasyon gerçek zamanlı kaydedilir ve **MP4 (9:16, 720×1280, ~20 sn)** olarak iner; "Поделиться" düğmesi varsa doğrudan WhatsApp'a gönderilir.
+- Tema, isimler, tarih, mekân, müzik davetiyeyle aynı veriden gelir.
+- En iyi sonuç güncel **Chrome / Android**. Eski tarayıcı WebM üretirse uyarı gösterir.
+- Müzik için mp3 dosyası `music/` klasöründe olmalı (ya da CORS'a izin veren bir link).
+
+### Davetiyeye ek alanlar
+- **`video`**: YouTube linki → davetiyede video oynatıcı.
+- **`album`**: Google Fotoğraflar (ortak albüm) veya Google Drive (düzenleyici) linki → "Тойдун сүрөттөрү / Фото с торжества" düğmesi. Misafirler fotoğrafları oraya yükler. Sunucu olmadığı için fotoğraf doğrudan sitede saklanmaz.
+- Davetiyenin sonunda **"Чакырууну даярдаган Самара"** kartı (WhatsApp + Instagram) otomatik çıkar. WhatsApp ve Instagram `js/config.js` içindeki değerlerden gelir.
+
 ### Misafire özel link
 Linkin sonuna `&g=` + isim ekle → "Урматтуу Асан байке!" diye açılır. (Panel bunu otomatik yapar.)
 

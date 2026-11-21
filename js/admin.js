@@ -28,7 +28,7 @@
   };
 
   var theme = "ak-kuu";
-  var currentLink = "";
+  var currentLink = "", videoLink = "";
   var timer;
 
   // ---------- Заполнение статичных частей ----------
@@ -103,6 +103,8 @@
     put("music", $("music").value);
     var photos = $("photos").value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 6);
     put("photos", photos);
+    put("video", $("video").value);
+    put("album", $("album").value);
     return d;
   }
 
@@ -125,6 +127,8 @@
     $("rsvpWa").value = d.rsvpWhatsapp || "";
     $("music").value = d.music || "";
     $("photos").value = (d.photos || []).join("\n");
+    $("video").value = d.video || "";
+    $("album").value = d.album || "";
     setTheme(d.theme || "ak-kuu");
   }
 
@@ -142,14 +146,16 @@
     var d = collect();
     try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch (e) {}
     var ok = d.names.length && d.date;
-    ["btnCopy", "btnOpen"].forEach(function (id) { $(id).disabled = !ok; });
+    ["btnCopy", "btnOpen", "btnVCopy", "btnVOpen"].forEach(function (id) { $(id).disabled = !ok; });
     $("btnWa").setAttribute("aria-disabled", ok ? "false" : "true");
     $("phoneWrap").classList.toggle("has", !!ok);
-    if (!ok) { currentLink = ""; $("link").value = ""; $("linkInfo").textContent = ""; $("btnWa").removeAttribute("href"); $("frame").removeAttribute("src"); return; }
+    if (!ok) { currentLink = ""; videoLink = ""; $("vlink").value = ""; $("link").value = ""; $("linkInfo").textContent = ""; $("btnWa").removeAttribute("href"); $("frame").removeAttribute("src"); return; }
     window.CODEC.encode(d).then(function (code) {
       var base = new URL("davet.html", location.href).href;
       currentLink = base + "?d=" + code;
       $("link").value = currentLink;
+      videoLink = new URL("video.html", location.href).href + "?d=" + code;
+      $("vlink").value = videoLink;
       $("frame").src = "davet.html?d=" + code + "&preview=1";
       var n = currentLink.length;
       var info = $("linkInfo");
@@ -180,6 +186,8 @@
   });
   $("btnCopy").addEventListener("click", function () { if (currentLink) copy(currentLink); });
   $("btnOpen").addEventListener("click", function () { if (currentLink) window.open(currentLink, "_blank", "noopener"); });
+  $("btnVCopy").addEventListener("click", function () { if (videoLink) copy(videoLink); });
+  $("btnVOpen").addEventListener("click", function () { if (videoLink) window.open(videoLink, "_blank", "noopener"); });
 
   $("btnGuests").addEventListener("click", function () {
     var list = $("guestList"); list.innerHTML = "";

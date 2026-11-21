@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=5">
-<link rel="stylesheet" href="css/admin.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="stylesheet" href="css/admin.css?v=7">
 </head>
 <body class="adm gated">
 
@@ -31,7 +31,7 @@
     <a class="logo" href="index.html"><span class="logo-mark"><img src="logo/mark-sm.svg" alt="" width="30" height="30"></span><span><b>Samara</b><small>конструктор</small></span></a>
     <div class="adm-actions">
       <a class="btn btn-sm btn-ghost" href="index.html">← На сайт</a>
-      <button type="button" class="btn btn-sm btn-ghost" id="btnReset">Новое приглашение</button>
+      <button type="button" class="btn btn-sm btn-ghost" id="btnReset" title="Начать новое приглашение">Новое</button>
     </div>
   </div>
 </header>
@@ -114,6 +114,13 @@
         <textarea id="photos" rows="3" placeholder="photos/1.jpg"></textarea>
       </label>
       <p class="hint">Файлы mp3 и фото кладутся в папки <code>music/</code> и <code>photos/</code> репозитория, затем здесь пишется путь.</p>
+      <label>Видео с YouTube <small>(ссылка)</small>
+        <input id="video" inputmode="url" placeholder="https://youtu.be/...">
+      </label>
+      <label>Альбом для фото гостей <small>(ссылка на Google Фото или Google Диск)</small>
+        <input id="album" inputmode="url" placeholder="https://photos.app.goo.gl/...">
+      </label>
+      <p class="hint">Чтобы гости могли добавлять фото: создайте общий альбом в Google Фото (включите «Совместная работа») или папку на Google Диске с доступом «Редактор» по ссылке, и вставьте ссылку сюда.</p>
     </section>
   </form>
 
@@ -139,6 +146,16 @@
     </div>
 
     <div class="card out">
+      <h2>Видео-приглашение</h2>
+      <p class="hint">Короткое видео 9:16 с музыкой — для статуса WhatsApp. Откройте ссылку на телефоне и нажмите «Скачать видео».</p>
+      <div class="linkbox"><input id="vlink" readonly placeholder="Ссылка появится здесь"></div>
+      <div class="out-btns">
+        <button type="button" class="btn btn-sm btn-solid" id="btnVCopy" disabled>Скопировать</button>
+        <button type="button" class="btn btn-sm btn-ghost" id="btnVOpen" disabled>Открыть</button>
+      </div>
+    </div>
+
+    <div class="card out">
       <h2>Личные ссылки для гостей</h2>
       <p class="hint">Впишите имена гостей — по одному в строке. У каждого будет своя ссылка с обращением по имени.</p>
       <textarea id="guests" rows="4" placeholder="Асан байке&#10;Гүлзат эже&#10;Бекмамат"></textarea>
@@ -156,8 +173,8 @@
   </aside>
 </main>
 
-<script src="js/config.js?v=5"></script>
-<script src="js/codec.js?v=5"></script>
-<script src="js/admin.js?v=5"></script>
+<script src="js/config.js?v=7"></script>
+<script src="js/codec.js?v=7"></script>
+<script src="js/admin.js?v=7"></script>
 </body>
 </html>

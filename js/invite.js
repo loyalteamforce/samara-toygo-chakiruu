@@ -14,6 +14,8 @@
       dear: "Урматтуу",
       dearGuests: "Кадырлуу коноктор!",
       back: "Артка", orderBtn: "Заказ",
+      video: "Видео", album: "Тойдун сүрөттөрү", albumText: "Тойдо тарткан сүрөттөрүңүздү бул жерге жүктөңүз", albumBtn: "Сүрөттөрдү жүктөө",
+      madeBy: "Чакырууну даярдаган", madeName: "Самара", madeText: "Той, кыз узатуу, үйлөнүү үлпөтү жана башка өзгөчө күндөрүңүзгө кооз, заманбап электрондук чакырууларды жасап беребиз! 💌",
       calendar: "Той күнү",
       addCal: "Күнтизбеге кошуу",
       at: "саат",
@@ -49,6 +51,8 @@
       dear: "Уважаемый(ая)",
       dearGuests: "Дорогие гости!",
       back: "Назад", orderBtn: "Заказать",
+      video: "Видео", album: "Фото с торжества", albumText: "Загрузите сюда фотографии, снятые на тое", albumBtn: "Загрузить фото",
+      madeBy: "Приглашение подготовила", madeName: "Самара", madeText: "Создаём красивые современные электронные приглашения на той, кыз узатуу, свадьбу и другие торжества! 💌",
       calendar: "Дата торжества",
       addCal: "Добавить в календарь",
       at: "в",
@@ -82,28 +86,7 @@
     }
   };
 
-  // Ар бир теманын Google шрифттери (кыргыз тамгаларын колдойт)
-  var THEME_FONTS = {
-    "shyrdak": ["Philosopher:wght@400;700"],
-    "bordo":   ["Prata"],
-    "zumurut": ["EB+Garamond:ital,wght@0,400;1,400"],
-    "asman":   ["Lora:ital,wght@0,400;0,500;1,400"],
-    "beshik":  ["Comfortaa:wght@400;600", "Bad+Script"],
-    "altyn":   ["Forum"],
-    "gul":     ["Lora:ital,wght@0,400;0,500;1,400", "Bad+Script"],
-    "ayim":    ["Yeseva+One"],
-    "boz-uy":  ["Philosopher:wght@400;700"],
-    "minimal": ["Oswald:wght@400;600"],
-    "balalyk": ["Comfortaa:wght@400;600", "Pacifico"]
-  };
-  function loadFonts(theme) {
-    var f = THEME_FONTS[theme];
-    if (!f) return;
-    var l = document.createElement("link");
-    l.rel = "stylesheet";
-    l.href = "https://fonts.googleapis.com/css2?family=" + f.join("&family=") + "&display=swap";
-    document.head.appendChild(l);
-  }
+  function loadFonts(theme) { if (window.loadThemeFonts) window.loadThemeFonts(theme); }
 
   var qs = new URLSearchParams(location.search);
   var app = document.getElementById("app");
@@ -121,6 +104,18 @@
     if (/^[a-z][a-z0-9+.-]*:/i.test(u) && !/^https?:/i.test(u)) return "";
     return u;
   }
+  function agencyCard(t) {
+    var S = window.SITE;
+    if (!S || !S.whatsapp) return '<footer class="made">Samara · той чакыруу</footer>';
+    return '<section class="agency reveal"><p class="ag-k">' + t.madeBy + "</p><h3>" + t.madeName + "</h3><p>" + t.madeText + "</p>" +
+      '<a class="btn btn-solid" href="https://wa.me/' + esc(S.whatsapp) + '" target="_blank" rel="noopener">WhatsApp</a>' +
+      (S.instagram ? '<a class="btn" href="' + esc(S.instagram) + '" target="_blank" rel="noopener">' + esc(igName(S.instagram)) + "</a>" : "") + "</section>";
+  }
+  function ytId(u) {
+    var m = String(u || "").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/))([\w-]{11})/);
+    return m ? m[1] : "";
+  }
+  function igName(u) { var m = String(u || "").match(/instagram\.com\/([^/?#]+)/i); return m ? "@" + m[1] : "Instagram"; }
   function icsEsc(x) { return String(x || "").replace(/[\\;,]/g, function (c) { return "\\" + c; }).replace(/\n/g, "\\n"); }
 
   var id = (qs.get("id") || "demo").replace(/[^a-z0-9_-]/gi, "");
@@ -247,6 +242,13 @@
         "</div></section>";
     }
 
+    // ---------- YouTube видео ----------
+    var yt = ytId(d.video);
+    if (yt) {
+      html += '<section class="block reveal"><h2>' + t.video + '</h2><div class="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/' + yt +
+        '?rel=0" title="' + t.video + '" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></section>';
+    }
+
     // ---------- Дресс-код ----------
     if (d.dresscode) {
       html += '<section class="block reveal"><h2>' + t.dress + '</h2><p class="body-text">' + esc(d.dresscode) + "</p>" +
@@ -278,13 +280,15 @@
 
     // ---------- Аягы ----------
     html +=
+      ((d.album && /^https?:\/\//i.test(d.album)) ? '<section class="block album reveal"><h2>' + t.album + '</h2><p class="body-text">' + t.albumText +
+        '</p><a class="btn btn-solid" href="' + esc(d.album) + '" target="_blank" rel="noopener">📷 ' + t.albumBtn + "</a></section>" : "") +
       '<section class="finale reveal">' +
         '<div class="ornament">' + O.divider + "</div>" +
         '<p class="monogram">' + esc(initials) + "</p>" +
         "<h2>" + t.waitYou + "</h2>" +
         (d.hosts ? '<p class="hosts">' + t.respect + "<br>" + esc(d.hosts) + "</p>" : "") +
       "</section>" +
-      '<footer class="made">Samara · той чакыруу</footer>' +
+      agencyCard(t) +
       "</article>";
 
     // ---------- Музыка ----------
