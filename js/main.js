@@ -38,6 +38,7 @@
         '<article class="tpl">' +
           '<a class="tpl-preview tp-' + t.id + '" href="' + view + '" style="--tb:' + t.bg + ";--ti:" + t.ink + ";--ta:" + t.accent + '">' +
             '<span class="tp-frame"></span>' +
+            (t.garland && window.Botanic ? '<span class="tp-garland">' + window.Botanic.garland(300, 96, t.garland, 7, false) + "</span>" : "") +
             '<span class="tp-eyebrow">' + (lang === "ky" ? "ТОЙГО ЧАКЫРУУ" : "ПРИГЛАШЕНИЕ") + "</span>" +
             (t.isNew ? '<span class="tp-new">' + esc(tr("tpl.new")) + "</span>" : "") +
             '<span class="tp-names" style="' + nameStyle + '">' + names + "</span>" +

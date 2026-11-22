@@ -499,3 +499,58 @@ body[data-theme^="zhibek"] .finale::after {
 
 body[data-theme^="zhibek"] .hero-age { margin-top: 14px; }
 body[data-theme^="zhibek"] .hero-age span { margin-top: 6px; }
+
+/* ============================================================
+   «Бакча» темалары: жалбырак жана гүл чеңбери, жумшак булут фон
+   ============================================================ */
+body[data-theme^="garden"] {
+  --f-head: "Cormorant Garamond", Georgia, serif; --f-names: "Cormorant Garamond", Georgia, serif; --names-style: italic; --names-k: 1.3;
+  --card: transparent; --accent-ink: #fff;
+  background:
+    radial-gradient(60% 34% at 15% 6%, rgba(255,255,255,.95), transparent 70%),
+    radial-gradient(55% 30% at 88% 24%, rgba(255,252,242,.9), transparent 70%),
+    radial-gradient(70% 34% at 25% 62%, rgba(255,255,255,.55), transparent 70%),
+    radial-gradient(60% 30% at 80% 88%, rgba(255,250,238,.7), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+body[data-theme="garden"]       { --bg: #f4eee0; --bg2: #f9f5ea; --ink: #3e4630; --muted: #6f7258; --accent: #6b7f4e; --line: rgba(107,127,78,.4);
+  --zgold: #7a8c5a; --zcard1: #fbf8ef; --zcard2: #efe7d2; --zseal1: #8aa068; --zseal2: #4f6338; --env: #f4eee0; --env2: #efe7d2; --seal: #6b7f4e; }
+body[data-theme="garden-blush"] { --bg: #f9eee9; --bg2: #fdf5f1; --ink: #4b3a3c; --muted: #8b6f72; --accent: #b4727d; --line: rgba(180,114,125,.4);
+  --zgold: #c28790; --zcard1: #fff7f4; --zcard2: #f6e2dc; --zseal1: #d08a96; --zseal2: #985462; --env: #f9eee9; --env2: #f6e2dc; --seal: #b4727d; }
+body[data-theme="garden-blue"]  { --bg: #eef2f1; --bg2: #f5f8f7; --ink: #2f3f44; --muted: #5f747a; --accent: #5d7f88; --line: rgba(93,127,136,.4);
+  --zgold: #6f9099; --zcard1: #f7fafa; --zcard2: #e2ebec; --zseal1: #7fa1a9; --zseal2: #48666e; --env: #eef2f1; --env2: #e2ebec; --seal: #5d7f88; }
+
+body[data-theme^="garden"] .invite { background: transparent; }
+.garland { line-height: 0; pointer-events: none; }
+.hero .garland.top, .hero .garland.bot { position: absolute; left: 0; right: 0; }
+.hero .garland.top { top: -4px; } .hero .garland.bot { bottom: -4px; }
+body[data-theme^="garden"] .corner { display: none; }
+body[data-theme^="garden"] .eyebrow { color: var(--accent); letter-spacing: .28em; }
+body[data-theme^="garden"] .names { color: var(--ink); text-shadow: none; }
+body[data-theme^="garden"] .names .amp { color: var(--accent); }
+body[data-theme^="garden"] .hd-day { color: var(--accent); font-family: var(--f-head); }
+body[data-theme^="garden"] .hero-age b { color: var(--accent); }
+body[data-theme^="garden"] .ornament { color: var(--accent); }
+/* бөлүмдөр: кагазсыз, борборлоштурулган, ичке сызык менен бөлүнгөн */
+body[data-theme^="garden"] .block { background: transparent; border: 0; border-radius: 0; box-shadow: none; padding: 34px 28px; margin: 0 14px; position: relative; }
+body[data-theme^="garden"] .block + .block { border-top: 1px solid var(--line); }
+body[data-theme^="garden"] .block h2 { font-family: "Bad Script", cursive; font-weight: 400; font-size: 36px; color: var(--accent); }
+body[data-theme^="garden"] .block h2::after { width: 8px; height: 8px; margin: 14px auto 0; background: var(--accent); transform: rotate(45deg); border-radius: 1px; opacity: .8; }
+body[data-theme^="garden"] .text-block { padding-top: 6px; border-top: 0 !important; }
+.text-block .garland { margin: -6px -14px 4px; }
+body[data-theme^="garden"] .greet { font-family: "Bad Script", cursive; font-size: 38px; color: var(--ink); }
+body[data-theme^="garden"] .btn { border-color: var(--accent); color: var(--accent); }
+body[data-theme^="garden"] .btn-solid, body[data-theme^="garden"] .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+body[data-theme^="garden"] .cd-cell { border-color: var(--line); background: rgba(255,255,255,.5); }
+body[data-theme^="garden"] .cd-num { color: var(--accent); }
+body[data-theme^="garden"] .cal-day.is-day::before { background: var(--accent); }
+body[data-theme^="garden"] .music-btn { background: var(--bg2); border-color: var(--accent); color: var(--accent); }
+body[data-theme^="garden"] .finale h2 { font-family: "Bad Script", cursive; color: var(--accent); }
+body[data-theme^="garden"] .monogram { color: var(--accent); }
+/* конверт */
+body[data-theme^="garden"] .zenv {
+  background:
+    radial-gradient(60% 34% at 20% 12%, rgba(255,255,255,.95), transparent 70%),
+    radial-gradient(60% 30% at 85% 70%, rgba(255,252,242,.8), transparent 70%), var(--env);
+}

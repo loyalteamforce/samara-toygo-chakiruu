@@ -15,7 +15,10 @@
     "zhibek":          ["Prata"],
     "zhibek-emerald":  ["Prata"],
     "zhibek-burgundy": ["Prata"],
-    "zhibek-navy":     ["Prata"]
+    "zhibek-navy":     ["Prata"],
+    "garden":          ["Bad+Script"],
+    "garden-blush":    ["Bad+Script"],
+    "garden-blue":     ["Bad+Script"]
   };
   window.THEME_UPPER = { "altyn": 1, "boz-uy": 1, "minimal": 1 };
   window.loadThemeFonts = function (theme) {

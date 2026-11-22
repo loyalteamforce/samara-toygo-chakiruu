@@ -168,6 +168,9 @@
     document.body.setAttribute("data-theme", theme);
     loadFonts(theme);
     var isSilk = /^zhibek/.test(theme);
+    var isGarden = /^garden/.test(theme) && !!window.Botanic;
+    var gpal = theme === "garden-blush" ? "blush" : theme === "garden-blue" ? "blue" : "olive";
+    function garland(h, seed, flip) { return '<div class="garland' + (flip ? " bot" : "") + '">' + window.Botanic.garland(390, h, gpal, seed, flip) + "</div>"; }
     if (isSilk && window.Silk) {
       var palName = theme.replace(/^zhibek-?/, "") || "cream";
       try { document.body.style.setProperty("--silk", 'url("' + window.Silk.make(window.Silk.PAL[palName] || window.Silk.PAL.cream, 360, 640).toDataURL("image/jpeg", 0.82) + '")'); } catch (e) {}
@@ -194,7 +197,7 @@
     var html = "";
 
     // ---------- Конверт ----------
-    if (!preview && isSilk) {
+    if (!preview && (isSilk || isGarden)) {
       html += zEnvelope(t, guest, initials, d.heading);
     } else if (!preview) {
       html +=
@@ -213,6 +216,7 @@
     html +=
       '<article class="invite">' +
       '<section class="hero' + (safeUrl(d.cover) ? " has-cover" : "") + '">' +
+        (isGarden ? '<div class="garland top">' + window.Botanic.garland(390, 150, gpal, 7, false) + "</div>" : "") +
         '<span class="corner tl">' + O.corner + '</span><span class="corner tr">' + O.corner + "</span>" +
         '<p class="eyebrow reveal">' + esc(d.heading) + "</p>" +
         (/^\d{1,3}$/.test(String(d.age || "").trim()) ? '<div class="hero-age reveal"><b>' + String(d.age).trim() + "</b><span>" + t.age + "</span></div>" : "") +
@@ -226,11 +230,12 @@
         '<p class="hero-sub reveal">' + year + " · " + t.at + " " + timeStr + "</p>" +
         (d.city ? '<p class="hero-city reveal">' + esc(d.city) + "</p>" : "") +
         '<span class="corner bl">' + O.corner + '</span><span class="corner br">' + O.corner + "</span>" +
+        (isGarden ? '<div class="garland bot">' + window.Botanic.garland(390, 150, gpal, 19, true) + "</div>" : "") +
       "</section>";
 
     // ---------- Чакыруу тексти ----------
     html +=
-      '<section class="block text-block reveal">' +
+      '<section class="block text-block reveal">' + (isGarden ? garland(120, 41, false) : "") +
         '<h2 class="greet">' + greet + "</h2>" +
         '<p class="body-text">' + esc(d.text).replace(/\n/g, "<br>") + "</p>" +
         (d.hosts ? '<p class="hosts">' + t.respect + "<br><strong>" + esc(d.hosts) + "</strong></p>" : "") +
