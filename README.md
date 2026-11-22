@@ -82,7 +82,10 @@ Linkin sonuna `&g=` + isim ekle → "Урматтуу Асан байке!" diye
 ### Misafir cevapları
 "Келем / Келе албайм" formu hazır mesaj olarak `rsvpWhatsapp` numarasına WhatsApp'tan gider.
 
-## Domain bağlama ve Google
+## Domain: samaratc.store (bağlandı)
+Domain Namecheap'te. DNS: dört `A` kaydı (`@` → GitHub Pages) çalışıyor, HTTPS aktif. Site `https://samaratc.store/` adresinde. `www` için `CNAME www → loyalteamforce.github.io` kaydı da eklenmeli. Depoda `CNAME` dosyası (`samaratc.store`) **silinmemeli**. Adresleri `tools/set-domain.py` ile yeni adrese çevirdik.
+
+## Domain bağlama ve Google (genel adımlar)
 
 **Sıra önemli.** Domain DNS'e bağlanmadan GitHub'da özel domain yazarsan site açılmaz.
 

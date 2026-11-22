@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /data/
 
-Sitemap: https://loyalteamforce.github.io/samara-toygo-chakiruu/sitemap.xml
+Sitemap: https://samaratc.store/sitemap.xml
