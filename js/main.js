@@ -122,4 +122,27 @@
     }
     sessionStorage.removeItem("samara-y");
   } catch (e) {}
+
+  // ---------- Люкс көрүнүш: ипек фон жана жумшак пайда болуу ----------
+  try {
+    if (window.Silk) {
+      var silkUrl = 'url("' + window.Silk.make(window.Silk.PAL.emerald, 360, 640).toDataURL("image/jpeg", 0.82) + '")';
+      document.documentElement.style.setProperty("--hero-silk", silkUrl);
+    }
+  } catch (e) {}
+
+  var REVEAL = ".section h2, .section .kicker, .section .sub, .type-card, .tpl, .feat, .steps li, .price-card, .faq details, .vchips li, .final-cta h2, .final-cta p";
+  var io = null;
+  function observeReveal() {
+    var els = document.querySelectorAll(REVEAL);
+    els.forEach(function (el, i) { if (!el.classList.contains("rv")) { el.classList.add("rv"); el.style.transitionDelay = ((i % 6) * 70) + "ms"; } });
+    if (!("IntersectionObserver" in window)) { document.querySelectorAll(".rv").forEach(function (e) { e.classList.add("in"); }); return; }
+    if (!io) io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    document.querySelectorAll(".rv:not(.in)").forEach(function (e) { io.observe(e); });
+  }
+  observeReveal();
+  var origApply = applyLang;
+  applyLang = function () { origApply(); observeReveal(); };
 })();
