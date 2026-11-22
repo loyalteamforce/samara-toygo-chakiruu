@@ -47,6 +47,11 @@ Panelde **"Выбрать из галереи / Добавить из галер
 - **Müzik:** panelde **"Выбрать музыку с телефона"** → mp3 / m4a / aac, **en fazla 8 MB**, ilerleme çubuğu ve çalar önizlemesiyle. Ayrı bucket: **`samara-music`** (aynı kurallar: sadece `u/` klasörüne ekleme, ses dosyaları, 8 MB). Tek müzik hem davetiyede (zarf açılınca) hem videoda (kayda girer) çalar.
 - Telif: müşteri yalnızca hakkı olduğu müziği kullanmalı.
 
+### "Жибек" davetiye temaları (ipek + altın)
+Temalar: `zhibek` (krem), `zhibek-emerald`, `zhibek-burgundy`, `zhibek-navy`. İpek zemin tarayıcıda çizilir (`js/silk.js`, videoyla ortak), altın oyma çerçeve, **mühürlü ve püsküllü zarf**, altın gradyanlı isimler/tarih.
+- `age` alanı doluysa (tüm temalarda) açılış ekranında büyük **yaş rakamı** çıkar (jübile için), "жаш/лет" ile.
+- Videodaki "Жибек" stiliyle aynı görünümde olduğu için davetiye + video birlikte satılabilir.
+
 ### Video stilleri
 Panelde **"Стиль видео"**:
 - **Жибек (önerilen):** krem/zümrüt/bordo/lacivert **ipek kumaş** zemin, altın Kırgız oyma çerçeve, medalyon deseni, altın gradyanlı yazılar. Sahneler: başlık → büyük isim/yaş → dua (toy türüne göre hazır metin) → davet metni → tarih → mekân → kapanış.

@@ -10,7 +10,7 @@
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function waUrl(text) { return "https://wa.me/" + S.whatsapp + "?text=" + encodeURIComponent(text); }
 
-  var DEMO_NAMES = { "demo": "Санжар <i>&amp;</i> Нурайым", "demo-beshik": "Айсулуу", "demo-sunnot": "Нурсултан" };
+  var DEMO_NAMES = { "demo": "Санжар <i>&amp;</i> Нурайым", "demo-beshik": "Айсулуу", "demo-sunnot": "Нурсултан", "demo-kyz": "Айпери", "demo-yubiley": "Азамат" };
 
   function renderTypes() {
     document.getElementById("typeList").innerHTML = TYPES.map(function (k) {

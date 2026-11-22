@@ -13,7 +13,7 @@
       open: "Ачуу үчүн басыңыз",
       dear: "Урматтуу",
       dearGuests: "Кадырлуу коноктор!",
-      back: "Артка", orderBtn: "Заказ",
+      back: "Артка", orderBtn: "Заказ", age: "жаш",
       video: "Видео", album: "Тойдун сүрөттөрү", albumText: "Тойдо тарткан сүрөттөрүңүздү бул жерге жүктөңүз", albumBtn: "Сүрөттөрдү жүктөө",
       madeBy: "Чакырууну даярдаган", madeName: "Самара", madeText: "Той, кыз узатуу, үйлөнүү үлпөтү жана башка өзгөчө күндөрүңүзгө кооз, заманбап электрондук чакырууларды жасап беребиз! 💌",
       calendar: "Той күнү",
@@ -50,7 +50,7 @@
       open: "Нажмите, чтобы открыть",
       dear: "Уважаемый(ая)",
       dearGuests: "Дорогие гости!",
-      back: "Назад", orderBtn: "Заказать",
+      back: "Назад", orderBtn: "Заказать", age: "лет",
       video: "Видео", album: "Фото с торжества", albumText: "Загрузите сюда фотографии, снятые на тое", albumBtn: "Загрузить фото",
       madeBy: "Приглашение подготовила", madeName: "Самара", madeText: "Создаём красивые современные электронные приглашения на той, кыз узатуу, свадьбу и другие торжества! 💌",
       calendar: "Дата торжества",
@@ -131,6 +131,34 @@
       app.innerHTML = '<p class="loading">' + L.ky.notFound + "<br>" + L.ru.notFound + "</p>";
     });
 
+  // «Жибек» темасынын конверти: алтын оюм, мөөр жана пуштактар (SVG менен чийилген)
+  var ZORN = '<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
+    '<g transform="translate(10 10) scale(.5) translate(-4 -4)"><path d="M4 96 V30 C4 14 14 4 30 4 H96 M14 86 V36 C14 22 22 14 36 14 H86 M30 30 C30 46 46 52 54 44 C62 36 54 24 44 28 C38 30 40 38 45 37"/></g>' +
+    '<g transform="translate(290 10) scale(-.5 .5) translate(-4 -4)"><path d="M4 96 V30 C4 14 14 4 30 4 H96 M14 86 V36 C14 22 22 14 36 14 H86 M30 30 C30 46 46 52 54 44 C62 36 54 24 44 28 C38 30 40 38 45 37"/></g>' +
+    '<g transform="translate(10 190) scale(.5 -.5) translate(-4 -4)"><path d="M4 96 V30 C4 14 14 4 30 4 H96 M14 86 V36 C14 22 22 14 36 14 H86 M30 30 C30 46 46 52 54 44 C62 36 54 24 44 28 C38 30 40 38 45 37"/></g>' +
+    '<g transform="translate(290 190) scale(-.5 -.5) translate(-4 -4)"><path d="M4 96 V30 C4 14 14 4 30 4 H96 M14 86 V36 C14 22 22 14 36 14 H86 M30 30 C30 46 46 52 54 44 C62 36 54 24 44 28 C38 30 40 38 45 37"/></g>' +
+    '<g transform="translate(150 150) scale(.7) translate(-120 -30)"><path d="M120 30 C120 16 108 8 98 12 C88 16 90 30 100 28 C106 27 106 20 101 20 M120 30 C120 16 132 8 142 12 C152 16 150 30 140 28 C134 27 134 20 139 20"/></g>' +
+    '<path d="M70 176 H120 M180 176 H230" opacity=".7"/></g>';
+  var ZFLAP = '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M24 10 L276 10 L150 112 Z" stroke-width="1" opacity=".6"/>' +
+    '<g transform="translate(150 40) scale(.5) translate(-120 -30)" stroke-width="2.6"><path d="M120 30 C120 16 108 8 98 12 C88 16 90 30 100 28 C106 27 106 20 101 20 M120 30 C120 16 132 8 142 12 C152 16 150 30 140 28 C134 27 134 20 139 20"/></g></g>';
+  var ZTASSEL = '<g stroke-linecap="round" fill="none">' +
+    '<path d="M40 2 C38 22 30 28 30 42" stroke="currentColor" stroke-width="2.4"/><path d="M80 2 C82 22 90 28 90 42" stroke="currentColor" stroke-width="2.4"/></g>' +
+    '<g fill="currentColor"><rect x="24" y="40" width="12" height="14" rx="5"/><rect x="84" y="40" width="12" height="14" rx="5"/></g>' +
+    '<g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M26 56 L24 96 M30 56 L29 98 M34 56 L34 98 M38 56 L39 96"/><path d="M86 56 L84 96 M90 56 L89 98 M94 56 L94 98 M98 56 L99 96"/></g>';
+  function zEnvelope(t, guest, initials, heading) {
+    return '<div class="envelope zenv" id="envelope" role="button" tabindex="0" aria-label="' + t.open + '">' +
+      '<div class="zenv-stage">' +
+        '<div class="zenv-card"><svg class="zenv-orn" viewBox="0 0 300 200" aria-hidden="true">' + ZORN + "</svg>" +
+          "</div>" +
+        '<svg class="zenv-flap" viewBox="0 0 300 132" preserveAspectRatio="none" aria-hidden="true"><path class="zf-fill" d="M2 2 L298 2 L150 128 Z"/><path class="zf-edge" d="M2 2 L298 2 L150 128 Z" fill="none"/>' + ZFLAP + "</svg>" +
+        '<svg class="zenv-tassels" viewBox="0 0 120 100" aria-hidden="true">' + ZTASSEL + "</svg>" +
+        '<div class="zenv-seal"><span>' + esc(initials) + "</span></div>" +
+      "</div>" +
+      '<div class="zenv-text"><p class="zenv-head">' + esc(heading) + "</p>" + (guest ? '<p class="zenv-guest">' + esc(guest) + "</p>" : "") + "</div>" +
+      '<p class="env-hint">' + t.open + "</p></div>";
+  }
+
   function render(d) {
     var lang = (qs.get("lang") || d.lang) === "ru" ? "ru" : "ky";
     var t = L[lang];
@@ -139,6 +167,11 @@
     var theme = (qs.get("t") || d.theme || "ak-kuu").replace(/[^a-z0-9-]/gi, "");
     document.body.setAttribute("data-theme", theme);
     loadFonts(theme);
+    var isSilk = /^zhibek/.test(theme);
+    if (isSilk && window.Silk) {
+      var palName = theme.replace(/^zhibek-?/, "") || "cream";
+      try { document.body.style.setProperty("--silk", 'url("' + window.Silk.make(window.Silk.PAL[palName] || window.Silk.PAL.cream, 360, 640).toDataURL("image/jpeg", 0.82) + '")'); } catch (e) {}
+    }
 
     var names = (Array.isArray(d.names) ? d.names : []).map(String).filter(Boolean);
     var title = names.join(" & ");
@@ -161,7 +194,9 @@
     var html = "";
 
     // ---------- Конверт ----------
-    if (!preview) {
+    if (!preview && isSilk) {
+      html += zEnvelope(t, guest, initials, d.heading);
+    } else if (!preview) {
       html +=
         '<div class="envelope" id="envelope" role="button" tabindex="0" aria-label="' + t.open + '">' +
           '<div class="env-flap"></div>' +
@@ -180,6 +215,7 @@
       '<section class="hero' + (safeUrl(d.cover) ? " has-cover" : "") + '">' +
         '<span class="corner tl">' + O.corner + '</span><span class="corner tr">' + O.corner + "</span>" +
         '<p class="eyebrow reveal">' + esc(d.heading) + "</p>" +
+        (/^\d{1,3}$/.test(String(d.age || "").trim()) ? '<div class="hero-age reveal"><b>' + String(d.age).trim() + "</b><span>" + t.age + "</span></div>" : "") +
         '<h1 class="names reveal" style="--nl:' + Math.max(8, Math.max.apply(null, names.map(function (n) { return n.length; }).concat([0]))) + '">' + names.map(esc).join('<span class="amp">&amp;</span>') + "</h1>" +
         '<div class="ornament reveal">' + O.divider + "</div>" +
         '<div class="hero-date reveal">' +

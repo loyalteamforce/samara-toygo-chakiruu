@@ -15,12 +15,7 @@
   var GOOGLE = ["Bad+Script", "EB+Garamond:ital,wght@0,400;0,600;1,400;1,600", "Prata", "Cormorant+Garamond:wght@500;600"];
   var GOLD = ["#fbeab4", "#e2b650", "#a97b1f", "#f4d581"];
 
-  var PAL = {
-    cream:    { mid: "#f4ead6", hi: "#fffaf0", lo: "#d3bd93", ink: "#3b2a15", soft: "#6e5a3a", wash: "rgba(248,240,224,.7)", dark: false },
-    emerald:  { mid: "#115243", hi: "#2f8d74", lo: "#04251e", ink: "#f7edd2", soft: "#c3d9ce", wash: "rgba(8,50,40,.66)", dark: true },
-    burgundy: { mid: "#6d1a2a", hi: "#b64c60", lo: "#2b0810", ink: "#f9ead3", soft: "#ead0cf", wash: "rgba(70,14,26,.66)", dark: true },
-    navy:     { mid: "#1a3163", hi: "#5278c0", lo: "#071230", ink: "#f4eddb", soft: "#c3cde6", wash: "rgba(12,28,66,.66)", dark: true }
-  };
+  var PAL = window.Silk.PAL;
 
   var LABEL = {
     ky: { "uylonuu": "ҮЙЛӨНҮҮ ТОЮ", "kyz-uzatuu": "КЫЗ УЗАТУУ ТОЮ", "nikah": "НИКЕ КЫЮУ ТОЮ", "sunnot": "СҮННӨТ ТОЮ", "beshik": "БЕШИК ТОЮ", "tushoo": "ТУШОО КЕСҮҮ ТОЮ", "yubiley": "МААРАКЕЛИК ТОЙ", "tuulgan-kun": "ТУУЛГАН КҮН", "kuda": "КУДА ТҮШҮҮ" },
@@ -59,7 +54,7 @@
   var HORN_R = new Path2D("M120 30 C120 16 132 8 142 12 C152 16 150 30 140 28 C134 27 134 20 139 20");
   var CORNER = new Path2D("M4 96 V30 C4 14 14 4 30 4 H96 M14 86 V36 C14 22 22 14 36 14 H86 M30 30 C30 46 46 52 54 44 C62 36 54 24 44 28 C38 30 40 38 45 37");
 
-  function rgba(hex, a) { var n = parseInt(hex.slice(1), 16); return "rgba(" + (n >> 16) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
+  var rgba = window.Silk.rgba;
 
   function loadFonts() {
     return new Promise(function (res) {
@@ -91,37 +86,7 @@
     function pad(n) { return (n < 10 ? "0" : "") + n; }
 
     // ---------- Ипек кездеме (бир жолу чийилет, анан жылдырылат) ----------
-    var seed = 11;
-    function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
-    function bands(g, w, h, count, th0, thR, amp0, ampR, rot, peakLight, peakDark) {
-      g.save(); g.translate(w / 2, h / 2); g.rotate(rot); g.translate(-w * 1.1, -h * 1.1);
-      var span = Math.max(w, h) * 2.2, step = (h * 2.2) / count;
-      for (var i = 0; i < count; i++) {
-        var y0 = i * step + rnd() * step * 0.4, amp = amp0 + rnd() * ampR, ph = rnd() * 6, th = th0 + rnd() * thR, x;
-        g.beginPath(); g.moveTo(0, y0);
-        for (x = 0; x <= span; x += 4) g.lineTo(x, y0 + Math.sin(x / (span / 5.5) + ph) * amp + Math.sin(x / (span / 13) + ph * 2) * amp * 0.28);
-        for (x = span; x >= 0; x -= 4) g.lineTo(x, y0 + th + Math.sin(x / (span / 5.5) + ph + 0.8) * amp + Math.sin(x / (span / 11) + ph) * amp * 0.25);
-        g.closePath();
-        var gr = g.createLinearGradient(0, y0 - amp, 0, y0 + th + amp), light = i % 2 === 0;
-        var col = light ? P.hi : P.lo, peak = light ? peakLight : peakDark;
-        gr.addColorStop(0, rgba(col, 0)); gr.addColorStop(0.5, rgba(col, peak)); gr.addColorStop(1, rgba(col, 0));
-        g.fillStyle = gr; g.fill();
-      }
-      g.restore();
-    }
-    // Ипек: аз чечимдеги катмандар чоңойтулганда жумшак, жалтырак бүктөлмөлөр болуп калат
-    var silk = (function () {
-      var out = document.createElement("canvas"); out.width = 360; out.height = 640;
-      var o = out.getContext("2d"); o.imageSmoothingEnabled = true; o.imageSmoothingQuality = "high";
-      o.fillStyle = P.mid; o.fillRect(0, 0, 360, 640);
-      var l1 = document.createElement("canvas"); l1.width = 54; l1.height = 96;
-      var g1 = l1.getContext("2d"); bands(g1, 54, 96, 9, 8, 12, 3, 5, -0.5, P.dark ? 0.42 : 0.85, P.dark ? 0.6 : 0.4);
-      o.drawImage(l1, 0, 0, 360, 640);
-      var l2 = document.createElement("canvas"); l2.width = 120; l2.height = 214;
-      var g2 = l2.getContext("2d"); bands(g2, 120, 214, 14, 10, 18, 4, 9, -0.38, P.dark ? 0.22 : 0.5, P.dark ? 0.34 : 0.22);
-      o.globalAlpha = 0.9; o.drawImage(l2, 0, 0, 360, 640); o.globalAlpha = 1;
-      return out;
-    })();
+    var silk = window.Silk.make(P, 360, 640);
 
     function background(t) {
       ctx.globalAlpha = 1;

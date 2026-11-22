@@ -43,6 +43,10 @@ window.SITE = {
   // Шаблондор / Шаблоны. id = css/invite.css ичиндеги тема
   // demo = data/ ичиндеги мисал чакыруу, font = карточкадагы аттардын шрифти
   templates: [
+    { id: "zhibek",          name: "Жибек",          isNew: true, types: ["yubiley", "uylonuu", "kyz-uzatuu", "nikah"],  demo: "demo-yubiley", font: "'Cormorant Garamond', serif", italic: true, bg: "#f1e6cd", ink: "#3b2a15", accent: "#b8862b" },
+    { id: "zhibek-emerald",  name: "Жибек · Изумруд", isNew: true, types: ["uylonuu", "nikah", "yubiley"],                demo: "demo",         font: "'Cormorant Garamond', serif", italic: true, bg: "#0d4a3c", ink: "#f7edd2", accent: "#e0b866" },
+    { id: "zhibek-burgundy", name: "Жибек · Бордо",   isNew: true, types: ["kyz-uzatuu", "uylonuu", "yubiley"],           demo: "demo-kyz",     font: "'Cormorant Garamond', serif", italic: true, bg: "#6d1a2a", ink: "#f9ead3", accent: "#e8c273" },
+    { id: "zhibek-navy",     name: "Жибек · Көк",     isNew: true, types: ["sunnot", "tuulgan-kun", "uylonuu", "yubiley"], demo: "demo-sunnot",  font: "'Cormorant Garamond', serif", italic: true, bg: "#1a3163", ink: "#f4eddb", accent: "#e7c77d" },
     { id: "ak-kuu",  name: "Ак куу",  isNew: false, types: ["uylonuu", "nikah", "kuda"],          demo: "demo",        font: "'Cormorant Garamond', serif", italic: true, bg: "#fbf7f0", ink: "#3b2f24", accent: "#b8945a" },
     { id: "altyn",   name: "Алтын",   isNew: true,  types: ["uylonuu", "nikah", "yubiley"],       demo: "demo",        font: "'Forum', serif", upper: true, small: true, bg: "#0e0c0a", ink: "#f1e6cf", accent: "#d6b06a" },
     { id: "gul",     name: "Гүл",     isNew: true,  types: ["uylonuu", "kyz-uzatuu", "kuda"],     demo: "demo",        font: "'Bad Script', cursive",        bg: "#fff7f3", ink: "#4d2f2c", accent: "#d0806f" },

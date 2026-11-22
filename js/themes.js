@@ -11,7 +11,11 @@
     "ayim":    ["Yeseva+One"],
     "boz-uy":  ["Philosopher:wght@400;700"],
     "minimal": ["Oswald:wght@400;600"],
-    "balalyk": ["Comfortaa:wght@400;600", "Pacifico"]
+    "balalyk": ["Comfortaa:wght@400;600", "Pacifico"],
+    "zhibek":          ["Prata"],
+    "zhibek-emerald":  ["Prata"],
+    "zhibek-burgundy": ["Prata"],
+    "zhibek-navy":     ["Prata"]
   };
   window.THEME_UPPER = { "altyn": 1, "boz-uy": 1, "minimal": 1 };
   window.loadThemeFonts = function (theme) {
