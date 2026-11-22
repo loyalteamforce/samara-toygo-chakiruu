@@ -79,6 +79,19 @@ Linkin sonuna `&g=` + isim ekle → "Урматтуу Асан байке!" diye
 ### Misafir cevapları
 "Келем / Келе албайм" formu hazır mesaj olarak `rsvpWhatsapp` numarasına WhatsApp'tan gider.
 
+## Domain bağlama ve Google
+
+**Sıra önemli.** Domain DNS'e bağlanmadan GitHub'da özel domain yazarsan site açılmaz.
+
+1. Domain alınır (müşterinin adına).
+2. DNS kayıtları eklenir: dört `A` kaydı (`@` → `185.199.108.153`, `.109.153`, `.110.153`, `.111.153`) ve `www` için `CNAME` → `<github-kullanıcı>.github.io`.
+3. GitHub → depo → **Settings → Pages → Custom domain** alanına domain yazılır, **Enforce HTTPS** açılır (sertifika birkaç dakika–1 saat sürebilir).
+4. Depoda: `python3 tools/set-domain.py https://alanadi.kg` → og:image, canonical, JSON-LD, `sitemap.xml`, `robots.txt` yeni adrese göre güncellenir. Commit + push.
+5. **Google Search Console** → "Domain" tipinde mülk ekle → DNS'e verdiği TXT kaydını ekle → doğrula → Sitemap olarak `https://alanadi.kg/sitemap.xml` gönder.
+6. İsteğe bağlı: **Google İşletme Profili** (harita ve telefon aramaları için).
+
+Gizli sayfalar (`admin.html`, `davet.html`, `video.html`) `noindex` ile Google'dan gizlidir.
+
 ## Sayfalar
 - `index.html` — ana sayfa. `?type=sunnot` ile toy türüne göre filtrelenmiş açılır.
 - `design.html?id=<tema>` / `design.html?k=video&id=<video>` — **şablon detay sayfası**: telefonda canlı önizleme (zarf, "mühre bas"), fiyat, özellikler, "Дагы дизайндар" şeridi, altta sabit **sipariş** butonu (WhatsApp, seçilen şablonun adıyla hazır mesaj). Şablon/video listeleri `js/config.js` (`templates`, `videos`).
