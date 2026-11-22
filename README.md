@@ -74,6 +74,13 @@ Linkin sonuna `&g=` + isim ekle → "Урматтуу Асан байке!" diye
 ### Misafir cevapları
 "Келем / Келе албайм" formu hazır mesaj olarak `rsvpWhatsapp` numarasına WhatsApp'tan gider.
 
+## Sayfalar
+- `index.html` — ana sayfa. `?type=sunnot` ile toy türüne göre filtrelenmiş açılır.
+- `design.html?id=<tema>` / `design.html?k=video&id=<video>` — **şablon detay sayfası**: telefonda canlı önizleme (zarf, "mühre bas"), fiyat, özellikler, "Дагы дизайндар" şeridi, altta sabit **sipariş** butonu (WhatsApp, seçilen şablonun adıyla hazır mesaj). Şablon/video listeleri `js/config.js` (`templates`, `videos`).
+- `texts.html` — toy türüne göre hazır davet metinleri, "Копировать" düğmesiyle.
+- `terms.html`, `privacy.html` — Koşullar ve Gizlilik. İçerik `js/legal.js` içinde. **Taslaktır; yayından önce firma sahibi gözden geçirmeli, resmi unvan/iletişim bilgisi eklenmeli.**
+- Ortak üst/alt bilgi: `js/shell.js` (alt bilgi sütunları ve linkler burada).
+
 ## Yerelde deneme
 
 ```bash

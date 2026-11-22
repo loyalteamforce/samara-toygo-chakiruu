@@ -336,3 +336,77 @@ h3 { font-size: 24px; }
   .vcards::-webkit-scrollbar { display: none; }
   .vcard { scroll-snap-align: center; }
 }
+
+/* ============================================================
+   Ички барактар: дизайн, тексттер, шарттар + жаңы ылдыйкы маалымат
+   ============================================================ */
+.tb-in { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 62px; gap: 12px; }
+.tb-in .logo { justify-self: center; }
+.tb-in .lang { justify-self: end; }
+.tb-back { justify-self: start; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(224,184,102,.4); background: transparent; color: #f1dba6; font-size: 20px; cursor: pointer; line-height: 1; }
+.tb-back:hover { background: rgba(224,184,102,.15); }
+@media (max-width: 420px) { .tb-in .logo > span:last-child small { display: none; } }
+
+body.inner { background: var(--bg); }
+.page { padding-top: 40px; padding-bottom: 60px; }
+.page h1 { font-size: clamp(34px, 6vw, 52px); margin-bottom: 12px; }
+.page h2 { font-size: 26px; margin: 28px 0 8px; }
+.page p { color: var(--ink); }
+.legal-upd { font-size: 13px; margin-bottom: 14px; }
+
+/* Дизайн баракчасы */
+.dz-main { max-width: 520px; margin: 0 auto; padding: 26px 20px 30px; text-align: center; }
+.dz-main .phone { transform: none; margin: 0 auto; width: min(300px, 76vw); height: min(610px, 152vw); }
+.dz-hint { margin: 18px 0 6px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.dz-full { display: inline-block; font-size: 13px; color: var(--brand); text-decoration: underline; text-underline-offset: 3px; margin-bottom: 10px; }
+.dz-title { font-size: clamp(40px, 9vw, 54px); margin-top: 10px; }
+.dz-tags { color: var(--muted); margin-top: 6px; }
+.dz-price { margin-top: 10px; font-size: 18px; color: var(--brand); }
+.dz-price b { font: 500 60px/1 "Cormorant Garamond", serif; }
+.dz-list { list-style: none; display: grid; gap: 14px; text-align: left; max-width: 420px; margin: 24px auto 40px; }
+.dz-list li { position: relative; padding-left: 34px; font-size: 17px; }
+.dz-list li::before { content: "✓"; position: absolute; left: 4px; top: 0; color: var(--brand); font-weight: 700; font-size: 20px; }
+.dz-more h2 { font-size: 34px; margin-bottom: 18px; }
+.dz-scroll { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 6px 20px 16px; margin: 0 -20px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.dz-scroll::-webkit-scrollbar { display: none; }
+.dz-mini { flex: none; width: 148px; text-decoration: none; color: var(--ink); scroll-snap-align: start; text-align: center; }
+.dz-mini .tpl-preview, .dz-mini .dz-mini-pv { display: flex; aspect-ratio: 3 / 4.3; border-radius: 18px; padding: 10px; box-shadow: var(--shadow); }
+.dz-mini .tp-names { font-size: 21px; }
+.dz-mini .tp-frame { inset: 8px; }
+.dz-mini b { display: block; margin-top: 10px; font: 500 19px/1.2 "Cormorant Garamond", serif; color: var(--brand); }
+.dz-mini-pv { position: relative; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--line); }
+.dz-vid-frame { position: absolute; inset: 8px; border: 1px solid rgba(224,184,102,.7); border-radius: 12px; }
+.dz-vid-t { color: #f1dba6; font: 500 22px/1.2 "Cormorant Garamond", serif; padding: 0 12px; }
+.dz-vid-p { position: absolute; right: 10px; bottom: 10px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: rgba(224,184,102,.95); color: #0b231d; font-size: 12px; padding-left: 2px; }
+.dz-mini .dz-vid:first-child { }
+.dz-nf { padding: 80px 0; color: var(--muted); }
+.dz-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding: 26px 16px calc(12px + env(safe-area-inset-bottom)); text-align: center; background: linear-gradient(180deg, rgba(242,246,241,0), rgba(242,246,241,.97) 38%); pointer-events: none; }
+.dz-cta .btn { pointer-events: auto; width: 100%; max-width: 480px; padding: 19px 20px; font-size: 14px; box-shadow: 0 10px 26px rgba(8,33,27,.3); }
+.dz-cta small { display: block; margin-top: 8px; font-size: 13px; color: var(--muted); }
+body.dz-page .footer { padding-bottom: 150px; }
+
+/* Тексттер */
+.tx-list { display: grid; gap: 16px; margin: 6px 0 30px; }
+.tx-card { background: #fbfdfa; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: grid; gap: 14px; justify-items: start; }
+.tx-card p { font-size: 16px; line-height: 1.7; }
+
+/* Жаңы ылдыйкы маалымат (бардык барактарда) */
+.footer .wrap { max-width: 1160px; }
+.foot-brand { margin-bottom: 30px; }
+.foot-grid { display: grid; grid-template-columns: 1.1fr 1.3fr .8fr 1fr; gap: 28px; padding-bottom: 8px; }
+.foot-col h4 { font: 600 12px "Montserrat", sans-serif; letter-spacing: .18em; text-transform: uppercase; color: #8fa89b; margin-bottom: 14px; }
+.foot-col ul { list-style: none; display: grid; gap: 10px; }
+.foot-col a { color: #e9ddd0; text-decoration: none; font-size: 15px; }
+.foot-col a:hover { color: #f1dba6; }
+.footer .copy { text-align: left; margin-top: 34px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+.footer .legal { display: flex; gap: 18px; }
+.footer .legal a { color: #8fa89b; text-decoration: none; }
+.footer .legal a:hover { color: #f1dba6; }
+@media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) { .foot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.foot-col a { overflow-wrap: anywhere; }
+@media (max-width: 360px) { .tb-in .logo > span:last-child { display: none; } .tb-in { gap: 6px; } }
+
+.dz-main .phone { height: min(560px, 138vw); }
+.dz-cta .btn { font-size: 13px; letter-spacing: .06em; white-space: nowrap; }
+@media (max-width: 760px) { .foot-col:last-child { grid-column: 1 / -1; } }

@@ -31,6 +31,15 @@ window.SITE = {
     personal: 500   // жеке дизайн / индивидуальный дизайн
   },
 
+  // Видео дизайндар (Жибек стили). demo = data/ ичиндеги мисал, vp = палитра
+  videos: [
+    { id: "zhibek-yubiley",  demo: "demo-yubiley", vp: "cream",    type: "yubiley" },
+    { id: "zhibek-uylonuu",  demo: "demo",         vp: "emerald",  type: "uylonuu" },
+    { id: "zhibek-kyz",      demo: "demo-kyz",     vp: "burgundy", type: "kyz-uzatuu" },
+    { id: "zhibek-sunnot",   demo: "demo-sunnot",  vp: "navy",     type: "sunnot" },
+    { id: "zhibek-beshik",   demo: "demo-beshik",  vp: "cream",    type: "beshik" }
+  ],
+
   // Шаблондор / Шаблоны. id = css/invite.css ичиндеги тема
   // demo = data/ ичиндеги мисал чакыруу, font = карточкадагы аттардын шрифти
   templates: [

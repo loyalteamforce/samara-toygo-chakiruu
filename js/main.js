@@ -30,7 +30,7 @@
     document.getElementById("tplGrid").innerHTML = list.map(function (t) {
       var demo = t.demo || "demo";
       var names = DEMO_NAMES[demo] || DEMO_NAMES.demo;
-      var view = "davet.html?id=" + demo + "&t=" + t.id + "&lang=" + lang + "&from=site&n=" + encodeURIComponent(t.name);
+      var view = "design.html?id=" + t.id + "&lang=" + lang;
       var nameStyle = "font-family:" + t.font + (t.italic ? ";font-style:italic" : ";font-style:normal") +
         (t.upper ? ";text-transform:uppercase" : "") + (t.small ? ";font-size:24px" : "");
       var tags = t.types.map(function (k) { return tr("type." + k); }).join(" · ");
@@ -56,19 +56,12 @@
     }).join("");
   }
 
-  var VIDEOS = [
-    { id: "demo-yubiley", vp: "cream", type: "yubiley" },
-    { id: "demo", vp: "emerald", type: "uylonuu" },
-    { id: "demo-kyz", vp: "burgundy", type: "kyz-uzatuu" },
-    { id: "demo-sunnot", vp: "navy", type: "sunnot" },
-    { id: "demo-beshik", vp: "cream", type: "beshik" }
-  ];
   function renderVideos() {
     var box = document.getElementById("vcards");
     if (!box) return;
-    box.innerHTML = VIDEOS.map(function (v) {
-      var q = "id=" + v.id + "&vs=silk&vp=" + v.vp + "&lang=" + lang;
-      return '<a class="vcard" href="video.html?' + q + '&from=site">' +
+    box.innerHTML = S.videos.map(function (v) {
+      var q = "id=" + v.demo + "&vs=silk&vp=" + v.vp + "&lang=" + lang;
+      return '<a class="vcard" href="design.html?k=video&id=' + v.id + '&lang=' + lang + '">' +
         '<span class="vc-frame"><iframe src="video.html?' + q + '&preview=1" loading="lazy" tabindex="-1" aria-hidden="true" title=""></iframe><span class="vc-play">▶</span></span>' +
         "<b>" + esc(tr("type." + v.type)) + "</b><span>" + esc(tr("cta.view")) + "</span></a>";
     }).join("");
@@ -89,12 +82,14 @@
       a.target = "_blank"; a.rel = "noopener";
     });
     renderTypes(); renderFilter(); renderTemplates(); renderVideos(); renderFaq();
+    if (window.Shell) window.Shell.footer(document.getElementById("siteFooter"), lang);
   }
 
   document.querySelectorAll("[data-price]").forEach(function (el) { el.textContent = S.prices[el.getAttribute("data-price")]; });
   document.querySelectorAll('[data-count="templates"]').forEach(function (el) { el.textContent = S.templates.length; });
-  document.getElementById("year").textContent = new Date().getFullYear();
-  document.getElementById("igLink").href = S.instagram;
+  // ?type=sunnot — алдынкы баракчалардан келген фильтр
+  var qType = new URLSearchParams(location.search).get("type");
+  if (qType && TYPES.indexOf(qType) > -1) filter = qType;
 
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-lang]");
@@ -113,7 +108,7 @@
   // «Көрүү» басканда турган жерди эстеп, артка кайтканда ошол жерге алып келебиз
   try { history.scrollRestoration = "manual"; } catch (e) {}
   document.addEventListener("click", function (e) {
-    if (e.target.closest('.tpl a[href^="davet.html"], .vcard')) {
+    if (e.target.closest('.tpl a[href^="design.html"], .vcard')) {
       try { sessionStorage.setItem("samara-y", String(Math.round(window.scrollY))); } catch (err) {}
     }
   }, true);
