@@ -160,3 +160,8 @@ body[data-mode="public"] .card.out { display: none; }
 .ord-chip.off { background: #eee; color: #666; border: 1px solid #ccc; }
 .row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 520px) { .row3 { grid-template-columns: 1fr; } }
+
+.slugrow { display: flex; align-items: center; border: 1px solid var(--line, #ccc); border-radius: 10px; overflow: hidden; background: #fff; }
+.slugrow span { padding: 0 8px 0 12px; color: #6b7a72; font-size: 13px; white-space: nowrap; }
+.slugrow input { border: 0; flex: 1; min-width: 0; padding: 11px 10px 11px 0; font-size: 15px; background: transparent; outline: 0; }
+#shortInfo.ok { color: #1d6b52; } #shortInfo.err { color: #b3283a; }

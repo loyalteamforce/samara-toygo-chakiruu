@@ -17,7 +17,7 @@
     });
   }
   function secret() { try { return localStorage.getItem(SECRET_KEY) || ""; } catch (e) { return ""; } }
-  function clean(code) { return String(code || "").replace(/[^a-z0-9]/gi, "").slice(0, 32); }
+  function clean(code) { return String(code || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 40); }
 
   window.Orders = {
     enabled: function () { return !!(S.url && S.key); },
@@ -32,6 +32,7 @@
     adminCheck: function (v) { return rpc("samara_admin_check", { p_secret: v }); },
     list: function () { return rpc("samara_admin_list", { p_secret: secret() }); },
     setStatus: function (code, status) { return rpc("samara_admin_set_status", { p_secret: secret(), p_code: code, p_status: status }); },
+    publish: function (slug, data) { return rpc("samara_admin_publish", { p_secret: secret(), p_slug: slug, p_data: data }); },
     update: function (code, data) { return rpc("samara_admin_update", { p_secret: secret(), p_code: code, p_data: data }); },
     setPrices: function (p) { return rpc("samara_admin_set_prices", { p_secret: secret(), p_prices: p }); }
   };

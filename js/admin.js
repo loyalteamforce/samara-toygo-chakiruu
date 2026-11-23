@@ -30,7 +30,7 @@
   };
 
   var theme = "ak-kuu";
-  var currentLink = "", videoLink = "";
+  var currentLink = "", videoLink = "", shortCode = "", longLink = "";
   var timer;
 
   // ---------- Заполнение статичных частей ----------
@@ -228,6 +228,52 @@
     clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove("on"); }, 1800);
   }
 
+
+  // ---------- Кыска туруктуу шилтеме ----------
+  var TR = { "а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"e","ж":"j","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"h","ц":"ts","ч":"ch","ш":"sh","щ":"sh","ъ":"","ы":"y","ь":"","э":"e","ю":"yu","я":"ya","ө":"o","ү":"u","ң":"n" };
+  function slugify(s) { return String(s || "").toLowerCase().split("").map(function (c) { return TR[c] != null ? TR[c] : c; }).join("").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40); }
+  function shortUrl(kind) { return location.origin + "/" + kind + "/" + shortCode; }
+  var MON = { ky: ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"], ru: ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"] };
+  var WDAY = { ky: ["Жекшемби","Дүйшөмбү","Шейшемби","Шаршемби","Бейшемби","Жума","Ишемби"], ru: ["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"] };
+  function waText(d, link) {
+    var l = d.lang === "ru" ? "ru" : "ky", m = String(d.date).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/), when = "";
+    if (m) {
+      var wi = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])).getUTCDay();
+      var wk = l === "ky" ? ["Жекшемби","Дүйшөмбү","Шейшемби","Шаршемби","Бейшемби","Жума","Ишемби"][wi] : WDAY.ru[wi];
+      when = wk + ", " + (+m[3]) + (l === "ky" ? "-" : " ") + MON[l][+m[2] - 1] + ", " + m[1] + (l === "ky" ? ", саат " : ", в ") + m[4] + ":" + m[5];
+    }
+    var v = d.venue || {}, place = [v.name, v.address].filter(Boolean).join(", ");
+    var head = (d.names || []).join(" & ") + (d.heading ? " — " + d.heading : "");
+    return (l === "ky" ? "Урматтуу туугандар жана достор!\n\n" : "Уважаемые родные и друзья!\n\n") + head + "\n" +
+      (when ? "📅 " + when + "\n" : "") + (place ? "📍 " + place + "\n" : "") +
+      (l === "ky" ? "\nСиздерди күтөбүз!\n\nЧакыруу: " : "\nЖдём вас!\n\nПриглашение: ") + link;
+  }
+  function shortUi(d) {
+    var ok = d.names.length && d.date, b = $("btnShort"), w = $("btnWaText"), sl = $("slug");
+    if (!b) return;
+    if (sl && !sl.value && !sl.dataset.touched && !shortCode) sl.value = slugify(d.names.join("-"));
+    b.disabled = !ok || !slugify(sl.value); w.disabled = !ok;
+    b.textContent = shortCode ? "Обновить короткую ссылку" : "Создать короткую ссылку";
+    var si = $("shortInfo");
+    if (shortCode) { si.className = "hint ok"; si.textContent = "Ссылка: " + shortUrl("i") + " — если вы изменили приглашение, нажмите «Обновить»."; }
+  }
+  if ($("slug")) {
+    $("slug").addEventListener("input", function () { this.dataset.touched = "1"; shortCode = ""; schedule(); });
+    $("btnShort").addEventListener("click", function () {
+      var d = collect(), slug = slugify($("slug").value), si = $("shortInfo");
+      if (!slug || slug.length < 3) { si.className = "hint err"; si.textContent = "Название слишком короткое (минимум 3 буквы)."; return; }
+      $("btnShort").disabled = true; si.className = "hint"; si.textContent = "Сохраняем…";
+      O.publish(slug, d).then(function (r) {
+        shortCode = r.code; $("slug").value = r.code; update();
+        copy(shortUrl("i")); si.className = "hint ok"; si.textContent = (r.updated ? "Обновлено ✓ " : "Готово ✓ ") + shortUrl("i");
+      }).catch(function (e) {
+        si.className = "hint err";
+        si.textContent = /taken/.test(e.message) ? "Это название занято — выберите другое." : /reserved/.test(e.message) ? "Это название нельзя использовать." : /forbidden/.test(e.message) ? "Нет доступа — войдите по коду заново." : "Не удалось сохранить: " + e.message;
+      }).then(function () { $("btnShort").disabled = false; });
+    });
+    $("btnWaText").addEventListener("click", function () { if (!currentLink) return; copy(waText(collect(), currentLink)); toast("Текст скопирован ✓"); });
+  }
+
   function schedule() { clearTimeout(timer); timer = setTimeout(update, 350); }
 
   function update() {
@@ -240,16 +286,18 @@
     if (!ok) { currentLink = ""; videoLink = ""; $("vlink").value = ""; $("link").value = ""; $("linkInfo").textContent = ""; $("btnWa").removeAttribute("href"); $("frame").removeAttribute("src"); return; }
     window.CODEC.encode(d).then(function (code) {
       var base = new URL("davet.html", location.href).href;
-      currentLink = base + "?d=" + code;
+      longLink = base + "?d=" + code;
+      currentLink = shortCode ? shortUrl("i") : longLink;
       $("link").value = currentLink;
-      videoLink = new URL("video.html", location.href).href + "?d=" + code;
+      videoLink = shortCode ? shortUrl("v") : new URL("video.html", location.href).href + "?d=" + code;
       $("vlink").value = videoLink;
+      shortUi(d);
       $("frame").src = "davet.html?d=" + code + "&preview=1";
       var n = currentLink.length;
       var info = $("linkInfo");
       info.className = "hint" + (n > 3800 ? " warn" : "");
-      info.textContent = "Длина ссылки: " + n + " символов." + (n > 3800 ? " Ссылка длинная — сократите текст или уберите фото." : "");
-      $("btnWa").href = "https://wa.me/?text=" + encodeURIComponent(currentLink);
+      info.textContent = shortCode ? "" : "Длина ссылки: " + n + " символов." + (n > 3800 ? " Ссылка длинная — сократите текст или уберите фото." : "");
+      $("btnWa").href = "https://wa.me/?text=" + encodeURIComponent(shortCode ? waText(d, currentLink) : currentLink);
     });
   }
 
@@ -282,7 +330,7 @@
     if (!currentLink) { toast("Сначала заполните имена и дату"); return; }
     var l = lang();
     $("guests").value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 300).forEach(function (n) {
-      var link = currentLink + "&g=" + encodeURIComponent(n);
+      var link = currentLink + (currentLink.indexOf("?") > -1 ? "&" : "?") + "g=" + encodeURIComponent(n);
       var msg = WA_MSG[l].replace("{n}", n).replace("{l}", link);
       var row = document.createElement("div"); row.className = "g";
       var b = document.createElement("b"); b.textContent = n;
@@ -296,8 +344,13 @@
 
   $("btnImport").addEventListener("click", function () {
     var err = $("importErr"); err.hidden = true;
-    var code;
-    try { code = new URL($("importLink").value.trim()).searchParams.get("d"); } catch (e) {}
+    var code, sc = "";
+    try { var u = new URL($("importLink").value.trim()); code = u.searchParams.get("d"); var pm = u.pathname.match(/^\/[iv]\/([a-z0-9-]+)/i); sc = pm ? pm[1].toLowerCase() : (u.searchParams.get("i") || "").toLowerCase(); } catch (e) {}
+    if (sc && O) {
+      O.get(sc).then(function (r) { if (!r || !r.data) throw new Error("nf"); fill(r.data); shortCode = sc; if ($("slug")) { $("slug").value = sc; $("slug").dataset.touched = "1"; } update(); toast("Ссылка загружена ✓"); window.scrollTo({ top: 0, behavior: "smooth" }); })
+        .catch(function () { err.hidden = false; });
+      return;
+    }
     if (!code) { err.hidden = false; return; }
     window.CODEC.decode(code).then(function (d) { fill(d); update(); toast("Ссылка загружена ✓"); window.scrollTo({ top: 0, behavior: "smooth" }); })
       .catch(function () { err.hidden = false; });

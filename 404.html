@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ky">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Той чакыруу</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Той чакыруу">
+<meta property="og:description" content="Сиздерди тойго чакырабыз! Приглашаем вас на наш той!">
+<meta property="og:image" content="https://samaratc.store/og.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  html,body{margin:0;height:100%;background:#0d2a22;color:#f1e6c8;font-family:Georgia,serif;display:grid;place-items:center;text-align:center}
+  a{color:#e0b866} p{margin:6px 0}
+</style>
+</head>
+<body>
+<div id="m"><p>Чакыруу ачылууда…</p><p>Открываем приглашение…</p></div>
+<script>
+(function () {
+  var m = location.pathname.match(/^\/([iv])\/([A-Za-z0-9-]+)\/?$/);
+  if (m) {
+    var q = new URLSearchParams(location.search);
+    q.set("i", m[2].toLowerCase());
+    location.replace("/" + (m[1] === "v" ? "video.html" : "davet.html") + "?" + q.toString());
+    return;
+  }
+  document.getElementById("m").innerHTML = '<p>Бет табылган жок · Страница не найдена</p><p><a href="/">samaratc.store</a></p>';
+})();
+</script>
+</body>
+</html>
