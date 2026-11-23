@@ -20,9 +20,9 @@
     "garden-blush":    ["Bad+Script"],
     "garden-blue":     ["Bad+Script"]
   };
-  window.THEME_UPPER = { "altyn": 1, "boz-uy": 1, "minimal": 1 };
+  window.THEME_UPPER = { "altyn": 1, "boz-uy": 1, "minimal": 1, "scn-yurt-sunset": 1, "scn-yurt-green": 1 };
   window.loadThemeFonts = function (theme) {
-    var f = F[theme];
+    var f = F[theme] || (window.SCENE_THEMES && window.SCENE_THEMES[theme] && window.SCENE_THEMES[theme].fonts);
     if (!f) return Promise.resolve();
     // Стиль файлы жүктөлгөндө гана шрифт «белгилүү» болот — ошону күтөбүз (канвас үчүн керек)
     return new Promise(function (res) {

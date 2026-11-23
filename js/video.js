@@ -98,7 +98,10 @@
         setTimeout(function () { res(null); }, 8000);
       });
     }
-    var coverReady = loadImg(coverUrl).then(function (im) { coverImg = im; });
+    var sceneBg = false;
+    var coverReady = (!coverUrl && window.Scenes && window.Scenes.has(theme) && !silkMode)
+      ? window.Scenes.image(theme, 540, 810).then(function (im) { if (im) { coverImg = im; sceneBg = true; } })
+      : loadImg(coverUrl).then(function (im) { coverImg = im; });
     var UP = !!(window.THEME_UPPER && window.THEME_UPPER[theme]);
     function nm(s) { return UP ? s.toUpperCase() : s; }
 
@@ -180,7 +183,7 @@
 
     function background(t) {
       if (coverImg) {
-        drawCover(t);
+        drawCover(t, sceneBg ? "rgba(0,0,0,0)" : undefined);
         ctx.strokeStyle = T.accent; ctx.lineWidth = 2; ctx.globalAlpha = 0.6; ctx.strokeRect(24, 24, W - 48, H - 48);
         ctx.lineWidth = 1; ctx.globalAlpha = 0.3; ctx.strokeRect(34, 34, W - 68, H - 68);
         corners(); return;

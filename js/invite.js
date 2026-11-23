@@ -171,6 +171,8 @@
     loadFonts(theme);
     var isSilk = /^zhibek/.test(theme);
     var isGarden = /^garden/.test(theme) && !!window.Botanic;
+    var isScn = !!(window.Scenes && window.Scenes.has(theme));
+    if (isScn) document.body.setAttribute("data-scn", window.Scenes.dark(theme) ? "dark" : "light"); else document.body.removeAttribute("data-scn");
     var gpal = theme === "garden-blush" ? "blush" : theme === "garden-blue" ? "blue" : "olive";
     function garland(h, seed, flip) { return '<div class="garland' + (flip ? " bot" : "") + '">' + window.Botanic.garland(390, h, gpal, seed, flip) + "</div>"; }
     if (isSilk && window.Silk) {
@@ -199,7 +201,7 @@
     var html = "";
 
     // ---------- Конверт ----------
-    if (!preview && (isSilk || isGarden)) {
+    if (!preview && (isSilk || isGarden || isScn)) {
       html += zEnvelope(t, guest, initials, d.heading);
     } else if (!preview) {
       html +=
@@ -218,6 +220,7 @@
     html +=
       '<article class="invite">' +
       '<section class="hero' + (safeUrl(d.cover) ? " has-cover" : "") + '">' +
+        (isScn && !safeUrl(d.cover) ? '<div class="scene-art">' + window.Scenes.art(theme) + "</div>" : "") +
         (isGarden ? '<div class="garland top">' + window.Botanic.garland(390, 150, gpal, 7, false) + "</div>" : "") +
         '<span class="corner tl">' + O.corner + '</span><span class="corner tr">' + O.corner + "</span>" +
         '<p class="eyebrow reveal">' + esc(d.heading) + "</p>" +

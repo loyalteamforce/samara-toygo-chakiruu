@@ -24,7 +24,7 @@
     var names = DEMO_NAMES[x.demo || "demo"] || DEMO_NAMES.demo;
     var st = "font-family:" + x.font + (x.italic ? ";font-style:italic" : ";font-style:normal") + (x.upper ? ";text-transform:uppercase" : "") + (x.small ? ";font-size:19px" : "");
     return '<a class="dz-mini" href="' + url(x) + '"><span class="tpl-preview tp-' + x.id + '" style="--tb:' + x.bg + ";--ti:" + x.ink + ";--ta:" + x.accent + '">' +
-      '<span class="tp-frame"></span>' + (x.garland && window.Botanic ? '<span class="tp-garland">' + window.Botanic.garland(220, 70, x.garland, 7, false) + "</span>" : "") + '<span class="tp-names" style="' + st + '">' + names + "</span></span><b>" + esc(x.name) + "</b></a>";
+      '<span class="tp-frame"></span>' + (x.scene && window.Scenes ? window.Scenes.card(x.id) : "") + (x.garland && window.Botanic ? '<span class="tp-garland">' + window.Botanic.garland(220, 70, x.garland, 7, false) + "</span>" : "") + '<span class="tp-names" style="' + st + '">' + names + "</span></span><b>" + esc(x.name) + "</b></a>";
   }
 
   function render() {

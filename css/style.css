@@ -612,3 +612,13 @@ body.dz-page .footer { padding-bottom: 150px; }
 @keyframes rvSpark { 0% { opacity: 1; transform: rotate(var(--a)) translateX(0) scale(.4); } 100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) rotate(200deg) scale(1); } }
 @media (prefers-reduced-motion: reduce) { .rv-track { animation: none; } .rv-row { transition: none; } .henv.lift .henv-stage { animation: none; } }
 @media (max-width: 600px) { .rv-card { width: 140px; } .rv-card .tp-names { font-size: 19px; } .rv-wall { gap: 12px; } }
+
+/* «Сахна» карточкалары */
+.tpl-preview.tp-scn, .tpl-preview[class*=" tp-scn-"] { justify-content: flex-start; padding-top: 17%; overflow: hidden; }
+.tp-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; z-index: 0; }
+.tpl-preview[class*=" tp-scn-"] > :not(.tp-art) { position: relative; z-index: 1; }
+.tpl-preview[class*=" tp-scn-"] .tp-frame, .tpl-preview[class*=" tp-scn-"] .tp-orn { display: none; }
+.tpl-preview[class*=" tp-scn-"] .tp-new { position: absolute; }
+.tpl-preview[class*=" tp-scn-"] .tp-names, .tpl-preview[class*=" tp-scn-"] .tp-date, .tpl-preview[class*=" tp-scn-"] .tp-eyebrow { text-shadow: 0 1px 12px color-mix(in srgb, var(--tb) 80%, transparent); }
+.tpl-preview[class*=" tp-scn-"] .tp-eyebrow { color: var(--ti); opacity: .8; }
+.rv-card[class*=" tp-scn-"] { padding-top: 14%; }

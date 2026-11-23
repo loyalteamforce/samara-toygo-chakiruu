@@ -55,7 +55,7 @@
         '<article class="tpl">' +
           '<a class="tpl-preview tp-' + t.id + '" href="' + view + '" style="--tb:' + t.bg + ";--ti:" + t.ink + ";--ta:" + t.accent + '">' +
             '<span class="tp-frame"></span>' +
-            (t.garland && window.Botanic ? '<span class="tp-garland">' + window.Botanic.garland(300, 96, t.garland, 7, false) + "</span>" : "") +
+            (t.scene && window.Scenes ? window.Scenes.card(t.id) : "") + (t.garland && window.Botanic ? '<span class="tp-garland">' + window.Botanic.garland(300, 96, t.garland, 7, false) + "</span>" : "") +
             '<span class="tp-eyebrow">' + (lang === "ky" ? "ТОЙГО ЧАКЫРУУ" : "ПРИГЛАШЕНИЕ") + "</span>" +
             (t.isNew ? '<span class="tp-new">' + esc(tr("tpl.new")) + "</span>" : "") +
             '<span class="tp-names" style="' + nameStyle + '">' + names + "</span>" +
@@ -201,7 +201,7 @@
           var nameStyle = "font-family:" + t.font + (t.italic ? ";font-style:italic" : ";font-style:normal") + (t.upper ? ";text-transform:uppercase" : "") + (t.small ? ";font-size:20px" : "");
           return '<a class="rv-card tpl-preview tp-' + t.id + '" href="design.html?id=' + t.id + "&lang=" + lang + '" style="--tb:' + t.bg + ";--ti:" + t.ink + ";--ta:" + t.accent + '" tabindex="-1">' +
             '<span class="tp-frame"></span>' +
-            (t.garland && window.Botanic ? '<span class="tp-garland">' + window.Botanic.garland(300, 96, t.garland, 7, false) + "</span>" : "") +
+            (t.scene && window.Scenes ? window.Scenes.card(t.id) : "") + (t.garland && window.Botanic ? '<span class="tp-garland">' + window.Botanic.garland(300, 96, t.garland, 7, false) + "</span>" : "") +
             '<span class="tp-eyebrow">' + (lang === "ky" ? "ТОЙГО ЧАКЫРУУ" : "ПРИГЛАШЕНИЕ") + "</span>" +
             '<span class="tp-names" style="' + nameStyle + '">' + names + '</span><span class="tp-date">19 · XII · 2026</span></a>';
         }).join("");

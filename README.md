@@ -125,3 +125,6 @@ Sonra tarayıcıda `http://localhost:8000` aç.
 
 Kırgız harflerini (Ө ө Ү ү Ң ң) gerçekten çizen fontlar kullanıldı. Yeni font eklerken mutlaka
 "Өмүрбек Үмүтай Ң ң" yazıp kontrol et — Great Vibes, Unbounded, Playfair Display gibi fontlarda bu harfler YOK.
+
+## «Сахна» темалары (scn-*)
+`js/scenes.js` — 25 көркөм тема (көл террасасы+гүлдөр, тоолор, боз үй, жүрөк, жубайлар, гүл арка, сакура, мак/жоогазын талаасы, түнкү асман). Бардыгы SVG, сүрөт файлы жок: чакырууда, видеодо (классикалык стиль), каталогдо жана конверт сахнасында бирдей чыгат. Жаңы тема кошуу: `T` объектисине жазуу кошуңуз.
