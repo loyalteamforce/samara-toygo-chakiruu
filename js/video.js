@@ -21,7 +21,7 @@
       saved: "Даяр! «Видеону сактоо» баскычын басыңыз.",
       webm: " Файл WebM форматында — WhatsApp кабыл албаса, Chrome'дун жаңы версиясында ачыңыз.",
       noRec: "Бул браузер видеону жазууну колдобойт. Chrome браузеринде ачыңыз.",
-      back: "Артка", wait: "Сиздерди күтөбүз!", venue: "Той өтүүчү жер", respect: "Урматтоо менен,", brand: "Самара · Той чакыруу",
+      unpaid: "Заказ төлөнө элек: видео жүктөлбөйт. Төлөгөндөн кийин даяр болот.", back: "Артка", wait: "Сиздерди күтөбүз!", venue: "Той өтүүчү жер", respect: "Урматтоо менен,", brand: "Самара · Той чакыруу",
       at: "саат", notFound: "Чакыруу табылган жок.",
       wd: ["жекшемби", "дүйшөмбү", "шейшемби", "шаршемби", "бейшемби", "жума", "ишемби"],
       mon: ["январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
@@ -33,7 +33,7 @@
       saved: "Готово! Нажмите «Сохранить видео».",
       webm: " Файл в формате WebM — если WhatsApp не принимает, откройте приглашение в новой версии Chrome.",
       noRec: "Этот браузер не умеет записывать видео. Откройте в Chrome.",
-      back: "Назад", wait: "Ждём вас!", venue: "Место проведения", respect: "С уважением,", brand: "Самара · Той чакыруу",
+      unpaid: "Заказ ещё не оплачен: видео скачать нельзя. После оплаты оно станет доступно.", back: "Назад", wait: "Ждём вас!", venue: "Место проведения", respect: "С уважением,", brand: "Самара · Той чакыруу",
       at: "в", notFound: "Приглашение не найдено.",
       wd: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
       mon: ["январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
@@ -41,10 +41,12 @@
   };
 
   var id = (qs.get("id") || "demo").replace(/[^a-z0-9_-]/gi, "");
-  var dParam = qs.get("d");
-  var loading = dParam
-    ? window.CODEC.decode(dParam)
-    : fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  var dParam = qs.get("d"), iParam = qs.get("i"), orderStatus = null;
+  var loading = iParam && window.Orders
+    ? window.Orders.get(iParam).then(function (r) { if (!r || !r.data) throw new Error("not found"); orderStatus = r.status; return r.data; })
+    : dParam
+      ? window.CODEC.decode(dParam)
+      : fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
   loading.then(init).catch(function () { document.body.innerHTML = '<p style="padding:40px;text-align:center;color:#9fb7aa">' + UI.ky.notFound + "<br>" + UI.ru.notFound + "</p>"; });
 
   function safeUrl(u) {
@@ -59,6 +61,7 @@
     document.documentElement.lang = lang;
     var theme = (qs.get("t") || d.theme || "ak-kuu").replace(/[^a-z0-9-]/gi, "");
     document.body.setAttribute("data-theme", theme);
+    var unpaid = !!(orderStatus && orderStatus !== "paid");
     var vstyle = qs.get("vs") || d.vstyle || "classic";
     var silkMode = vstyle === "silk" && !!window.VideoSilk;
     var vpal = qs.get("vp") || d.vpalette || "cream";
@@ -315,6 +318,14 @@
       });
       if (fgFn) { ctx.save(); fgFn(t); ctx.restore(); }
       ctx.globalAlpha = 1;
+      if (unpaid) watermark();
+    }
+    function watermark() {
+      ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-0.5);
+      ctx.font = "700 40px Arial, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineWidth = 3;
+      ctx.strokeStyle = "rgba(255,255,255,.6)"; ctx.fillStyle = "rgba(0,0,0,.3)"; spacing(0);
+      for (var yy = -H, row = 0; yy < H; yy += 190, row++) for (var xx = -W + (row % 2 ? 190 : 0); xx < W; xx += 440) { ctx.strokeText("ПРЕДПРОСМОТР · НЕ ОПЛАЧЕНО", xx, yy); ctx.fillText("ПРЕДПРОСМОТР · НЕ ОПЛАЧЕНО", xx, yy); }
+      ctx.restore();
     }
 
     // ---------- Ойнотуу ----------
@@ -394,6 +405,7 @@
     $("btnRec").textContent = U.rec;
     $("btnShare").textContent = U.share;
     $("hint").textContent = U.hint;
+    if (unpaid) { $("btnRec").disabled = true; $("btnRec").style.display = "none"; $("hint").textContent = U.unpaid; }
     $("bigPlay").addEventListener("click", play);
     $("btnReplay").addEventListener("click", function () { if (!playing) play(); });
     $("btnRec").addEventListener("click", function () { if ($("btnRec").getAttribute("data-mode") === "save" && blob) saveFile(); else if (!playing) startRecording(); });

@@ -42,7 +42,7 @@
             '<li><a href="index.html#prices">' + esc(tr(lang, "nav.prices")) + "</a></li>" +
             '<li><a href="index.html#faq">' + esc(tr(lang, "nav.faq")) + "</a></li></ul></div>" +
           '<div class="foot-col"><h4>' + esc(tr(lang, "foot.col.inv")) + "</h4><ul>" + typeLinks + "</ul></div>" +
-          '<div class="foot-col"><h4>' + esc(tr(lang, "foot.col.cab")) + '</h4><ul><li><a href="admin.html">' + esc(tr(lang, "foot.admin")) + "</a></li></ul></div>" +
+          '<div class="foot-col"><h4>' + esc(tr(lang, "foot.col.cab")) + '</h4><ul><li><a href="order.html">' + esc(tr(lang, "foot.orders")) + '</a></li><li><a href="create.html">' + esc(tr(lang, "cta.create")) + '</a></li><li><a href="admin.html">' + esc(tr(lang, "foot.admin")) + "</a></li></ul></div>" +
           '<div class="foot-col"><h4>' + esc(tr(lang, "foot.col.contact")) + "</h4><ul>" +
             '<li><a href="' + esc(waUrl(tr(lang, "wa.general"))) + '" target="_blank" rel="noopener">WhatsApp</a></li>' +
             (S.instagram ? '<li><a href="' + esc(S.instagram) + '" target="_blank" rel="noopener">' + esc(igName(S.instagram)) + "</a></li>" : "") + "</ul></div>" +

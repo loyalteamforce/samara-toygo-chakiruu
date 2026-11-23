@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Создать приглашение · Samara</title>
+<meta name="description" content="Создайте приглашение на той бесплатно: выберите дизайн, впишите имена и дату, посмотрите результат. Платите, когда всё нравится.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=24">
+<link rel="stylesheet" href="css/admin.css?v=24">
+</head>
+<body class="adm" data-mode="public">
+
+
+
+
+<header class="adm-top">
+  <div class="wrap adm-top-in">
+    <a class="logo" href="index.html"><span class="logo-mark"><img src="logo/mark-sm.svg" alt="" width="30" height="30"></span><span><b>Samara</b><small>конструктор</small></span></a>
+    <div class="adm-actions">
+      <a class="btn btn-sm btn-ghost" href="index.html">← На сайт</a>
+      <button type="button" class="btn btn-sm btn-ghost" id="btnReset" title="Начать заново">Заново</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap adm-grid">
+  <!-- ФОРМА -->
+  <form class="adm-form" id="form" autocomplete="off" onsubmit="return false">
+
+    <section class="card" id="prodCard">
+      <h2>Что вам нужно?</h2>
+      <p class="hint">Создавать и смотреть — <b>бесплатно</b>. Платите только когда всё нравится.</p>
+      <div class="prod">
+        <label><input type="radio" name="product" value="site" checked><span><b>Сайт-приглашение</b><small>ссылка для гостей</small><i data-pp="site">300 сом</i></span></label>
+        <label><input type="radio" name="product" value="video"><span><b>Видео-приглашение</b><small>для статуса WhatsApp</small><i data-pp="video">250 сом</i></span></label>
+        <label class="best"><input type="radio" name="product" value="both"><span><b>Сайт + видео</b><small>выгодно</small><i data-pp="both">450 сом</i></span></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span>1</span> Что за той?</h2>
+      <div class="row2">
+        <label>Язык приглашения
+          <div class="seg" id="langSeg">
+            <label><input type="radio" name="lang" value="ky" checked><span>Кыргызча</span></label>
+            <label><input type="radio" name="lang" value="ru"><span>Русский</span></label>
+          </div>
+        </label>
+        <label>Вид тоя
+          <select id="type"></select>
+        </label>
+      </div>
+      <label>Заголовок
+        <input id="heading" maxlength="80">
+      </label>
+    </section>
+
+    <section class="card">
+      <h2><span>2</span> Кто и когда?</h2>
+      <div class="row2">
+        <label>Имя 1 <input id="name1" maxlength="40" placeholder="Санжар"></label>
+        <label>Имя 2 <small>(необязательно)</small> <input id="name2" maxlength="40" placeholder="Нурайым"></label>
+      </div>
+      <div class="row2">
+        <label>Дата и время <input id="date" type="datetime-local"></label>
+        <label>Город <input id="city" maxlength="40" placeholder="Бишкек"></label>
+      </div>
+      <label>Текст приглашения
+        <textarea id="text" rows="4" maxlength="600"></textarea>
+      </label>
+      <label>От кого <small>(семья / хозяева)</small>
+        <input id="hosts" maxlength="60" placeholder="Сыдыковдор үй-бүлөсү">
+      </label>
+    </section>
+
+    <section class="card">
+      <h2><span>3</span> Программа</h2>
+      <div id="programList"></div>
+      <button type="button" class="btn btn-sm btn-ghost" id="addRow">+ Добавить пункт</button>
+    </section>
+
+    <section class="card">
+      <h2><span>4</span> Место проведения</h2>
+      <label>Название тойканы <input id="vname" maxlength="70" placeholder="«Ак-Өргөө» той залы"></label>
+      <label>Адрес <input id="vaddr" maxlength="100" placeholder="Бишкек ш., Ч. Айтматов пр., 12"></label>
+      <label>Ссылка на 2GIS / Google карты <small>(скопируйте «Поделиться»)</small>
+        <input id="vmap" inputmode="url" placeholder="https://2gis.kg/...">
+      </label>
+      <label>Дресс-код <small>(необязательно)</small> <input id="dress" maxlength="100" placeholder="Кечки кийим"></label>
+    </section>
+
+    <section class="card">
+      <h2><span>5</span> Ответы гостей</h2>
+      <div class="row2">
+        <label>WhatsApp для ответов <small>(номер хозяев тоя)</small>
+          <input id="rsvpWa" inputmode="tel" placeholder="996 550 123 456">
+        </label>
+        <label>Ответить до <input id="rsvpUntil" maxlength="30" placeholder="10 декабря"></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span>6</span> Дизайн</h2>
+      <div class="themes" id="themes"></div>
+      <div class="row2">
+        <label>Стиль видео
+          <select id="vstyle">
+            <option value="silk">Жибек — шёлк и золотой орнамент</option>
+            <option value="classic">Как у приглашения (тема)</option>
+          </select>
+        </label>
+        <label>Цвет видео <small>(для «Жибек»)</small>
+          <select id="vpal">
+            <option value="cream">Кремовый</option>
+            <option value="emerald">Изумрудный</option>
+            <option value="burgundy">Бордовый</option>
+            <option value="navy">Тёмно-синий</option>
+          </select>
+        </label>
+      </div>
+      <label>Возраст <small>(только для юбилея — большая цифра в видео)</small>
+        <input id="age" inputmode="numeric" maxlength="3" placeholder="60">
+      </label>
+    </section>
+
+    <section class="card">
+      <h2><span>7</span> Музыка и фото <small>(необязательно)</small></h2>
+      <div class="pick">
+        <div class="pick-head"><b>Фото для фона</b> <small>обложка приглашения и видео</small></div>
+        <div class="thumbs" id="coverThumb"></div>
+        <label class="btn btn-sm btn-ghost pick-btn" data-need="storage">📷 Выбрать из галереи<input type="file" id="coverFile" accept="image/*" hidden></label>
+        <details id="coverMore"><summary>или вставить ссылку</summary>
+          <input id="cover" inputmode="url" placeholder="https://... или photos/cover.jpg">
+        </details>
+        <p class="hint">Лучше вертикальное фото хорошего качества. Текст поверх фото автоматически становится белым.</p>
+      </div>
+
+      <div class="pick">
+        <div class="pick-head"><b>Фотографии</b> <small>до 6 · в видео: 1-е — сцена места, 2-е — финал</small></div>
+        <div class="thumbs" id="photoThumbs"></div>
+        <label class="btn btn-sm btn-ghost pick-btn" data-need="storage">📷 Добавить из галереи<input type="file" id="photoFile" accept="image/*" multiple hidden></label>
+        <details id="photoMore"><summary>или вставить ссылки</summary>
+          <textarea id="photos" rows="3" placeholder="https://... (по одной в строке)"></textarea>
+        </details>
+      </div>
+      <p class="hint" id="pickStatus" aria-live="polite"></p>
+
+      <div class="pick">
+        <div class="pick-head"><b>Музыка</b> <small>играет в приглашении и записывается в видео</small></div>
+        <div class="music-row" id="musicRow" hidden>
+          <audio id="musicPlayer" controls preload="none"></audio>
+          <button type="button" class="btn btn-sm btn-ghost" id="musicDel">Удалить</button>
+        </div>
+        <label class="btn btn-sm btn-ghost pick-btn" data-need="storage">🎵 Выбрать музыку с телефона<input type="file" id="musicFile" accept="audio/*,.mp3,.m4a,.aac" hidden></label>
+        <div class="bar" id="musicBar" hidden><i></i></div>
+        <details id="musicMore"><summary>или вставить ссылку</summary>
+          <input id="music" inputmode="url" placeholder="https://... или music/song.mp3">
+        </details>
+        <p class="hint">Форматы mp3, m4a, aac — до 8 МБ. Песню можно взять из «Файлов» или «Загрузок» телефона. Используйте музыку, на которую у вас есть права.</p>
+      </div>
+      <label>Видео с YouTube <small>(ссылка)</small>
+        <input id="video" inputmode="url" placeholder="https://youtu.be/...">
+      </label>
+      <label>Альбом для фото гостей <small>(ссылка на Google Фото или Google Диск)</small>
+        <input id="album" inputmode="url" placeholder="https://photos.app.goo.gl/...">
+      </label>
+      <p class="hint">Чтобы гости могли добавлять фото: создайте общий альбом в Google Фото (включите «Совместная работа») или папку на Google Диске с доступом «Редактор» по ссылке, и вставьте ссылку сюда.</p>
+    </section>
+  </form>
+
+  <!-- ПРЕДПРОСМОТР + ССЫЛКА -->
+  <aside class="adm-side">
+    <div class="phone" id="phoneWrap">
+      <div class="phone-notch"></div>
+      <iframe id="frame" title="Предпросмотр приглашения"></iframe>
+      <p class="phone-empty" id="empty">Впишите имя и дату —<br>здесь появится приглашение</p>
+    </div>
+
+
+    <div class="card ord" id="orderBox">
+      <h2>Оформление заказа</h2>
+      <label>Ваше имя <small>(необязательно)</small><input id="cName" maxlength="60" autocomplete="name"></label>
+      <label>Ваш номер WhatsApp <small>(для связи)</small><input id="cPhone" inputmode="tel" maxlength="24" placeholder="+996 ..." autocomplete="tel"></label>
+      <p class="ord-total">Итого: <b id="ordPrice">300</b> сом</p>
+      <p class="hint err" id="ordErr" hidden></p>
+      <button type="button" class="btn btn-solid" id="btnOrder">Оформить заказ →</button>
+      <p class="hint">После заказа вы увидите QR для оплаты. Пока оплата не подтверждена, приглашение показывается с надписью «Предпросмотр».</p>
+    </div>
+
+    <div class="card out">
+      <h2>Готовая ссылка</h2>
+      <div class="linkbox">
+        <input id="link" readonly placeholder="Ссылка появится здесь">
+      </div>
+      <div class="out-btns">
+        <button type="button" class="btn btn-sm btn-solid" id="btnCopy" disabled>Скопировать</button>
+        <button type="button" class="btn btn-sm btn-ghost" id="btnOpen" disabled>Открыть</button>
+        <a class="btn btn-sm btn-ghost" id="btnWa" target="_blank" rel="noopener" aria-disabled="true">WhatsApp</a>
+      </div>
+      <p class="hint" id="linkInfo"></p>
+    </div>
+
+    <div class="card out">
+      <h2>Видео-приглашение</h2>
+      <p class="hint">Короткое видео 9:16 с музыкой — для статуса WhatsApp. Откройте ссылку на телефоне и нажмите «Скачать видео».</p>
+      <div class="linkbox"><input id="vlink" readonly placeholder="Ссылка появится здесь"></div>
+      <div class="out-btns">
+        <button type="button" class="btn btn-sm btn-solid" id="btnVCopy" disabled>Скопировать</button>
+        <button type="button" class="btn btn-sm btn-ghost" id="btnVOpen" disabled>Открыть</button>
+      </div>
+    </div>
+
+    <div class="card out">
+      <h2>Личные ссылки для гостей</h2>
+      <p class="hint">Впишите имена гостей — по одному в строке. У каждого будет своя ссылка с обращением по имени.</p>
+      <textarea id="guests" rows="4" placeholder="Асан байке&#10;Гүлзат эже&#10;Бекмамат"></textarea>
+      <button type="button" class="btn btn-sm btn-ghost" id="btnGuests">Создать ссылки</button>
+      <div id="guestList"></div>
+    </div>
+
+    <div class="card out">
+      <h2>Изменить готовую ссылку</h2>
+      <p class="hint">Вставьте ссылку, которую создали раньше — форма заполнится.</p>
+      <div class="linkbox"><input id="importLink" placeholder="https://…/davet.html?d=…"></div>
+      <button type="button" class="btn btn-sm btn-ghost" id="btnImport">Загрузить</button>
+      <p class="hint err" id="importErr" hidden>Не удалось прочитать ссылку.</p>
+    </div>
+  </aside>
+</main>
+
+<script src="js/config.js?v=24"></script>
+<script src="js/orders.js?v=24"></script>
+<script src="js/codec.js?v=24"></script>
+<script src="js/photos.js?v=24"></script>
+<script src="js/admin.js?v=24"></script>
+</body>
+</html>

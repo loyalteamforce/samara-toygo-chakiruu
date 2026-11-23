@@ -120,10 +120,12 @@
 
   var id = (qs.get("id") || "demo").replace(/[^a-z0-9_-]/gi, "");
 
-  var dParam = qs.get("d");
-  var loading = dParam
-    ? window.CODEC.decode(dParam)
-    : fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  var dParam = qs.get("d"), iParam = qs.get("i"), orderStatus = null;
+  var loading = iParam && window.Orders
+    ? window.Orders.get(iParam).then(function (r) { if (!r || !r.data) throw new Error("not found"); orderStatus = r.status; return r.data; })
+    : dParam
+      ? window.CODEC.decode(dParam)
+      : fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
 
   loading
     .then(render)
@@ -347,6 +349,7 @@
         (wa ? '<a href="https://wa.me/' + esc(wa) + "?text=" + encodeURIComponent(msg) + '" target="_blank" rel="noopener">' + t.orderBtn + "</a>" : "") + "</div>";
       document.body.classList.add("has-sitebar");
     }
+    if (orderStatus && orderStatus !== "paid") html += '<div class="wm" aria-hidden="true"></div>';
     app.innerHTML = html;
     var sb = document.getElementById("sbBack");
     if (sb) sb.addEventListener("click", function () {

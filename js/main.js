@@ -2,7 +2,7 @@
   "use strict";
   var S = window.SITE, I = window.I18N;
   var TYPES = ["uylonuu", "kyz-uzatuu", "nikah", "sunnot", "beshik", "tushoo", "yubiley", "tuulgan-kun", "kuda"];
-  var lang = "ky", filter = "all";
+  var lang = "ky", filter = "all", product = "site";
 
   try { var saved = localStorage.getItem("samara-lang"); if (saved === "ky" || saved === "ru") lang = saved; } catch (e) {}
 
@@ -25,7 +25,24 @@
     }).join("");
   }
 
+  function vcardHtml(v) {
+    var q = "id=" + v.demo + "&vs=silk&vp=" + v.vp + "&lang=" + lang;
+    return '<a class="vcard" href="design.html?k=video&id=' + v.id + '&lang=' + lang + '">' +
+      '<span class="vc-frame"><iframe src="video.html?' + q + '&preview=1" loading="lazy" tabindex="-1" aria-hidden="true" title=""></iframe><span class="vc-play">▶</span></span>' +
+      "<b>" + esc(tr("type." + v.type)) + "</b><span>" + esc(tr("cta.view")) + "</span></a>";
+  }
+
   function renderTemplates() {
+    var grid = document.getElementById("tplGrid");
+    if (product === "video") {
+      var vl = S.videos.filter(function (v) { return filter === "all" || v.type === filter; });
+      grid.className = "tpl-grid vids";
+      grid.innerHTML = vl.length ? vl.map(function (v) {
+        return '<article class="vtile">' + vcardHtml(v) + '<a class="btn btn-sm btn-solid" href="create.html?p=video&vp=' + v.vp + "&type=" + v.type + '">' + esc(tr("cta.createShort")) + "</a></article>";
+      }).join("") : '<p class="center muted vnone">—</p>';
+      return;
+    }
+    grid.className = "tpl-grid";
     var list = S.templates.filter(function (t) { return filter === "all" || t.types.indexOf(filter) > -1; });
     document.getElementById("tplGrid").innerHTML = list.map(function (t) {
       var demo = t.demo || "demo";
@@ -49,7 +66,7 @@
             "<div><h3>" + esc(t.name) + "</h3><p>" + esc(tags) + "</p></div>" +
             '<div class="tpl-actions">' +
               '<a class="btn btn-sm btn-ghost" href="' + view + '">' + esc(tr("cta.view")) + "</a>" +
-              '<a class="btn btn-sm btn-solid" href="' + waUrl(tr("wa.tpl").replace("{t}", t.name)) + '" target="_blank" rel="noopener">' + esc(tr("cta.orderShort")) + "</a>" +
+              '<a class="btn btn-sm btn-solid" href="create.html?t=' + t.id + "&p=" + product + '">' + esc(tr("cta.createShort")) + "</a>" +
             "</div>" +
           "</div>" +
         "</article>"
@@ -60,12 +77,7 @@
   function renderVideos() {
     var box = document.getElementById("vcards");
     if (!box) return;
-    box.innerHTML = S.videos.map(function (v) {
-      var q = "id=" + v.demo + "&vs=silk&vp=" + v.vp + "&lang=" + lang;
-      return '<a class="vcard" href="design.html?k=video&id=' + v.id + '&lang=' + lang + '">' +
-        '<span class="vc-frame"><iframe src="video.html?' + q + '&preview=1" loading="lazy" tabindex="-1" aria-hidden="true" title=""></iframe><span class="vc-play">▶</span></span>' +
-        "<b>" + esc(tr("type." + v.type)) + "</b><span>" + esc(tr("cta.view")) + "</span></a>";
-    }).join("");
+    box.innerHTML = S.videos.map(vcardHtml).join("");
   }
 
   function renderFaq() {
@@ -82,11 +94,24 @@
       a.href = waUrl(tr("wa." + (a.getAttribute("data-wa") || "general")));
       a.target = "_blank"; a.rel = "noopener";
     });
-    renderTypes(); renderFilter(); renderTemplates(); renderVideos(); renderFaq();
+    renderTypes(); renderFilter(); renderTemplates(); renderVideos(); renderFaq(); applyPrices();
     if (window.Shell) window.Shell.footer(document.getElementById("siteFooter"), lang);
   }
 
-  document.querySelectorAll("[data-price]").forEach(function (el) { el.textContent = S.prices[el.getAttribute("data-price")]; });
+  function applyPrices() {
+    document.querySelectorAll("[data-price]").forEach(function (el) { var v = S.prices[el.getAttribute("data-price")]; if (v != null) el.textContent = v; });
+    var hp = document.getElementById("heroPrice");
+    if (hp) hp.innerHTML = tr("hero.priceline").replace("{site}", S.prices.site).replace("{video}", S.prices.video).replace("{both}", S.prices.both);
+    var pp = document.getElementById("prodPrice"); if (pp) pp.textContent = S.prices[product];
+    var pn = document.getElementById("prodNote"); if (pn) pn.textContent = tr("prod.note." + product);
+    document.querySelectorAll("#prodTabs [data-p]").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-p") === product); });
+  }
+  // чыныгы баалар серверден (админ өзгөртө алат)
+  if (window.Orders && window.Orders.enabled()) {
+    window.Orders.prices().then(function (p) { if (p && p.site != null) { S.prices.site = p.site; S.prices.video = p.video; S.prices.both = p.both; applyPrices(); } }).catch(function () {});
+  }
+  var qProd = new URLSearchParams(location.search).get("p");
+  if (qProd === "video" || qProd === "both") product = qProd;
   document.querySelectorAll('[data-count="templates"]').forEach(function (el) { el.textContent = S.templates.length; });
   // ?type=sunnot — алдынкы баракчалардан келген фильтр
   var qType = new URLSearchParams(location.search).get("type");
@@ -95,6 +120,8 @@
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-lang]");
     if (b) { lang = b.getAttribute("data-lang"); try { localStorage.setItem("samara-lang", lang); } catch (err) {} applyLang(); return; }
+    var pt = e.target.closest("#prodTabs [data-p]");
+    if (pt) { product = pt.getAttribute("data-p"); applyPrices(); renderTemplates(); return; }
     var f = e.target.closest("[data-filter]");
     if (f) { filter = f.getAttribute("data-filter"); renderFilter(); renderTemplates(); return; }
     var ty = e.target.closest("[data-type]");
@@ -146,4 +173,17 @@
   observeReveal();
   var origApply = applyLang;
   applyLang = function () { origApply(); observeReveal(); };
+
+  // ---------- Мөөрлүү конверт (башкы бөлүк) ----------
+  (function () {
+    var env = document.getElementById("henv"), pill = document.getElementById("henvPill"), more = document.getElementById("henvMore");
+    if (!env) return;
+    var auto = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    function setOpen(v) { env.classList.toggle("opened", v); if (pill) pill.hidden = v; if (more) more.hidden = !v; }
+    function toggle() { auto = false; setOpen(!env.classList.contains("opened")); }
+    env.addEventListener("click", toggle);
+    env.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+    function cycle() { if (!auto) return; setOpen(true); setTimeout(function () { if (!auto) return; setOpen(false); setTimeout(cycle, 3800); }, 6500); }
+    setTimeout(cycle, 2200);
+  })();
 })();

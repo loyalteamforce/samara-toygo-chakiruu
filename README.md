@@ -82,6 +82,15 @@ Linkin sonuna `&g=` + isim ekle → "Урматтуу Асан байке!" diye
 ### Misafir cevapları
 "Келем / Келе албайм" formu hazır mesaj olarak `rsvpWhatsapp` numarasına WhatsApp'tan gider.
 
+## Sipariş sistemi (müşteriler kendi davetiyesini yapar)
+Akış: **create.html** (herkese açık, ücretsiz önizleme) → "Оформить заказ" → **order.html?i=KOD** (QR ile ödeme) → yönetici **orders.html**'de "Оплачено ✓" der → müşterinin sayfasında linkler çıkar. Ödenene kadar `davet.html?i=KOD` ve `video.html?i=KOD` **filigranlı** (video indirilemez).
+- Veri: Supabase projesi `mbyyuovlipbpioxtkjcp`, tablolar `samara_orders`, `samara_settings` (RLS açık, **doğrudan erişim yok**). Her şey `samara_*` fonksiyonlarıyla (SECURITY DEFINER); fiyatı **sunucu** belirler.
+- **Yönetici kodu** sunucuda hash olarak durur (`samara_settings.admin_hash`), kod sitede yazmaz. `admin.html` ve `orders.html` girişi sunucuda doğrulanır. Kodu değiştirmek için: yeni kodu küçük harf ve tiresiz hâliyle SHA-256'ya çevirip `update samara_settings set value = to_jsonb('<hash>'::text) where key='admin_hash'` çalıştır.
+- Fiyatlar: `orders.html` altındaki **"Цены"** kutusu (sunucudaki fiyat geçerli; `js/config.js` sadece yedek).
+- Ödeme: ELQR QR (`img/elqr.jpg`), ad ve numara `js/config.js` → `payment`. Ödeme **elle** onaylanır (çek WhatsApp'a gelir, yönetici işaretler).
+- Müşteri sipariş kodlarını tarayıcısında saklar (`order.html` → "Мои заказы"). Yöneticinin "Изменить" düğmesi siparişi `admin.html?order=KOD` ile açar ve kaydeder.
+- ⚠️ Supabase projesi başka bir canlı uygulamayla paylaşılıyor. Devirde ayrı proje açıp aynı SQL'i orada çalıştırmak ve `config.js` → `storage`'ı güncellemek gerekir.
+
 ## Domain: samaratc.store (bağlandı)
 Domain Namecheap'te. DNS: dört `A` kaydı (`@` → GitHub Pages) çalışıyor, HTTPS aktif. Site `https://samaratc.store/` adresinde. `www` için `CNAME www → loyalteamforce.github.io` kaydı da eklenmeli. Depoda `CNAME` dosyası (`samaratc.store`) **silinmemeli**. Adresleri `tools/set-domain.py` ile yeni adrese çevirdik.
 

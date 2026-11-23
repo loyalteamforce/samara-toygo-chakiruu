@@ -2,7 +2,9 @@
   "use strict";
   var S = window.SITE;
   var $ = function (id) { return document.getElementById(id); };
-  var DRAFT_KEY = "samara-admin-draft-v1";
+  var PUBLIC = document.body.getAttribute("data-mode") === "public";   // create.html: клиенттер өзү чакыруу түзөт
+  var O = window.Orders;
+  var DRAFT_KEY = PUBLIC ? "samara-create-draft-v1" : "samara-admin-draft-v1";
 
   // ---------- Шаблоны текстов ----------
   var TYPES = [
@@ -313,25 +315,98 @@
     if (!fresh) { try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); } catch (e) {} }
     if (draft) { fill(draft); }
     else {
-      fill({ lang: "ky", type: "uylonuu", theme: "ak-kuu", names: [], rsvpWhatsapp: S.whatsapp, vstyle: "silk", vpalette: "cream" });
+      fill({ lang: "ky", type: "uylonuu", theme: "ak-kuu", names: [], rsvpWhatsapp: PUBLIC ? "" : S.whatsapp, vstyle: "silk", vpalette: "cream" });
       applyPresets(true);
     }
     $("guestList").innerHTML = ""; $("guests").value = ""; $("importLink").value = "";
     update();
   }
+  // ---------- Заказ берүү (create.html — коомдук режим) ----------
+  var PRICES = (S.prices || {});
+  function curProduct() { var r = document.querySelector('input[name=product]:checked'); return r ? r.value : "site"; }
+  function setProduct(p) { var r = document.querySelector('input[name=product][value="' + p + '"]'); if (r) { r.checked = true; showPrice(); } }
+  function showPrice() {
+    var el = $("ordPrice"); if (el) el.textContent = PRICES[curProduct()] != null ? PRICES[curProduct()] : "";
+    document.querySelectorAll("[data-pp]").forEach(function (e) { var v = PRICES[e.getAttribute("data-pp")]; if (v != null) e.textContent = v + " сом"; });
+  }
+  function digits(v) { var d = String(v || "").replace(/\D/g, ""); if (d.length === 9) d = "996" + d; else if (d.length === 10 && d.charAt(0) === "0") d = "996" + d.slice(1); return d; }
+  function applyParams() {
+    var q = new URLSearchParams(location.search), t = q.get("t"), p = q.get("p"), vp = q.get("vp"), ty = q.get("type");
+    if (t && S.templates.some(function (x) { return x.id === t; })) setTheme(t);
+    if (p && ["site", "video", "both"].indexOf(p) > -1) setProduct(p);
+    if (vp && ["cream", "emerald", "burgundy", "navy"].indexOf(vp) > -1) { $("vpal").value = vp; $("vstyle").value = "silk"; }
+    if (ty && TYPES.some(function (x) { return x[0] === ty; })) { $("type").value = ty; applyPresets(false); }
+    schedule();
+  }
+  function wireOrder() {
+    document.querySelectorAll("input[name=product]").forEach(function (r) { r.addEventListener("change", showPrice); });
+    showPrice();
+    if (O && O.enabled()) O.prices().then(function (p) { if (p && p.site != null) { PRICES = p; showPrice(); } }).catch(function () {});
+    try { var c = JSON.parse(localStorage.getItem("samara-contact") || "null"); if (c) { $("cName").value = c.n || ""; $("cPhone").value = c.p || ""; } } catch (e) {}
+    $("btnOrder").addEventListener("click", function () {
+      var err = $("ordErr"), btn = $("btnOrder"), d = collect(), name = $("cName").value.trim(), phone = $("cPhone").value.trim(), msg = "";
+      if (!d.names.length) msg = "Впишите имя (имена) в разделе «Кто и когда?».";
+      else if (!d.date) msg = "Укажите дату и время тоя.";
+      else if (digits(phone).length < 11) msg = "Впишите ваш номер WhatsApp, чтобы мы могли с вами связаться.";
+      else if (!O || !O.enabled()) msg = "Заказы временно недоступны. Напишите нам в WhatsApp.";
+      if (msg) { err.textContent = msg; err.hidden = false; return; }
+      err.hidden = true;
+      if (!d.rsvpWhatsapp) d.rsvpWhatsapp = digits(phone);
+      try { localStorage.setItem("samara-contact", JSON.stringify({ n: name, p: phone })); } catch (e) {}
+      btn.disabled = true; btn.textContent = "Отправляем…";
+      O.create(curProduct(), d, name, phone).then(function (r) {
+        try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+        location.href = "order.html?i=" + encodeURIComponent(r.code);
+      }).catch(function (e) {
+        btn.disabled = false; btn.textContent = "Оформить заказ →";
+        err.textContent = "Не удалось оформить заказ. Проверьте интернет и попробуйте ещё раз." + (e && e.message ? " (" + e.message + ")" : ""); err.hidden = false;
+      });
+    });
+  }
+
+  // ---------- Админ: заказды ачуу жана сактоо ----------
+  var editingCode = "";
+  function loadOrderFromUrl() {
+    var code = O && O.clean(new URLSearchParams(location.search).get("order"));
+    if (!code) return;
+    O.get(code).then(function (r) {
+      if (!r || !r.data) { toast("Заказ табылган жок"); return; }
+      editingCode = code; fill(r.data); update();
+      var b = $("btnSaveOrder"); if (b) { b.hidden = false; b.textContent = "Сохранить в заказ №" + code.toUpperCase(); }
+      toast("Заказ №" + code.toUpperCase() + " загружен");
+    }).catch(function () { toast("Не удалось загрузить заказ"); });
+  }
+  if ($("btnSaveOrder")) $("btnSaveOrder").addEventListener("click", function () {
+    if (!editingCode) return;
+    O.update(editingCode, collect()).then(function () { toast("Сохранено ✓"); }).catch(function () { toast("Не удалось сохранить"); });
+  });
+
   // ---------- Кирүү коду ----------
-  function openGate() { document.body.classList.remove("gated"); $("gate").hidden = true; }
-  var pin = S.adminPin, ok = false;
-  try { ok = !pin || localStorage.getItem("samara-admin-ok") === pin; } catch (e) { ok = !pin; }
-  if (ok) { openGate(); init(false); }
-  else {
-    $("gateForm").addEventListener("submit", function (e) {
+  function openGate() { document.body.classList.remove("gated"); if ($("gate")) $("gate").hidden = true; }
+  function startAdmin() { openGate(); init(false); loadOrderFromUrl(); }
+  function showGate(msg) {
+    var form = $("gateForm"), err = $("gateErr");
+    if (msg) { err.textContent = msg; err.hidden = false; }
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
-      if ($("gatePin").value.trim() === pin) {
-        try { localStorage.setItem("samara-admin-ok", pin); } catch (err) {}
-        openGate(); init(false);
-      } else { $("gateErr").hidden = false; $("gatePin").value = ""; $("gatePin").focus(); }
+      var v = $("gatePin").value.trim(), btn = form.querySelector("button");
+      btn.disabled = true;
+      O.adminCheck(v).then(function (ok) {
+        if (ok) { O.saveSecret(v); startAdmin(); }
+        else { err.textContent = "Неверный код"; err.hidden = false; $("gatePin").value = ""; $("gatePin").focus(); }
+      }).catch(function () { err.textContent = "Нет связи с сервером. Проверьте интернет."; err.hidden = false; })
+        .then(function () { btn.disabled = false; });
     });
     $("gatePin").focus();
+  }
+
+  if (PUBLIC) { init(false); applyParams(); wireOrder(); }
+  else if (O && O.enabled()) {
+    if (O.secret()) {
+      O.adminCheck(O.secret()).then(function (ok) { if (ok) startAdmin(); else { O.forgetSecret(); showGate(); } }).catch(function () { showGate("Нет связи с сервером. Проверьте интернет."); });
+    } else showGate();
+  } else {
+    // сервер орнотулган эмес — эч ким кире албайт (код сервердеги ичинде текшерилет)
+    showGate("Сервер заказов не настроен.");
   }
 })();

@@ -51,6 +51,9 @@
 
     var others = list.filter(function (x) { return x.id !== item.id; });
     var msg = kind === "video" ? tr("wa.videoTpl").replace("{t}", title) : tr("wa.tpl").replace("{t}", title);
+    var createUrl = kind === "video"
+      ? "create.html?p=video&vp=" + item.vp + "&type=" + item.type
+      : "create.html?t=" + item.id + "&p=site";
 
     root.innerHTML =
       '<div class="phone"><div class="phone-notch"></div><iframe src="' + frame + '" title="' + esc(title) + '"></iframe></div>' +
@@ -63,7 +66,7 @@
       '<section class="dz-more"><h2>' + esc(tr("dz.more")) + '</h2><div class="dz-scroll">' + others.map(mini).join("") + "</div></section>";
 
     document.getElementById("cta").innerHTML =
-      '<a class="btn btn-solid" href="' + esc(Sh.waUrl(msg)) + '" target="_blank" rel="noopener">' + esc(tr("dz.cta")) + ' →</a><small>' + esc(tr("dz.ctaNote")) + "</small>";
+      '<a class="btn btn-solid" href="' + createUrl + '">' + esc(tr("dz.cta")) + ' →</a><small>' + esc(tr("dz.ctaNote")) + ' · <a class="dz-wa" target="_blank" rel="noopener" href="' + esc(Sh.waUrl(msg)) + '">' + esc(tr("dz.ctaWa")) + "</a></small>";
   }
   render();
 })();

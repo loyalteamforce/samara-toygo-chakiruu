@@ -472,3 +472,108 @@ body.dz-page .footer { padding-bottom: 150px; }
 .tp-garland { position: absolute; top: 8px; left: 0; right: 0; line-height: 0; pointer-events: none; }
 .tp-garden .tp-eyebrow, .tp-garden-blush .tp-eyebrow, .tp-garden-blue .tp-eyebrow { margin-top: 56px; }
 .dz-mini .tp-garland { top: 6px; }
+
+/* ============================================================
+   Заказ баракчасы (order.html)
+   ============================================================ */
+.ord-chip { display: inline-block; padding: 8px 18px; border-radius: 999px; font: 600 13px "Montserrat", sans-serif; letter-spacing: .06em; }
+.ord-chip.wait { background: #fff3d6; color: #8a5a00; border: 1px solid #e6c36a; }
+.ord-chip.ok { background: #dff3e8; color: #17493d; border: 1px solid #8fcfaa; }
+.ord-card { background: #fbfdfa; border: 1px solid rgba(201,162,77,.6); box-shadow: inset 0 0 0 4px #fbfdfa, inset 0 0 0 5px rgba(201,162,77,.32); border-radius: 18px; padding: 24px; margin: 18px 0; display: grid; gap: 14px; }
+.ord-card h2 { font-size: 28px; margin: 0; }
+.ord-card h3 { font-size: 22px; margin: 8px 0 0; }
+.ord-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.ord-row b { font: 500 30px "Cormorant Garamond", serif; color: var(--brand); }
+.ord-steps { padding-left: 20px; display: grid; gap: 10px; font-size: 15px; }
+.ord-qr { text-align: center; }
+.ord-qr img { max-width: min(260px, 70vw); height: auto; border-radius: 16px; border: 1px solid var(--line); background: #fff; }
+.ord-pay-name { text-align: center; font-size: 16px; }
+.ord-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.ord-btns .btn { flex: 1 1 140px; white-space: nowrap; padding-left: 12px; padding-right: 12px; }
+.ord-link p { font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+.ord-link input, .ord-card textarea { width: 100%; font: 400 14px "Montserrat", sans-serif; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; margin-bottom: 8px; }
+.ord-h { font-size: 22px; margin: 34px 0 14px; }
+.ord-phone { transform: none; margin: 0 auto 30px; width: min(300px, 76vw); height: min(560px, 138vw); }
+.ord-list { display: grid; gap: 10px; margin: 20px 0; }
+.ord-item { display: block; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: #fbfdfa; text-decoration: none; color: var(--brand); font-weight: 600; }
+.order-page #guestList { display: grid; gap: 8px; }
+.order-page .g { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; align-items: center; padding: 8px 10px; background: #fff; border: 1px solid var(--line); border-radius: 12px; font-size: 14px; }
+.order-page .g b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.order-page .g .btn { padding: 8px 12px; font-size: 10.5px; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); background: #0b231d; color: #fff; padding: 12px 20px; border-radius: 999px; font-size: 14px; opacity: 0; pointer-events: none; transition: .25s; z-index: 99; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ============================================================
+   Жаңы баш бет: мөөрлүү конверт, продукт табдары, баа картасы
+   ============================================================ */
+.hero-env { padding: 52px 0 70px; }
+.hero-env .hero-in { grid-template-columns: 1.05fr .95fr; align-items: center; }
+.hero-priceline { margin-top: 20px; font-size: 14.5px; color: #bcd2c6; max-width: 480px; line-height: 1.7; }
+.hero-priceline b { color: #f1dba6; font-weight: 600; }
+.hero-acc { margin-top: 18px; max-width: 480px; display: grid; gap: 0; border-top: 1px solid rgba(224,184,102,.25); }
+.hero-acc details { border-bottom: 1px solid rgba(224,184,102,.25); }
+.hero-acc summary { cursor: pointer; list-style: none; padding: 14px 28px 14px 0; font-weight: 500; color: #eaf2ed; position: relative; }
+.hero-acc summary::-webkit-details-marker { display: none; }
+.hero-acc summary::after { content: ""; position: absolute; right: 4px; top: 50%; width: 8px; height: 8px; border-right: 2px solid #e0b866; border-bottom: 2px solid #e0b866; transform: translateY(-70%) rotate(45deg); transition: transform .2s; }
+.hero-acc details[open] summary::after { transform: translateY(-30%) rotate(-135deg); }
+.hero-acc p { color: #a9c3b6; font-size: 14.5px; padding: 0 0 16px; }
+
+.hero-env-wrap { justify-self: center; text-align: center; width: 100%; }
+.henv { position: relative; width: min(400px, 84vw); margin: 0 auto; cursor: pointer; -webkit-tap-highlight-color: transparent; outline-offset: 8px; }
+.henv-stage { position: relative; width: 100%; aspect-ratio: 10 / 11; perspective: 1100px; filter: drop-shadow(0 26px 36px rgba(0,0,0,.5)); }
+.henv-back { position: absolute; left: 0; right: 0; top: 40%; bottom: 0; border-radius: 10px; background: linear-gradient(160deg, #f9f2e2, #e9dab8); }
+.henv-card {
+  position: absolute; left: 8%; right: 8%; top: 46%; bottom: 7%; z-index: 1; border-radius: 6px;
+  background: linear-gradient(170deg, #fffdf6, #f6eed9); box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  display: flex; flex-direction: column; align-items: center; padding: 9% 6% 0; text-align: center; color: #3b2a15;
+  transition: transform .95s cubic-bezier(.2,.8,.2,1) .35s;
+}
+.henv-card small { font: 600 10px "Montserrat", sans-serif; letter-spacing: .28em; color: #a8791f; }
+.henv-card b { font: italic 500 clamp(24px, 6.4vw, 31px)/1.15 "Cormorant Garamond", serif; margin-top: 10px; font-weight: 500; }
+.henv-card b i { color: #a8791f; font-style: normal; }
+.henv-card .hc-orn { color: #c9a24d; width: 130px; margin: 8px 0 2px; }
+.henv-card em { font: 500 12px "Montserrat", sans-serif; letter-spacing: .14em; color: #77613f; font-style: normal; }
+.henv-front { position: absolute; left: 0; right: 0; top: 40%; bottom: 0; z-index: 2; color: #c9a24d; border-radius: 10px;
+  background: linear-gradient(170deg, #fbf4e4, #eadcbc); clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%); }
+.henv-front svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.henv-flap { position: absolute; left: 0; top: 40%; width: 100%; height: 31.2%; z-index: 3; color: #c9a24d; transform-origin: top center; backface-visibility: visible;
+  transition: transform .85s cubic-bezier(.6,.05,.3,1), z-index 0s .42s; }
+.henv-flap .hf-fill { fill: #efe2c2; }
+.henv-flap .hf-edge { stroke: #c9a24d; stroke-width: 2.4; }
+.henv-seal { position: absolute; left: 50%; top: 71.2%; width: 17%; aspect-ratio: 1; transform: translate(-50%, -50%); z-index: 4; border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #2f7d68, #0b3d31 72%); box-shadow: 0 6px 14px rgba(0,0,0,.4), inset 0 0 0 4px rgba(224,184,102,.5); display: grid; place-items: center; transition: opacity .4s; animation: pulse 2.4s ease-in-out infinite; }
+.henv-seal img { width: 58%; height: 58%; }
+.henv-tassel { position: absolute; left: 50%; top: 73%; width: 10%; margin-left: -4%; z-index: 3; color: #d9b36a; transition: opacity .4s; }
+.henv.opened .henv-flap { transform: rotateX(180deg); z-index: 0; }
+.henv.opened .henv-card { transform: translateY(-46%); }
+.henv.opened .henv-seal, .henv.opened .henv-tassel { opacity: 0; animation: none; }
+.henv-pill { display: inline-block; margin-top: 22px; padding: 11px 22px; border-radius: 999px; background: rgba(255,251,240,.96); color: #3b2a15; font: 500 14px "Montserrat", sans-serif; box-shadow: 0 8px 22px rgba(0,0,0,.3); animation: bob 2.6s ease-in-out infinite; }
+.henv-pill::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #b3283a; margin-right: 10px; }
+.henv-more { display: inline-block; margin-top: 22px; padding: 11px 22px; border-radius: 999px; border: 1px solid #e0b866; color: #f1dba6; text-decoration: none; font: 600 12px "Montserrat", sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.henv-more[hidden], .henv-pill[hidden] { display: none; }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .henv-pill, .henv-seal { animation: none; } .henv-flap, .henv-card { transition-duration: .01s; transition-delay: 0s; } }
+@media (max-width: 920px) { .hero-env .hero-in { grid-template-columns: 1fr; text-align: center; } .hero-env .hero-copy { display: contents; } .hero-env .kicker { order: 1; } .hero-env h1 { order: 2; } .hero-env .hero-env-wrap { order: 3; margin: 22px 0 6px; } .hero-env .lead { order: 4; margin: 0 auto; } .hero-env .hero-cta { order: 5; } .hero-env .hero-priceline { order: 6; margin: 0 auto; } .hero-env .hero-acc { order: 7; margin: 16px auto 0; text-align: left; width: 100%; } .hero-env .hero-in { display: flex; flex-direction: column; align-items: stretch; } }
+
+/* Продукт табдары */
+.seg3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 520px; margin: 24px auto 18px; padding: 5px; border-radius: 999px; background: rgba(23,73,61,.09); border: 1px solid rgba(201,162,77,.45); }
+.seg3 button { position: relative; border: 0; background: transparent; border-radius: 999px; padding: 13px 8px; font: 600 14px "Montserrat", sans-serif; color: var(--muted); cursor: pointer; transition: .2s; }
+.seg3 button.on { background: linear-gradient(180deg, #1f5a4c, #134035); color: #f1dba6; box-shadow: 0 6px 16px rgba(8,33,27,.25); }
+.seg3 em { position: absolute; top: -12px; right: 8px; padding: 2px 8px; border-radius: 999px; background: #e0b866; color: #1d1405; font: 700 10px "Montserrat", sans-serif; letter-spacing: .06em; text-transform: uppercase; font-style: normal; }
+.prod-price { margin-bottom: 18px; }
+.prod-price b { font: 500 56px/1 "Cormorant Garamond", serif; color: var(--brand); }
+.prod-price small { display: block; margin-top: 4px; font-size: 14px; color: var(--muted); }
+.tpl-grid.vids { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 22px; }
+.vtile { display: grid; gap: 12px; text-align: center; }
+.vtile .btn { justify-self: center; }
+.vnone { grid-column: 1 / -1; }
+.topbar .nav a.nav-cta { background: linear-gradient(180deg, #f6d890, #e0b866 55%, #c99a3a); color: #1d1405; padding: 9px 18px; border-radius: 999px; font-weight: 600; font-size: 13px; }
+.topbar .nav a.nav-cta:hover { filter: brightness(1.06); color: #1d1405; }
+
+/* 4 баа картасы */
+.prices { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; justify-content: stretch; }
+@media (max-width: 1100px) { .prices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .prices { grid-template-columns: 1fr; } }
+.dz-cta .dz-wa { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--brand); text-decoration: underline; text-underline-offset: 3px; pointer-events: auto; }
+.henv-stage { margin-top: -14%; }
+.price-card .badge { top: -12px; right: 20px; }
