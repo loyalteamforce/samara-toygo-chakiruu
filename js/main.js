@@ -178,11 +178,73 @@
   (function () {
     var env = document.getElementById("henv"), pill = document.getElementById("henvPill"), more = document.getElementById("henvMore");
     if (!env) return;
-    var auto = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var auto = !reduce, busy = false, rv = null;
     function setOpen(v) { env.classList.toggle("opened", v); if (pill) pill.hidden = v; if (more) more.hidden = !v; }
-    function toggle() { auto = false; setOpen(!env.classList.contains("opened")); }
-    env.addEventListener("click", toggle);
-    env.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+
+    // Алтын учкундар / золотые искры
+    function sparks(host) {
+      var h = "";
+      for (var i = 0; i < 46; i++) {
+        var a = Math.random() * 360, d = 90 + Math.random() * 300, sz = 4 + Math.random() * 8;
+        h += '<i style="--a:' + a.toFixed(0) + "deg;--d:" + d.toFixed(0) + "px;--s:" + sz.toFixed(1) + "px;--t:" + (0.9 + Math.random() * 0.9).toFixed(2) + "s;--dl:" + (Math.random() * 0.25).toFixed(2) + 's"></i>';
+      }
+      host.innerHTML = h;
+    }
+
+    function wallHtml() {
+      var T = S.templates.slice(), rows = [[], [], [], []];
+      T.forEach(function (t, i) { rows[i % 4].push(t); });
+      return rows.map(function (r, ri) {
+        var cards = r.concat(r).map(function (t) {
+          var demo = t.demo || "demo", names = DEMO_NAMES[demo] || DEMO_NAMES.demo;
+          var nameStyle = "font-family:" + t.font + (t.italic ? ";font-style:italic" : ";font-style:normal") + (t.upper ? ";text-transform:uppercase" : "") + (t.small ? ";font-size:20px" : "");
+          return '<a class="rv-card tpl-preview tp-' + t.id + '" href="design.html?id=' + t.id + "&lang=" + lang + '" style="--tb:' + t.bg + ";--ti:" + t.ink + ";--ta:" + t.accent + '" tabindex="-1">' +
+            '<span class="tp-frame"></span>' +
+            (t.garland && window.Botanic ? '<span class="tp-garland">' + window.Botanic.garland(300, 96, t.garland, 7, false) + "</span>" : "") +
+            '<span class="tp-eyebrow">' + (lang === "ky" ? "ТОЙГО ЧАКЫРУУ" : "ПРИГЛАШЕНИЕ") + "</span>" +
+            '<span class="tp-names" style="' + nameStyle + '">' + names + '</span><span class="tp-date">19 · XII · 2026</span></a>';
+        }).join("");
+        return '<div class="rv-row ' + (ri % 2 ? "r" : "l") + '" style="--dl:' + (ri * 0.12) + "s;--sp:" + (46 + ri * 9) + 's"><div class="rv-track">' + cards + "</div></div>";
+      }).join("");
+    }
+
+    function closeRv() {
+      if (!rv) return;
+      var el = rv; rv = null; el.classList.add("out");
+      document.documentElement.classList.remove("rv-lock");
+      setTimeout(function () { el.remove(); busy = false; setOpen(false); auto = false; }, 500);
+    }
+
+    function openRv() {
+      var el = document.createElement("div");
+      el.className = "rvx"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
+      el.innerHTML = '<div class="rv-glow"></div><div class="rv-sparks"></div><div class="rv-wall" aria-hidden="false">' + wallHtml() + "</div>" +
+        '<div class="rv-veil"></div>' +
+        '<div class="rv-panel"><img src="logo/mark-sm.svg" alt="" width="44" height="44"><h2>' + esc(tr("rv.title")) + "</h2><p>" + esc(tr("rv.sub")) + "</p>" +
+        '<a class="btn btn-solid" href="create.html">' + esc(tr("cta.create")) + '</a><a class="rv-all" href="#templates">' + esc(tr("rv.all")) + "</a></div>" +
+        '<button type="button" class="rv-x" aria-label="' + esc(tr("rv.close")) + '">✕</button>';
+      document.body.appendChild(el); rv = el;
+      document.documentElement.classList.add("rv-lock");
+      sparks(el.querySelector(".rv-sparks"));
+      requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("on"); }); });
+      el.querySelector(".rv-x").addEventListener("click", closeRv);
+      el.querySelector(".rv-all").addEventListener("click", function () { closeRv(); });
+      el.addEventListener("click", function (e) { if (e.target.classList.contains("rv-veil") || e.target.classList.contains("rv-glow")) closeRv(); });
+      el.querySelector(".rv-x").focus({ preventScroll: true });
+    }
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && rv) closeRv(); });
+
+    function play() {
+      if (busy) return; busy = true; auto = false;
+      setOpen(true);
+      env.classList.add("lift");
+      setTimeout(function () { env.classList.add("burst"); }, reduce ? 0 : 1100);
+      setTimeout(function () { openRv(); env.classList.remove("lift", "burst"); }, reduce ? 50 : 1500);
+    }
+    function onTap() { if (busy) return; if (env.classList.contains("opened") && !auto) { /* авто-демодон кийин */ } play(); }
+    env.addEventListener("click", onTap);
+    env.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onTap(); } });
     function cycle() { if (!auto) return; setOpen(true); setTimeout(function () { if (!auto) return; setOpen(false); setTimeout(cycle, 3800); }, 6500); }
     setTimeout(cycle, 2200);
   })();
