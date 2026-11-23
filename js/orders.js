@@ -19,7 +19,24 @@
   function secret() { try { return localStorage.getItem(SECRET_KEY) || ""; } catch (e) { return ""; } }
   function clean(code) { return String(code || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 40); }
 
+  var MON = { ky: ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"], ru: ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"] };
+  var WDAY = { ky: ["Жекшемби","Дүйшөмбү","Шейшемби","Шаршемби","Бейшемби","Жума","Ишемби"], ru: ["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"] };
+  function waText(d, link) {
+    var l = d.lang === "ru" ? "ru" : "ky", m = String(d.date).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/), when = "";
+    if (m) {
+      var wi = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])).getUTCDay();
+      var wk = l === "ky" ? ["Жекшемби","Дүйшөмбү","Шейшемби","Шаршемби","Бейшемби","Жума","Ишемби"][wi] : WDAY.ru[wi];
+      when = wk + ", " + (+m[3]) + (l === "ky" ? "-" : " ") + MON[l][+m[2] - 1] + ", " + m[1] + (l === "ky" ? ", саат " : ", в ") + m[4] + ":" + m[5];
+    }
+    var v = d.venue || {}, place = [v.name, v.address].filter(Boolean).join(", ");
+    var head = (d.names || []).join(" & ") + (d.heading ? " — " + d.heading : "");
+    return (l === "ky" ? "Урматтуу туугандар жана достор!\n\n" : "Уважаемые родные и друзья!\n\n") + head + "\n" +
+      (when ? "📅 " + when + "\n" : "") + (place ? "📍 " + place + "\n" : "") +
+      (l === "ky" ? "\nСиздерди күтөбүз!\n\nЧакыруу: " : "\nЖдём вас!\n\nПриглашение: ") + link;
+  }
+
   window.Orders = {
+    waText: waText,
     enabled: function () { return !!(S.url && S.key); },
     clean: clean,
     prices: function () { return rpc("samara_prices"); },

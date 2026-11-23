@@ -233,21 +233,7 @@
   var TR = { "а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"e","ж":"j","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"h","ц":"ts","ч":"ch","ш":"sh","щ":"sh","ъ":"","ы":"y","ь":"","э":"e","ю":"yu","я":"ya","ө":"o","ү":"u","ң":"n" };
   function slugify(s) { return String(s || "").toLowerCase().split("").map(function (c) { return TR[c] != null ? TR[c] : c; }).join("").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40); }
   function shortUrl(kind) { return location.origin + "/" + kind + "/" + shortCode; }
-  var MON = { ky: ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"], ru: ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"] };
-  var WDAY = { ky: ["Жекшемби","Дүйшөмбү","Шейшемби","Шаршемби","Бейшемби","Жума","Ишемби"], ru: ["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"] };
-  function waText(d, link) {
-    var l = d.lang === "ru" ? "ru" : "ky", m = String(d.date).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/), when = "";
-    if (m) {
-      var wi = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])).getUTCDay();
-      var wk = l === "ky" ? ["Жекшемби","Дүйшөмбү","Шейшемби","Шаршемби","Бейшемби","Жума","Ишемби"][wi] : WDAY.ru[wi];
-      when = wk + ", " + (+m[3]) + (l === "ky" ? "-" : " ") + MON[l][+m[2] - 1] + ", " + m[1] + (l === "ky" ? ", саат " : ", в ") + m[4] + ":" + m[5];
-    }
-    var v = d.venue || {}, place = [v.name, v.address].filter(Boolean).join(", ");
-    var head = (d.names || []).join(" & ") + (d.heading ? " — " + d.heading : "");
-    return (l === "ky" ? "Урматтуу туугандар жана достор!\n\n" : "Уважаемые родные и друзья!\n\n") + head + "\n" +
-      (when ? "📅 " + when + "\n" : "") + (place ? "📍 " + place + "\n" : "") +
-      (l === "ky" ? "\nСиздерди күтөбүз!\n\nЧакыруу: " : "\nЖдём вас!\n\nПриглашение: ") + link;
-  }
+  function waText(d, link) { return O.waText(d, link); }
   function shortUi(d) {
     var ok = d.names.length && d.date, b = $("btnShort"), w = $("btnWaText"), sl = $("slug");
     if (!b) return;

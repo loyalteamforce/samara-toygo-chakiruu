@@ -19,7 +19,7 @@
       auto: "Бул бет өзү жаңыланат.", preview: "Чакыруунун көрүнүшү (төлөнгөнгө чейин фильграндуу)",
       readyTitle: "Төлөм ырасталды! Даяр шилтемелер:", linkInv: "Чакыруу шилтемеси", linkVid: "Видео-чакыруу (телефондо ачып «Видеону жүктөп алуу» басыңыз)",
       open: "Ачуу", copy: "Көчүрүү", share: "WhatsApp'ка жөнөтүү",
-      guestsTitle: "Конокторго жеке шилтемелер", guestsHint: "Коноктордун аттарын жазыңыз (ар бири жаңы сапка) — ар бирине өзүнчө шилтеме чыгат.", guestsBtn: "Шилтемелерди түзүү",
+      waReady: "WhatsApp үчүн даяр текст (жөн гана көчүрүп жөнөтүңүз)", guestsTitle: "Конокторго жеке шилтемелер", guestsHint: "Коноктордун аттарын жазыңыз (ар бири жаңы сапка) — ар бирине өзүнчө шилтеме чыгат.", guestsBtn: "Шилтемелерди түзүү",
       edit: "Маалыматты өзгөртүү керек болсо, бизге WhatsApp'ка жазыңыз — шилтеме ошол бойдон калат.",
       waPay: "Саламатсызбы! Заказ №{c} төлөндү: {s} сом. Чекти тиркедим.", waGuest: "Урматтуу {n}! Сизди тойубузга чакырабыз 💐\n{l}"
     },
@@ -35,7 +35,7 @@
       auto: "Страница обновляется сама.", preview: "Как выглядит приглашение (до оплаты — с надписью)",
       readyTitle: "Оплата подтверждена! Ваши ссылки:", linkInv: "Ссылка на приглашение", linkVid: "Видео-приглашение (откройте на телефоне и нажмите «Скачать видео»)",
       open: "Открыть", copy: "Копировать", share: "Отправить в WhatsApp",
-      guestsTitle: "Личные ссылки для гостей", guestsHint: "Впишите имена гостей — по одному в строке. У каждого будет своя ссылка.", guestsBtn: "Создать ссылки",
+      waReady: "Готовый текст для WhatsApp (просто скопируйте и отправьте)", guestsTitle: "Личные ссылки для гостей", guestsHint: "Впишите имена гостей — по одному в строке. У каждого будет своя ссылка.", guestsBtn: "Создать ссылки",
       edit: "Если нужно что-то изменить, напишите нам в WhatsApp — ссылка останется прежней.",
       waPay: "Здравствуйте! Заказ №{c} оплачен: {s} сом. Чек прикладываю.", waGuest: "Уважаемый(ая) {n}! Приглашаем вас на наш той 💐\n{l}"
     }
@@ -76,7 +76,7 @@
     var r = cur, d = r.data || {}, paid = r.status === "paid", tx = t(), P = S.payment || {};
     var names = (d.names || []).join(" & ");
     var dateStr = d.date ? String(d.date).slice(0, 10).split("-").reverse().join(".") : "";
-    var inv = abs("davet.html?i=" + code), vid = abs("video.html?i=" + code);
+    var inv = abs("i/" + code), vid = abs("v/" + code), wtxt = window.Orders.waText(d, inv);
     var html =
       '<h1 class="center">' + esc(tx.title) + esc(code.toUpperCase()) + "</h1>" +
       '<p class="center"><span class="ord-chip ' + (paid ? "ok" : "wait") + '">' + esc(tx.st[r.status] || r.status) + "</span></p>" +
@@ -96,6 +96,7 @@
       html += '<div class="ord-card ready"><h2>' + esc(tx.readyTitle) + "</h2>";
       if (r.product === "site" || r.product === "both") html += linkRow(tx.linkInv, inv);
       if (r.product === "video" || r.product === "both") html += linkRow(tx.linkVid, vid);
+      if (r.product === "site" || r.product === "both") html += '<div class="ord-link"><p>' + esc(tx.waReady) + '</p><textarea id="waReady" rows="7" readonly>' + esc(wtxt) + '</textarea><div class="ord-btns"><button type="button" class="btn btn-sm btn-ghost" data-copy-el="waReady">' + esc(tx.copy) + '</button><a class="btn btn-sm btn-solid" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(wtxt) + '">' + esc(tx.share) + "</a></div></div>";
       html += '<h3>' + esc(tx.guestsTitle) + '</h3><p class="hint">' + esc(tx.guestsHint) + '</p><textarea id="guests" rows="3" placeholder="Асан байке&#10;Гүлзат эже"></textarea>' +
         '<button type="button" class="btn btn-sm btn-ghost" id="bGuests">' + esc(tx.guestsBtn) + '</button><div id="guestList"></div>' +
         '<p class="hint">' + esc(tx.edit) + "</p></div>";
@@ -115,6 +116,7 @@
 
   function wire(r, inv) {
     var pg = document.getElementById("pg");
+    pg.querySelectorAll("[data-copy-el]").forEach(function (b) { b.addEventListener("click", function () { var el = document.getElementById(b.getAttribute("data-copy-el")); if (el) copy(el.value); }); });
     pg.querySelectorAll("[data-copy]").forEach(function (b) { b.addEventListener("click", function () { copy(b.getAttribute("data-copy")); }); });
     var bc = document.getElementById("bCopy"); if (bc) bc.addEventListener("click", function () { copy(String((S.payment || {}).phone || "").replace(/[^\d+]/g, "")); });
     var chk = document.getElementById("bCheck");
@@ -123,7 +125,7 @@
     if (bg) bg.addEventListener("click", function () {
       var list = document.getElementById("guestList"); list.innerHTML = "";
       document.getElementById("guests").value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 300).forEach(function (n) {
-        var link = inv + "&g=" + encodeURIComponent(n), row = document.createElement("div"); row.className = "g";
+        var link = inv + (inv.indexOf("?") > -1 ? "&" : "?") + "g=" + encodeURIComponent(n), row = document.createElement("div"); row.className = "g";
         var b = document.createElement("b"); b.textContent = n;
         var c = document.createElement("button"); c.type = "button"; c.className = "btn btn-ghost"; c.textContent = t().copy; c.addEventListener("click", function () { copy(link); });
         var w = document.createElement("a"); w.className = "btn btn-solid"; w.textContent = "WhatsApp"; w.target = "_blank"; w.rel = "noopener"; w.href = "https://wa.me/?text=" + encodeURIComponent(t().waGuest.replace("{n}", n).replace("{l}", link));
