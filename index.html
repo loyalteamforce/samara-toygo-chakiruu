@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Prata&family=EB+Garamond:ital@1&family=Oswald:wght@600&family=Philosopher:wght@400;700&family=Lora:ital@1&family=Pacifico&family=Bad+Script&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=26">
+<link rel="stylesheet" href="css/style.css?v=29">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
  {"@type":"Organization","name":"Samara","alternateName":"Самара · Той чакыруу","url":"https://samaratc.store/","logo":"https://samaratc.store/logo/samara-logo.png",
@@ -69,7 +69,8 @@
       </div>
       <div class="hero-env-wrap">
         <div class="henv" id="henv" role="button" tabindex="0" aria-label="Открыть приглашение">
-          <div class="henv-stage">
+          <div class="henv-stage he2">
+            <svg class="he-ribbon" viewBox="0 0 260 520" aria-hidden="true"><defs><linearGradient id="hrg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a3d2f"/><stop offset=".45" stop-color="#1c7a5f"/><stop offset=".7" stop-color="#0e4c3a"/><stop offset="1" stop-color="#082e24"/></linearGradient></defs><path d="M-10 40 C80 80 150 120 90 230 C40 330 -10 330 70 440 C120 510 200 500 270 520 L270 470 C210 450 160 440 130 400 C80 330 150 300 190 230 C250 130 130 40 -10 -10Z" fill="url(#hrg)"/><path d="M-10 40 C80 80 150 120 90 230 C40 330 -10 330 70 440" fill="none" stroke="#e0b866" stroke-opacity=".5" stroke-width="1.4"/></svg>
             <div class="henv-back"></div>
             <div class="henv-card">
               <small data-i18n="hero.cardK"></small>
@@ -78,9 +79,9 @@
               <em data-i18n="hero.cardD"></em>
             </div>
             <div class="henv-front">
-              <svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M8 112 H292 M8 8 L150 62 L292 8" opacity=".55"/><g transform="translate(150 96) scale(.7) translate(-120 -30)"><path d="M120 30 C120 16 108 8 98 12 C88 16 90 30 100 28 C106 27 106 20 101 20 M120 30 C120 16 132 8 142 12 C152 16 150 30 140 28 C134 27 134 20 139 20" stroke-width="2.2"/></g></g></svg>
+              <svg viewBox="0 0 300 420" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M0 2 L150 231 L300 2" opacity=".55"/><path d="M0 418 L125 300 M300 418 L175 300" opacity=".35"/><path d="M150 262 V418" opacity=".45"/><path d="M144 392 l6 -9 l6 9 l-6 9z" opacity=".7"/></g></svg>
             </div>
-            <svg class="henv-flap" viewBox="0 0 300 130" preserveAspectRatio="none" aria-hidden="true"><path class="hf-fill" d="M2 2 L298 2 L150 128 Z"/><path class="hf-edge" d="M2 2 L298 2 L150 128 Z" fill="none"/><path d="M26 10 L274 10 L150 112 Z" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/></svg>
+            <div class="henv-flap"><div class="hf hf-f"><span class="hf-orn"><svg viewBox="0 0 240 90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M120 70 C120 40 98 22 80 30 C62 38 66 66 86 62 C98 59 98 44 88 44 M120 70 C120 40 142 22 160 30 C178 38 174 66 154 62 C142 59 142 44 152 44 M120 70 V84"/><path d="M104 20 C112 10 128 10 136 20"/></g></svg></span></div><div class="hf hf-b"></div></div>
             <div class="henv-seal"><img src="logo/mark-sm.svg" alt="" width="34" height="34"></div>
             <svg class="henv-tassel" viewBox="0 0 60 120" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round"><path d="M30 0 C29 22 27 40 27 54" stroke-width="2.6"/></g><rect x="21" y="52" width="12" height="16" rx="5" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 68 L18 112 M25 68 L24 114 M29 68 L29 114 M33 68 L34 112"/></g></svg>
           </div>
@@ -223,13 +224,13 @@
   <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6a10.6 10.6 0 0 1-5.4-1.5l-.4-.2-3.9 1 1-3.8-.2-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.6a.6.6 0 0 0 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8.9 3.9.8a3.3 3.3 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.2-.3-.3-.6-.4z"/></svg>
 </a>
 
-<script src="js/config.js?v=26"></script>
-<script src="js/scenes.js?v=26"></script>
-<script src="js/i18n.js?v=26"></script>
-<script src="js/botanic.js?v=26"></script>
-<script src="js/silk.js?v=26"></script>
-<script src="js/orders.js?v=26"></script>
-<script src="js/shell.js?v=26"></script>
-<script src="js/main.js?v=26"></script>
+<script src="js/config.js?v=29"></script>
+<script src="js/scenes.js?v=29"></script>
+<script src="js/i18n.js?v=29"></script>
+<script src="js/botanic.js?v=29"></script>
+<script src="js/silk.js?v=29"></script>
+<script src="js/orders.js?v=29"></script>
+<script src="js/shell.js?v=29"></script>
+<script src="js/main.js?v=29"></script>
 </body>
 </html>

@@ -211,22 +211,44 @@
 
     function closeRv() {
       if (!rv) return;
-      var el = rv; rv = null; el.classList.add("out");
+      var el = rv; rv = null; clearTimeout(el._t); el.classList.add("out");
       document.documentElement.classList.remove("rv-lock");
       setTimeout(function () { el.remove(); busy = false; setOpen(false); auto = false; }, 500);
     }
 
+    var play;
     function openRv() {
       var el = document.createElement("div");
       el.className = "rvx"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
       el.innerHTML = '<div class="rv-glow"></div><div class="rv-sparks"></div><div class="rv-wall" aria-hidden="false">' + wallHtml() + "</div>" +
         '<div class="rv-veil"></div>' +
-        '<div class="rv-panel"><img src="logo/mark-sm.svg" alt="" width="44" height="44"><h2>' + esc(tr("rv.title")) + "</h2><p>" + esc(tr("rv.sub")) + "</p>" +
-        '<a class="btn btn-solid" href="create.html">' + esc(tr("cta.create")) + '</a><a class="rv-all" href="#templates">' + esc(tr("rv.all")) + "</a></div>" +
+        '<div class="rv-sheet"><h2>' + tr("rv.make") + '</h2><div class="rv-two">' +
+          '<a class="rv-pc" href="create.html?p=site"><span class="rv-pi" style="background-image:url(&quot;' + (window.Scenes ? window.Scenes.uri("scn-lake-scarlet") : "") + '&quot;)"></span><b>' + esc(tr("price.p1t")) + "</b><strong>" + S.prices.site + " <small>сом</small></strong></a>" +
+          '<a class="rv-pc" href="create.html?p=video"><span class="rv-pi" style="background-image:url(&quot;' + (window.Scenes ? window.Scenes.uri("scn-yurt-night") : "") + '&quot;)"><i>▶</i></span><b>' + esc(tr("price.p3t")) + "</b><strong>" + S.prices.video + " <small>сом</small></strong></a></div>" +
+          '<a class="rv-both" href="create.html?p=both"><b>' + esc(tr("price.p4t")) + "</b><strong>" + S.prices.both + " <small>сом</small></strong></a>" +
+          '<p class="rv-free">' + tr("rv.free") + '</p><a class="rv-all" href="#templates">' + esc(tr("rv.all")) + "</a></div>" +
+        '<button type="button" class="rv-replay" aria-label="' + esc(tr("rv.replay")) + '">↻</button>' +
+        '<div class="rv-phonebox"><div class="rv-phone"><iframe title="" tabindex="-1" loading="eager" src="davet.html?id=demo&t=scn-lake-scarlet&preview=1&lang=' + lang + '"></iframe></div><span class="rv-pill2" id="rvCap">' + esc(tr("rv.guest")) + '</span><button type="button" class="rv-skip2">' + esc(tr("rv.skip")) + '</button></div>' +
         '<button type="button" class="rv-x" aria-label="' + esc(tr("rv.close")) + '">✕</button>';
       document.body.appendChild(el); rv = el;
       document.documentElement.classList.add("rv-lock");
       sparks(el.querySelector(".rv-sparks"));
+      var ph = el.querySelector(".rv-phone"), fr = ph.querySelector("iframe");
+      function fit() { var s = (ph.clientWidth - 18) / 390; fr.style.transform = "scale(" + s + ")"; ph.style.height = (800 * s + 18) + "px"; ph.style.aspectRatio = "auto"; }
+      fit(); window.addEventListener("resize", fit);
+      function toWall() { clearTimeout(rv && rv._t); el.classList.add("wall"); }
+      el.querySelector(".rv-skip2").addEventListener("click", toWall);
+      var caps = ["rv.guest", "rv.c2", "rv.c3", "rv.c4"], tops = [0, 0.3, 0.52, 0.8], step = 0, cap = el.querySelector("#rvCap");
+      function scrollTo(f) { try { var w = fr.contentWindow, h = w.document.documentElement.scrollHeight - w.innerHeight; w.scrollTo({ top: Math.max(0, h * f), behavior: "smooth" }); } catch (e) {} }
+      function tick() {
+        if (!rv || el.classList.contains("wall")) return;
+        if (step >= caps.length) { toWall(); return; }
+        cap.style.opacity = 0;
+        setTimeout(function () { cap.textContent = tr(caps[step]); cap.style.opacity = 1; scrollTo(tops[step]); step++; }, 220);
+        el._t = setTimeout(tick, 2600);
+      }
+      el._t = setTimeout(tick, 1400);
+      el.querySelector(".rv-replay").addEventListener("click", function () { closeRv(); setTimeout(function () { play(); }, 700); });
       requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("on"); }); });
       el.querySelector(".rv-x").addEventListener("click", closeRv);
       el.querySelector(".rv-all").addEventListener("click", function () { closeRv(); });
@@ -235,13 +257,50 @@
     }
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && rv) closeRv(); });
 
-    function play() {
-      if (busy) return; busy = true; auto = false;
-      setOpen(true);
-      env.classList.add("lift");
-      setTimeout(function () { env.classList.add("burst"); }, reduce ? 0 : 1100);
-      setTimeout(function () { openRv(); env.classList.remove("lift", "burst"); }, reduce ? 50 : 1500);
+    function shards() {
+      var st = env.querySelector(".henv-stage"); if (!st || st.querySelector(".shard")) return;
+      for (var i = 0; i < 9; i++) {
+        var a = (i / 9) * 6.283 + Math.random() * 0.5, d = 60 + Math.random() * 90, sp = document.createElement("span");
+        sp.className = "shard"; sp.style.cssText = "--dx:" + Math.round(Math.cos(a) * d) + "px;--dy:" + Math.round(Math.sin(a) * d + 30) + "px;--r:" + Math.round(Math.random() * 540 - 270) + "deg;width:" + (4 + Math.random() * 4).toFixed(1) + "%";
+        st.appendChild(sp);
+      }
     }
+    function silkSvg() {
+      var g = "", i;
+      for (i = 0; i < 9; i++) {
+        var y = -40 + i * 100, w = 40 + (i % 3) * 22;
+        g += '<path d="M-200 ' + (y + 120) + "C-80 " + (y - 60) + " 60 " + (y + 200) + " 200 " + (y + 40) + "S 420 " + (y + 160) + " 560 " + (y - 40) + '" stroke="url(#sk' + (i % 2) + ')" stroke-width="' + w + '" fill="none" opacity="' + (0.55 - (i % 3) * 0.1) + '" filter="url(#skb)"/>';
+      }
+      return '<svg viewBox="0 0 400 800" preserveAspectRatio="none" aria-hidden="true"><defs>' +
+        '<linearGradient id="skg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#062a21"/><stop offset=".5" stop-color="#0f5a46"/><stop offset="1" stop-color="#0a3d2f"/></linearGradient>' +
+        '<linearGradient id="sk0" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e0b866" stop-opacity="0"/><stop offset=".5" stop-color="#f6e3a8" stop-opacity=".75"/><stop offset="1" stop-color="#e0b866" stop-opacity="0"/></linearGradient>' +
+        '<linearGradient id="sk1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#021510" stop-opacity="0"/><stop offset=".5" stop-color="#021510" stop-opacity=".7"/><stop offset="1" stop-color="#021510" stop-opacity="0"/></linearGradient>' +
+        '<filter id="skb"><feGaussianBlur stdDeviation="9"/></filter></defs>' +
+        '<path d="M-60 -20H470C430 140 500 260 450 400S500 650 460 820H-60C-20 650 -90 520 -40 400S-100 140 -60 -20Z" fill="url(#skg)"/>' + g + "</svg>";
+    }
+    var skipBtn = null, timers = [];
+    function later(f, ms) { var t = setTimeout(f, ms); timers.push(t); return t; }
+    function cleanupPlay() { timers.forEach(clearTimeout); timers = []; if (skipBtn) { skipBtn.remove(); skipBtn = null; } }
+    play = function () {
+      if (busy) return; busy = true; auto = false;
+      var silk = null;
+      function finishToRv() {
+        cleanupPlay(); if (silk) silk.remove();
+        env.classList.remove("crack", "lift", "burst"); openRv();
+      }
+      if (reduce) { setOpen(true); later(finishToRv, 50); return; }
+      shards(); env.classList.add("crack");
+      skipBtn = document.createElement("button"); skipBtn.type = "button"; skipBtn.className = "hs-skip"; skipBtn.textContent = tr("rv.skip");
+      skipBtn.addEventListener("click", function (e) { e.stopPropagation(); finishToRv(); }); document.body.appendChild(skipBtn);
+      later(function () { setOpen(true); }, 420);
+      later(function () {
+        silk = document.createElement("div"); silk.className = "silk"; silk.innerHTML = silkSvg(); document.body.appendChild(silk);
+        requestAnimationFrame(function () { silk.classList.add("in"); });
+      }, 1500);
+      later(function () { openRv(); env.classList.remove("crack"); if (skipBtn) { skipBtn.remove(); skipBtn = null; } }, 2500);
+      later(function () { if (silk) { silk.classList.remove("in"); silk.classList.add("out"); } }, 2600);
+      later(function () { if (silk) { silk.remove(); silk = null; } }, 3700);
+    };
     function onTap() { if (busy) return; if (env.classList.contains("opened") && !auto) { /* авто-демодон кийин */ } play(); }
     env.addEventListener("click", onTap);
     env.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onTap(); } });
