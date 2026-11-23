@@ -712,3 +712,11 @@ body.dz-page .footer { padding-bottom: 150px; }
 .rv-phonebox .rv-skip2 { background: rgba(60,45,20,.12); color: #5a4a2e; }
 .rvx:has(.rv-phonebox) .rv-x { color: #5a4a2e; border-color: rgba(90,74,46,.4); background: rgba(255,255,255,.6); }
 .henv.henv-t .henv-card, .he2 .henv-card { top: 22%; bottom: 20%; }
+/* Оңдоолор: кичине тасма, кагылган клапан, чоңураак телефон */
+.henv.henv-t .he-ribbon { width: 64%; left: -34%; top: -12%; opacity: .95; }
+.henv.henv-t .he-ribbon.r2 { width: 64%; right: -36%; bottom: -16%; left: auto; top: auto; }
+.he2 .henv-flap { transition: transform .95s cubic-bezier(.6,.05,.3,1), opacity .35s ease .85s, z-index 0s .45s; }
+.henv.opened .he2 .henv-flap, .he2.henv-stage .henv-flap { }
+.henv.opened .henv-flap { opacity: 0; }
+.rv-phone { width: min(300px, 62vw, 36dvh); }
+@media (min-width: 900px) { .rv-phone { width: min(300px, 38dvh); } }
