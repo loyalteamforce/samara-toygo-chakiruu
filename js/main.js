@@ -178,6 +178,8 @@
   (function () {
     var env = document.getElementById("henv"), pill = document.getElementById("henvPill"), more = document.getElementById("henvMore");
     if (!env) return;
+    env.classList.add("henv-t");
+    (function () { var r = env.querySelector(".he-ribbon"); if (r) { var c = r.cloneNode(true); c.classList.add("r2"); r.parentNode.insertBefore(c, r.nextSibling); } })();
     var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     var auto = !reduce, busy = false, rv = null;
     function setOpen(v) { env.classList.toggle("opened", v); if (pill) pill.hidden = v; if (more) more.hidden = !v; }
@@ -266,40 +268,56 @@
       }
     }
     function silkSvg() {
-      var g = "", i;
-      for (i = 0; i < 9; i++) {
-        var y = -40 + i * 100, w = 40 + (i % 3) * 22;
-        g += '<path d="M-200 ' + (y + 120) + "C-80 " + (y - 60) + " 60 " + (y + 200) + " 200 " + (y + 40) + "S 420 " + (y + 160) + " 560 " + (y - 40) + '" stroke="url(#sk' + (i % 2) + ')" stroke-width="' + w + '" fill="none" opacity="' + (0.55 - (i % 3) * 0.1) + '" filter="url(#skb)"/>';
-      }
+      // Чыныгы сатин: турбуленттик бүдүр бетти жарык менен жаркыратабыз
       return '<svg viewBox="0 0 400 800" preserveAspectRatio="none" aria-hidden="true"><defs>' +
-        '<linearGradient id="skg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#062a21"/><stop offset=".5" stop-color="#0f5a46"/><stop offset="1" stop-color="#0a3d2f"/></linearGradient>' +
-        '<linearGradient id="sk0" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e0b866" stop-opacity="0"/><stop offset=".5" stop-color="#f6e3a8" stop-opacity=".75"/><stop offset="1" stop-color="#e0b866" stop-opacity="0"/></linearGradient>' +
-        '<linearGradient id="sk1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#021510" stop-opacity="0"/><stop offset=".5" stop-color="#021510" stop-opacity=".7"/><stop offset="1" stop-color="#021510" stop-opacity="0"/></linearGradient>' +
-        '<filter id="skb"><feGaussianBlur stdDeviation="9"/></filter></defs>' +
-        '<path d="M-60 -20H470C430 140 500 260 450 400S500 650 460 820H-60C-20 650 -90 520 -40 400S-100 140 -60 -20Z" fill="url(#skg)"/>' + g + "</svg>";
+        '<filter id="satin" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">' +
+          '<feTurbulence type="fractalNoise" baseFrequency="0.0035 0.0011" numOctaves="2" seed="11" result="n"/>' +
+          '<feGaussianBlur in="n" stdDeviation="5" result="nb"/>' +
+          '<feSpecularLighting in="nb" surfaceScale="9" specularConstant=".9" specularExponent="34" lighting-color="#f3dc9a" result="spec"><feDistantLight azimuth="235" elevation="48"/></feSpecularLighting>' +
+          '<feDiffuseLighting in="nb" surfaceScale="7" diffuseConstant=".95" lighting-color="#2a8f72" result="dif"><feDistantLight azimuth="235" elevation="55"/></feDiffuseLighting>' +
+          '<feComposite in="dif" in2="SourceGraphic" operator="arithmetic" k1="1.0" k2="0" k3="0" k4="-.08" result="base"/>' +
+          '<feComposite in="spec" in2="base" operator="arithmetic" k1="0" k2=".55" k3="1" k4="0"/>' +
+        '</filter>' +
+        '<linearGradient id="skg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d4a3a"/><stop offset=".5" stop-color="#0f6b52"/><stop offset="1" stop-color="#083a2c"/></linearGradient></defs>' +
+        '<path filter="url(#satin)" d="M-60 -20H470C430 140 500 260 450 400S500 650 460 820H-60C-20 650 -90 520 -40 400S-100 140 -60 -20Z" fill="url(#skg)"/></svg>';
     }
     var skipBtn = null, timers = [];
     function later(f, ms) { var t = setTimeout(f, ms); timers.push(t); return t; }
     function cleanupPlay() { timers.forEach(clearTimeout); timers = []; if (skipBtn) { skipBtn.remove(); skipBtn = null; } }
+    var ph = null;
+    function expandEnv() {
+      var r = env.getBoundingClientRect();
+      ph = document.createElement("div"); ph.style.cssText = "width:" + r.width + "px;height:" + r.height + "px;margin:0 auto"; env.parentNode.insertBefore(ph, env);
+      env.style.cssText = "position:fixed;left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;height:" + r.height + "px;margin:0;z-index:150;";
+      document.documentElement.classList.add("fx-on");
+      void env.offsetWidth;
+      env.classList.add("fx");
+      env.style.transition = "left .75s cubic-bezier(.6,.05,.2,1), top .75s cubic-bezier(.6,.05,.2,1), width .75s cubic-bezier(.6,.05,.2,1), height .75s cubic-bezier(.6,.05,.2,1), border-radius .75s";
+      env.style.left = "0px"; env.style.top = "0px"; env.style.width = "100vw"; env.style.height = window.innerHeight + "px"; env.style.borderRadius = "0";
+    }
+    function resetEnv() {
+      env.classList.remove("fx", "crack"); env.removeAttribute("style"); if (ph) { ph.remove(); ph = null; }
+      document.documentElement.classList.remove("fx-on");
+      env.querySelectorAll(".shard").forEach(function (s) { s.remove(); });
+    }
     play = function () {
       if (busy) return; busy = true; auto = false;
       var silk = null;
-      function finishToRv() {
-        cleanupPlay(); if (silk) silk.remove();
-        env.classList.remove("crack", "lift", "burst"); openRv();
-      }
+      function finishToRv() { cleanupPlay(); if (silk) { silk.remove(); silk = null; } openRv(); resetEnv(); }
       if (reduce) { setOpen(true); later(finishToRv, 50); return; }
-      shards(); env.classList.add("crack");
+      setOpen(false);
+      expandEnv();
       skipBtn = document.createElement("button"); skipBtn.type = "button"; skipBtn.className = "hs-skip"; skipBtn.textContent = tr("rv.skip");
       skipBtn.addEventListener("click", function (e) { e.stopPropagation(); finishToRv(); }); document.body.appendChild(skipBtn);
-      later(function () { setOpen(true); }, 420);
+      later(function () { shards(); env.classList.add("crack"); }, 800);
+      later(function () { setOpen(true); }, 1350);
       later(function () {
         silk = document.createElement("div"); silk.className = "silk"; silk.innerHTML = silkSvg(); document.body.appendChild(silk);
         requestAnimationFrame(function () { silk.classList.add("in"); });
-      }, 1500);
-      later(function () { openRv(); env.classList.remove("crack"); if (skipBtn) { skipBtn.remove(); skipBtn = null; } }, 2500);
-      later(function () { if (silk) { silk.classList.remove("in"); silk.classList.add("out"); } }, 2600);
-      later(function () { if (silk) { silk.remove(); silk = null; } }, 3700);
+      }, 3000);
+      later(function () { openRv(); resetEnv(); if (skipBtn) { skipBtn.remove(); skipBtn = null; } }, 4050);
+      later(function () { if (silk) { silk.classList.remove("in"); silk.classList.add("out"); } }, 4150);
+      later(function () { if (silk) { silk.remove(); silk = null; } }, 5250);
     };
     function onTap() { if (busy) return; if (env.classList.contains("opened") && !auto) { /* авто-демодон кийин */ } play(); }
     env.addEventListener("click", onTap);

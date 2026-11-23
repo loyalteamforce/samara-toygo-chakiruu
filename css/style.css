@@ -693,3 +693,22 @@ body.dz-page .footer { padding-bottom: 150px; }
 .rv-pill2 { transition: opacity .25s ease; }
 .rv-phone iframe { max-width: none; }
 .hs-skip { right: auto; left: 50%; transform: translateX(-50%); }
+
+/* ---------- Үстөл үстүндөгү конверт + толук экран фильм ---------- */
+.henv.henv-t { width: min(350px, 88vw); aspect-ratio: 9 / 13; border-radius: 22px; overflow: hidden; display: grid; place-items: center; cursor: pointer;
+  background: var(--paper, none), radial-gradient(120% 90% at 50% 38%, #f8f1e1, #e6dac0 78%); box-shadow: 0 30px 60px rgba(0,0,0,.45), inset 0 0 90px rgba(130,95,40,.2); }
+.henv.henv-t .henv-stage.he2 { width: 66%; aspect-ratio: 5 / 7; margin: 0; filter: drop-shadow(0 18px 20px rgba(60,40,10,.38)) drop-shadow(0 3px 4px rgba(60,40,10,.3)); }
+.henv.henv-t .he-ribbon { z-index: 0; left: -58%; top: -22%; width: 96%; }
+.henv.henv-t .he-ribbon.r2 { left: auto; right: -62%; top: auto; bottom: -26%; transform: rotate(180deg); }
+.henv.henv-t .henv-stage > :not(.he-ribbon) { z-index: auto; }
+.henv.henv-t .henv-back, .henv.henv-t .henv-card, .henv.henv-t .henv-front, .henv.henv-t .henv-flap, .henv.henv-t .henv-seal, .henv.henv-t .henv-tassel { z-index: revert-layer; }
+.henv.fx { cursor: default; }
+.henv.fx .henv-stage.he2 { width: min(74vw, 46dvh); transition: width .75s cubic-bezier(.6,.05,.2,1); }
+.henv-stage.he2::after { content: ""; position: absolute; inset: 0; z-index: 6; pointer-events: none; border-radius: 5px; background: linear-gradient(135deg, rgba(255,255,255,.28), transparent 38%, rgba(60,40,10,.12)); mix-blend-mode: soft-light; }
+.fx-on .wa-float { display: none; }
+.hs-skip { background: none !important; backdrop-filter: none !important; color: #6b5a3e !important; letter-spacing: .16em; text-transform: uppercase; right: 22px !important; left: auto !important; transform: none !important; bottom: max(26px, env(safe-area-inset-bottom)) !important; font-size: 11px !important; padding: 8px 4px !important; }
+/* Телефон сахнасы: крем фон */
+.rv-phonebox { background: radial-gradient(90% 70% at 50% 35%, #fbf6ea, #ece1c8); }
+.rv-phonebox .rv-skip2 { background: rgba(60,45,20,.12); color: #5a4a2e; }
+.rvx:has(.rv-phonebox) .rv-x { color: #5a4a2e; border-color: rgba(90,74,46,.4); background: rgba(255,255,255,.6); }
+.henv.henv-t .henv-card, .he2 .henv-card { top: 22%; bottom: 20%; }
