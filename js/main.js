@@ -230,27 +230,19 @@
           '<a class="rv-both" href="create.html?p=both"><b>' + esc(tr("price.p4t")) + "</b><strong>" + S.prices.both + " <small>сом</small></strong></a>" +
           '<p class="rv-free">' + tr("rv.free") + '</p><a class="rv-all" href="#templates">' + esc(tr("rv.all")) + "</a></div>" +
         '<button type="button" class="rv-replay" aria-label="' + esc(tr("rv.replay")) + '">↻</button>' +
-        '<div class="rv-phonebox"><div class="rv-phone"><iframe title="" tabindex="-1" loading="eager" src="davet.html?id=demo&t=scn-lake-scarlet&preview=1&lang=' + lang + '"></iframe></div><span class="rv-pill2" id="rvCap">' + esc(tr("rv.guest")) + '</span><button type="button" class="rv-skip2">' + esc(tr("rv.skip")) + '</button></div>' +
+        '<div class="rv-phonebox"><div class="rv-phone"><video src="media/krem.mp4" poster="media/krem.jpg" muted playsinline autoplay preload="auto"></video></div><span class="rv-pill2" id="rvCap">' + esc(tr("rv.guest")) + '</span><button type="button" class="rv-skip2">' + esc(tr("rv.skip")) + '</button></div>' +
         '<button type="button" class="rv-x" aria-label="' + esc(tr("rv.close")) + '">✕</button>';
       document.body.appendChild(el); rv = el;
       document.documentElement.classList.add("rv-lock");
       sparks(el.querySelector(".rv-sparks"));
-      var ph = el.querySelector(".rv-phone"), fr = ph.querySelector("iframe");
-      function fit() { var s = (ph.clientWidth - 18) / 390; fr.style.transform = "scale(" + s + ")"; ph.style.height = (800 * s + 18) + "px"; ph.style.aspectRatio = "auto"; }
-      fit(); window.addEventListener("resize", fit);
-      function toWall() { clearTimeout(rv && rv._t); el.classList.add("wall"); }
+      function toWall() { clearTimeout(el._t); el.classList.add("wall"); var v0 = el.querySelector("video"); if (v0) v0.pause(); }
+      var vid = el.querySelector("video");
       el.querySelector(".rv-skip2").addEventListener("click", toWall);
-      var caps = ["rv.guest", "rv.c2", "rv.c3", "rv.c4"], tops = [0, 0.3, 0.52, 0.8], step = 0, cap = el.querySelector("#rvCap");
-      function scrollTo(f) { try { var w = fr.contentWindow, h = w.document.documentElement.scrollHeight - w.innerHeight; w.scrollTo({ top: Math.max(0, h * f), behavior: "smooth" }); } catch (e) {} }
-      function tick() {
-        if (!rv || el.classList.contains("wall")) return;
-        if (step >= caps.length) { toWall(); return; }
-        cap.style.opacity = 0;
-        setTimeout(function () { cap.textContent = tr(caps[step]); cap.style.opacity = 1; scrollTo(tops[step]); step++; }, 220);
-        el._t = setTimeout(tick, 2600);
-      }
-      el._t = setTimeout(tick, 1400);
       el.querySelector(".rv-replay").addEventListener("click", function () { closeRv(); setTimeout(function () { play(); }, 700); });
+      vid.addEventListener("ended", toWall);
+      vid.addEventListener("error", function () { el._t = setTimeout(toWall, 900); });
+      var pp = vid.play(); if (pp && pp.catch) pp.catch(function () {});
+      el._t = setTimeout(toWall, 14000);
       requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("on"); }); });
       el.querySelector(".rv-x").addEventListener("click", closeRv);
       el.querySelector(".rv-all").addEventListener("click", function () { closeRv(); });
@@ -302,6 +294,7 @@
     }
     play = function () {
       if (busy) return; busy = true; auto = false;
+      try { var pre = document.createElement("video"); pre.preload = "auto"; pre.muted = true; pre.src = "media/krem.mp4"; } catch (e) {}
       var silk = null;
       function finishToRv() { cleanupPlay(); if (silk) { silk.remove(); silk = null; } openRv(); resetEnv(); }
       if (reduce) { setOpen(true); later(finishToRv, 50); return; }
@@ -326,4 +319,16 @@
     setTimeout(cycle, 2200);
   })();
   if (window.Scenes && window.Scenes.ready) window.Scenes.ready.then(function () { renderTemplates(); document.querySelectorAll('[data-count="templates"]').forEach(function (el) { el.textContent = S.templates.length; }); });
+  // Көрүнгөндө гана ойнойт, көрүнбөсө токтойт
+  (function () {
+    var vids = document.querySelectorAll("video[data-src]");
+    if (!vids.length) return;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function ensure(v) { if (!v.src && v.getAttribute("data-src")) { v.src = v.getAttribute("data-src"); v.load(); } }
+    if (reduce || !("IntersectionObserver" in window)) { vids.forEach(function (v) { v.controls = true; ensure(v); }); return; }
+    var io2 = new IntersectionObserver(function (es) {
+      es.forEach(function (en) { var v = en.target; if (en.isIntersecting) { ensure(v); var p = v.play(); if (p && p.catch) p.catch(function () {}); } else { v.pause(); } });
+    }, { threshold: 0.35 });
+    vids.forEach(function (v) { io2.observe(v); });
+  })();
 })();
