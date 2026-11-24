@@ -153,7 +153,8 @@
       '<div class="zenv-stage">' +
         '<div class="zenv-card"><svg class="zenv-orn" viewBox="0 0 300 200" aria-hidden="true">' + ZORN + "</svg>" +
           "</div>" +
-        '<svg class="zenv-flap" viewBox="0 0 300 132" preserveAspectRatio="none" aria-hidden="true"><path class="zf-fill" d="M2 2 L298 2 L150 128 Z"/><path class="zf-edge" d="M2 2 L298 2 L150 128 Z" fill="none"/>' + ZFLAP + "</svg>" +
+        '<div class="zenv-lining"></div>' +
+        '<div class="zenv-flap"><svg class="zf-front" viewBox="0 0 300 132" preserveAspectRatio="none" aria-hidden="true"><path class="zf-fill" d="M2 2 L298 2 L150 128 Z"/><path class="zf-edge" d="M2 2 L298 2 L150 128 Z" fill="none"/>' + ZFLAP + '</svg><div class="zf-back"></div></div>' +
         '<svg class="zenv-tassels" viewBox="0 0 120 100" aria-hidden="true">' + ZTASSEL + "</svg>" +
         '<div class="zenv-seal"><span>' + esc(initials) + "</span></div>" +
       "</div>" +
@@ -167,6 +168,7 @@
     document.documentElement.lang = lang;
 
     var theme = (qs.get("t") || d.theme || "ak-kuu").replace(/[^a-z0-9-]/gi, "");
+    if (d.cs && window.Scenes && /^[a-z0-9-]+$/i.test(String(d.cs.base || ""))) { try { window.Scenes.register({ id: "ct-inline", name: "x", config: d.cs }); if (window.Scenes.has("ct-inline") && window.Scenes.themes["ct-inline"]._base === d.cs.base) { window.Scenes.flush(); theme = "ct-inline"; } } catch (e) {} }
     document.body.setAttribute("data-theme", theme);
     loadFonts(theme);
     var isSilk = /^zhibek/.test(theme);
@@ -175,6 +177,12 @@
     if (isScn) document.body.setAttribute("data-scn", window.Scenes.dark(theme) ? "dark" : "light"); else document.body.removeAttribute("data-scn");
     var gpal = theme === "garden-blush" ? "blush" : theme === "garden-blue" ? "blue" : "olive";
     function garland(h, seed, flip) { return '<div class="garland' + (flip ? " bot" : "") + '">' + window.Botanic.garland(390, h, gpal, seed, flip) + "</div>"; }
+    if (isScn && window.Silk && !isSilk) {
+      try {
+        var bgc = window.Scenes.themes[theme].bg, mixc = window.SilkFx ? window.SilkFx.mix : null;
+        if (mixc) document.body.style.setProperty("--silk", 'url("' + window.Silk.make({ mid: bgc, hi: mixc(bgc, "#ffffff", 0.55), lo: mixc(bgc, "#000000", 0.28), ink: "#000", soft: "#000", wash: "rgba(0,0,0,0)", dark: false }, 360, 640).toDataURL("image/jpeg", 0.82) + '")');
+      } catch (e) {}
+    }
     if (isSilk && window.Silk) {
       var palName = theme.replace(/^zhibek-?/, "") || "cream";
       try { document.body.style.setProperty("--silk", 'url("' + window.Silk.make(window.Silk.PAL[palName] || window.Silk.PAL.cream, 360, 640).toDataURL("image/jpeg", 0.82) + '")'); } catch (e) {}
@@ -404,10 +412,16 @@
         }
         var box = document.createElement("div"); box.className = "zshards"; box.innerHTML = sh; stage.appendChild(box);
       }
+      var Sc = window.Scenes, base = (Sc && Sc.themes[document.body.getAttribute("data-theme")] && Sc.themes[document.body.getAttribute("data-theme")].env && Sc.themes[document.body.getAttribute("data-theme")].env.lining) || getComputedStyle(document.body).getPropertyValue("--env2").trim() || "#115243";
+      if (!/^#[0-9a-f]{6}$/i.test(base)) base = (Sc && Sc.themes[document.body.getAttribute("data-theme")] && Sc.themes[document.body.getAttribute("data-theme")].accent) || "#115243";
       setTimeout(function () {
         env.classList.add("opened");
-        document.body.classList.remove("locked");
-        setTimeout(function () { env.remove(); }, 1500);
+        if (window.SilkFx && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+          setTimeout(function () { window.SilkFx.sweep(window.SilkFx.mix(base, "#000000", 0.15), function () { document.body.classList.remove("locked"); env.remove(); }); }, 1100);
+        } else {
+          document.body.classList.remove("locked");
+          setTimeout(function () { env.remove(); }, 1500);
+        }
       }, delay);
     }
     env.addEventListener("click", open);

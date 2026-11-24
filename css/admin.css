@@ -178,3 +178,16 @@ body[data-mode="public"] .card.out { display: none; }
 .lib-row { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 8px 10px; }
 .lib-play { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; background: #1d6b52; color: #fff; cursor: pointer; }
 .lib-t { flex: 1; min-width: 0; } .lib-t b { display: block; font-size: 14px; overflow-wrap: anywhere; } .lib-t small { color: var(--muted); }
+
+/* Свой стиль */
+.cs { border: 1px dashed var(--line); border-radius: 14px; padding: 12px 14px; background: rgba(255,255,255,.5); }
+.cs summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+.cs .hint { margin: 8px 0; }
+.cs-body { display: grid; gap: 10px; margin-top: 10px; }
+.cs:not(:has(#csOn:checked)) .cs-body { opacity: .45; pointer-events: none; }
+.cs-t { margin: 6px 0 0; font: 600 13px "Montserrat", sans-serif; color: var(--muted); }
+.st-colors { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+.st-colors label { display: grid; gap: 4px; font-size: 12px; }
+.st-colors input[type="color"] { width: 100%; height: 36px; border: 1px solid var(--line); border-radius: 8px; padding: 2px; background: #fff; cursor: pointer; }
+.chk { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.chk input { width: 18px; height: 18px; }

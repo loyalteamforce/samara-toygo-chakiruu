@@ -60,6 +60,7 @@
     var U = UI[lang];
     document.documentElement.lang = lang;
     var theme = (qs.get("t") || d.theme || "ak-kuu").replace(/[^a-z0-9-]/gi, "");
+    if (d.cs && window.Scenes && /^[a-z0-9-]+$/i.test(String(d.cs.base || ""))) { try { window.Scenes.register({ id: "ct-inline", name: "x", config: d.cs }); if (window.Scenes.has("ct-inline") && window.Scenes.themes["ct-inline"]._base === d.cs.base) { window.Scenes.flush(); theme = "ct-inline"; } } catch (e) {} }
     document.body.setAttribute("data-theme", theme);
     var unpaid = !!(orderStatus && orderStatus !== "paid");
     var vstyle = qs.get("vs") || d.vstyle || "classic";

@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=35">
-<link rel="stylesheet" href="css/admin.css?v=35">
+<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/admin.css?v=39">
 </head>
 <body class="adm" data-mode="public">
 
@@ -106,6 +106,24 @@
     <section class="card">
       <h2><span>6</span> Дизайн</h2>
       <div class="themes" id="themes"></div>
+      <details class="cs" id="csBox">
+        <summary>Свой стиль: цвета, шрифт и конверт</summary>
+        <p class="hint">Измените цвета выбранного дизайна под себя: фон, текст, рисунок и конверт. Работает для дизайнов с рисунком (Олива, Көк көл, Чоку и др.).</p>
+        <label class="chk"><input type="checkbox" id="csOn"> Использовать свой стиль</label>
+        <div class="cs-body" id="csBody">
+          <div class="row2">
+            <label>Шрифт имён <select id="csFont"></select></label>
+            <label class="chk"><input type="checkbox" id="csItal"> Курсив</label>
+          </div>
+          <p class="cs-t">Цвета страницы</p>
+          <div class="st-colors"><label>Фон <input type="color" id="csBg"></label><label>Текст <input type="color" id="csInk"></label><label>Акцент <input type="color" id="csAcc"></label></div>
+          <p class="cs-t">Конверт</p>
+          <div class="st-colors"><label>Бумага <input type="color" id="csPaper"></label><label>Подкладка <input type="color" id="csLining"></label><label>Печать <input type="color" id="csSeal"></label></div>
+          <p class="cs-t">Цвета рисунка</p>
+          <div class="st-colors" id="csSlots"></div>
+        </div>
+      </details>
+
       <div class="row2">
         <label>Стиль видео
           <select id="vstyle">
@@ -241,12 +259,12 @@
     <div class="lib-list" id="libList"></div>
   </div>
 </div>
-<script src="js/config.js?v=35"></script>
-<script src="js/scenes.js?v=35"></script>
-<script src="js/orders.js?v=35"></script>
-<script src="js/codec.js?v=35"></script>
-<script src="js/photos.js?v=35"></script>
-<script src="js/admin.js?v=35"></script>
-<script src="js/library.js?v=35"></script>
+<script src="js/config.js?v=39"></script>
+<script src="js/scenes.js?v=39"></script>
+<script src="js/orders.js?v=39"></script>
+<script src="js/codec.js?v=39"></script>
+<script src="js/photos.js?v=39"></script>
+<script src="js/admin.js?v=39"></script>
+<script src="js/library.js?v=39"></script>
 </body>
 </html>

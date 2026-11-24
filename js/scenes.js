@@ -395,10 +395,10 @@
     t.fonts = [FONT_Q[t.font] || "Bad+Script"];
     var fam = "'" + t.font + "', " + (t.font === "Bad Script" || t.font === "Pacifico" ? "cursive" : "serif");
     var e = t.env || {};
-    var zc1 = e.paper || "color-mix(in srgb," + t.bg + " 60%,#fff)", zc2 = e.lining || t.bg, seal = e.seal || t.accent;
+    var zc1 = e.paper || "color-mix(in srgb," + t.bg + " 60%,#fff)", zc2 = e.paper ? "color-mix(in srgb," + e.paper + " 88%,#000)" : t.bg, seal = e.seal || t.accent;
     return 'body[data-theme="' + id + '"]{--bg:' + t.bg + ";--bg2:color-mix(in srgb," + t.bg + " 70%,#fff);--ink:" + t.ink + ";--muted:color-mix(in srgb," + t.ink + " 68%," + t.bg + ");--accent:" + t.accent + ";--accent-ink:" + (dark ? t.bg : "#fff") +
       ";--line:color-mix(in srgb," + t.accent + " 42%,transparent);--f-names:" + fam + ";--f-head:" + (dark ? fam : "'Cormorant Garamond',serif") + ";--names-style:" + (t.ital ? "italic" : "normal") + ";--names-k:" + (NK[t.kind] ? NK[t.kind] * (t.font === "Bad Script" ? 1 : 1.1) : t.font === "Bad Script" ? 1.15 : t.upper ? 0.82 : 1.25) + ";--hpt:" + (TOP[t.kind] || 15) + "svh;--tsh:" + (dark ? "0 2px 16px rgba(0,0,0,.5)" : "0 1px 14px rgba(255,255,255,.65)") +
-      ";--zgold:" + t.accent + ";--zcard1:" + zc1 + ";--zcard2:" + zc2 + ";--zseal1:color-mix(in srgb," + seal + " 70%,#fff);--zseal2:" + seal + ";--env:" + (e.paper || t.bg) + ";--env2:" + (e.lining || "color-mix(in srgb," + t.bg + " 88%,#000)") + ";--seal:" + seal + "}";
+      ";--zlin:" + (e.lining || "color-mix(in srgb," + t.accent + " 62%,#000)") + ";--zgold:" + t.accent + ";--zcard1:" + zc1 + ";--zcard2:" + zc2 + ";--zseal1:color-mix(in srgb," + seal + " 70%,#fff);--zseal2:" + seal + ";--env:" + (e.paper || t.bg) + ";--env2:" + (e.lining || "color-mix(in srgb," + t.bg + " 88%,#000)") + ";--seal:" + seal + "}";
   }
   function entry(id) {
     var t = T[id];
@@ -434,7 +434,7 @@
     if (!base || !/^ct-[a-z0-9-]+$/.test(row.id)) return false;
     var t = JSON.parse(JSON.stringify(base));
     delete t._svg; delete t._uri; delete t.fonts;
-    t.custom = true; t.name = String(row.name || "Шаблон").slice(0, 60);
+    t.custom = true; t._base = c.base; t.name = String(row.name || "Шаблон").slice(0, 60);
     if (c.types && c.types.length) t.types = c.types.slice(0, 9);
     if (HEX.test(c.bg || "")) t.bg = c.bg;
     if (HEX.test(c.ink || "")) t.ink = c.ink;

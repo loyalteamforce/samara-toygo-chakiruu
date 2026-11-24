@@ -48,6 +48,7 @@
 
   function setTheme(id) {
     theme = id;
+    if (typeof csBuild === "function") { try { csBuild(); } catch (e) {} }
     document.querySelectorAll(".th").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-theme") === id); });
   }
 
@@ -91,6 +92,43 @@
   }
 
   // ---------- Сбор данных ----------
+
+  // ---------- Өз стили (түстөр, шрифт, конверт) ----------
+  var Sc = window.Scenes, csSlots = [];
+  function csBase() { var t = Sc && Sc.themes[theme]; return t ? (t._base || theme) : ""; }
+  function csOk() { return !!csBase() && Sc.builtin.indexOf(csBase()) > -1; }
+  function csDefaults() {
+    var t = Sc.themes[theme], b = Sc.themes[csBase()];
+    $("csFont").value = t.font; $("csItal").checked = !!t.ital;
+    $("csBg").value = t.bg; $("csInk").value = t.ink; $("csAcc").value = t.accent;
+    var e = t.env || {}; $("csPaper").value = e.paper || t.bg; $("csLining").value = e.lining || t.accent; $("csSeal").value = e.seal || t.accent;
+    csSlots = Sc.colorSlots(csBase());
+    $("csSlots").innerHTML = csSlots.map(function (s, i) { return '<label>' + (i + 1) + ' <input type="color" data-i="' + i + '" value="' + s.val + '"></label>'; }).join("");
+  }
+  function csBuild() {
+    var box = $("csBox"); if (!box) return;
+    box.hidden = !csOk();
+    if (!csOk()) { $("csOn").checked = false; return; }
+    if (!$("csFont").options.length) $("csFont").innerHTML = Sc.fonts.map(function (f) { return '<option value="' + f + '">' + f + "</option>"; }).join("");
+    if (!$("csOn").checked) csDefaults();
+  }
+  function csCollect() {
+    if (!$("csBox") || !$("csOn").checked || !csOk()) return null;
+    var ov = {}; Array.prototype.forEach.call($("csSlots").querySelectorAll("input"), function (i) { var s = csSlots[+i.getAttribute("data-i")]; if (s && i.value.toLowerCase() !== s.val.toLowerCase()) ov[s.path] = i.value; });
+    return { base: csBase(), ov: ov, bg: $("csBg").value, ink: $("csInk").value, accent: $("csAcc").value, font: $("csFont").value, ital: $("csItal").checked, types: (Sc.themes[theme] || {}).types || ["uylonuu"], env: { paper: $("csPaper").value, lining: $("csLining").value, seal: $("csSeal").value } };
+  }
+  function csFill(cs) {
+    if (!$("csBox")) return;
+    csBuild();
+    if (!cs || !csOk()) { $("csOn").checked = false; return; }
+    $("csOn").checked = true; csDefaults();
+    $("csFont").value = cs.font || $("csFont").value; $("csItal").checked = !!cs.ital;
+    $("csBg").value = cs.bg || $("csBg").value; $("csInk").value = cs.ink || $("csInk").value; $("csAcc").value = cs.accent || $("csAcc").value;
+    if (cs.env) { $("csPaper").value = cs.env.paper || $("csPaper").value; $("csLining").value = cs.env.lining || $("csLining").value; $("csSeal").value = cs.env.seal || $("csSeal").value; }
+    Array.prototype.forEach.call($("csSlots").querySelectorAll("input"), function (i) { var s = csSlots[+i.getAttribute("data-i")]; if (s && cs.ov && cs.ov[s.path]) i.value = cs.ov[s.path]; });
+  }
+  if ($("csOn")) $("csOn").addEventListener("change", function () { if (this.checked) csDefaults(); });
+
   function collect() {
     var names = [$("name1").value.trim(), $("name2").value.trim()].filter(Boolean);
     var dt = $("date").value;
@@ -113,6 +151,7 @@
     put("age", $("age").value.replace(/\D/g, ""));
     put("cover", $("cover").value);
     put("video", $("video").value);
+    var cs = csCollect(); if (cs) d.cs = cs;
     put("album", $("album").value);
     return d;
   }
@@ -141,6 +180,7 @@
     $("video").value = d.video || "";
     $("album").value = d.album || "";
     setTheme(d.theme || "ak-kuu");
+    csFill(d.cs);
     renderThumbs(); if (typeof renderMusic === "function") renderMusic();
   }
 
