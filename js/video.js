@@ -184,7 +184,7 @@
 
     function background(t) {
       if (coverImg) {
-        drawCover(t, sceneBg ? "rgba(0,0,0,0)" : undefined);
+        drawCover(t, sceneBg ? (window.Scenes.washOf(theme) || "rgba(0,0,0,0)") : undefined);
         ctx.strokeStyle = T.accent; ctx.lineWidth = 2; ctx.globalAlpha = 0.6; ctx.strokeRect(24, 24, W - 48, H - 48);
         ctx.lineWidth = 1; ctx.globalAlpha = 0.3; ctx.strokeRect(34, 34, W - 68, H - 68);
         corners(); return;

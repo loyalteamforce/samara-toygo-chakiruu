@@ -199,3 +199,19 @@ body[data-mode="public"] .card.out { display: none; }
 .ee-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ee-th { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); }
 .ee-st { color: #b3283a; }
+
+/* Кичине палитра */
+.pal { display: grid; grid-template-columns: repeat(auto-fill, minmax(54px, 1fr)); gap: 8px 6px; }
+.pal .sw { display: grid; justify-items: center; gap: 3px; }
+.pal .sw[hidden] { display: none; }
+.pal .sw input[type="color"] { width: 34px; height: 34px; padding: 0; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px var(--line); background: none; cursor: pointer; }
+.pal .sw input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; } .pal .sw input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 50%; }
+.pal .sw input[type="color"]::-moz-color-swatch { border: 0; border-radius: 50%; }
+.pal .sw i { font: normal 500 10px/1.15 "Montserrat", sans-serif; color: var(--muted); text-align: center; max-width: 60px; overflow-wrap: anywhere; }
+.sy { display: grid; gap: 10px; }
+.sy-chks { display: grid; gap: 6px; align-content: end; }
+.sy-seg { display: grid; grid-template-columns: repeat(3, 1fr); }
+.sy-p { display: grid; gap: 8px; } .sy-p[hidden] { display: none; }
+.sy-env summary { cursor: pointer; font-weight: 600; font-size: 13px; padding: 6px 0; }
+.sy-env > div { display: grid; gap: 10px; padding-top: 6px; }
+input[type="range"] { width: 100%; }

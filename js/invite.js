@@ -234,7 +234,7 @@
     html +=
       '<article class="invite">' +
       '<section class="hero' + (safeUrl(d.cover) ? " has-cover" : "") + '">' +
-        (isScn && !safeUrl(d.cover) ? '<div class="scene-art">' + window.Scenes.art(theme) + "</div>" : "") +
+        (isScn && !safeUrl(d.cover) ? '<div class="scene-art">' + window.Scenes.hero(theme) + "</div>" : "") +
         (isGarden ? '<div class="garland top">' + window.Botanic.garland(390, 150, gpal, 7, false) + "</div>" : "") +
         '<span class="corner tl">' + O.corner + '</span><span class="corner tr">' + O.corner + "</span>" +
         '<p class="eyebrow reveal">' + esc(d.heading) + "</p>" +

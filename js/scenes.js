@@ -369,17 +369,37 @@
     t._svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">' + body + "</svg>";
     return t._svg;
   }
-  function uri(id) { var t = T[id]; if (!t) return ""; if (!t._uri) t._uri = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(art(id)); return t._uri; }
+  function fillCss(t) { return "linear-gradient(180deg," + t.bgColor + "," + (t.bgColor2 || t.bgColor) + ")"; }
+  function uri(id) {
+    var t = T[id]; if (!t) return "";
+    if (t.bgMode === "color") { var sv = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + t.bgColor + '"/><stop offset="1" stop-color="' + (t.bgColor2 || t.bgColor) + '"/></linearGradient></defs><rect width="400" height="600" fill="url(#g)"/></svg>'; return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(sv); }
+    if (t.bgMode === "photo") return t.bgImg;
+    if (!t._uri) t._uri = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(art(id)); return t._uri;
+  }
+  function washOf(id) { var t = T[id]; return t && t.bgMode === "photo" && t.bgDim ? "rgba(0,0,0," + (t.bgDim / 100).toFixed(2) + ")" : ""; }
+  // Приглашениенин башкы бөлүгүнүн фону: рисунок / түс / фото
+  function hero(id) {
+    var t = T[id]; if (!t) return "";
+    if (t.bgMode === "color") return '<div class="sa-fill" style="background:' + fillCss(t) + '"></div>';
+    if (t.bgMode === "photo") return '<img class="sa-photo" src="' + t.bgImg.replace(/"/g, "") + '" alt=""><div class="sa-dim" style="background:rgba(0,0,0,' + ((t.bgDim || 0) / 100).toFixed(2) + ')"></div>';
+    return art(id);
+  }
   function image(id, w, h) {
     return new Promise(function (res) {
       if (!T[id]) return res(null);
-      var im = new Image();
+      var im = new Image(); var t = T[id];
+      if (t.bgMode === "photo") im.crossOrigin = "anonymous";
       im.onload = function () { res(im); };
       im.onerror = function () { res(null); };
       im.width = w || 540; im.height = h || 810;
       im.src = uri(id);
-      setTimeout(function () { res(null); }, 6000);
+      setTimeout(function () { res(null); }, 8000);
     });
+  }
+  function card(id) {
+    var t = T[id]; if (!t) return "";
+    if (t.bgMode === "photo") return '<img class="tp-art" src="' + t.bgImg.replace(/"/g, "") + '" alt="" loading="lazy" decoding="async"><i class="tp-dim" style="background:rgba(0,0,0,' + ((t.bgDim || 0) / 100).toFixed(2) + ')"></i>';
+    return '<img class="tp-art" src="' + uri(id) + '" alt="" loading="lazy" decoding="async">';
   }
 
   // ---------- Сайтка тема катары тиркөө ----------
@@ -406,6 +426,7 @@
     return o;
   }
   var HEXC = /^#[0-9a-f]{6}$/i;
+  function lum(h) { var n = parseInt(String(h).slice(1), 16), r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255; return 0.2126 * r + 0.7152 * g + 0.0722 * b; }
   function patUri(kind, c) {
     c = String(c).replace("#", "%23");
     if (kind === "none") return "none";
@@ -469,6 +490,10 @@
     if (c.seed) t.seed = (+c.seed || t.seed) | 0;
     var ov = c.ov || {}; Object.keys(ov).forEach(function (pth) { if (HEX.test(ov[pth]) && getPath({ pal: t.pal, fl: t.fl }, pth) !== undefined) setPath({ pal: t.pal, fl: t.fl }, pth, ov[pth]); });
     var ce = cleanEnv(c.env); if (ce) t.env = ce;
+    t.bgMode = "scene"; delete t.bgColor; delete t.bgColor2; delete t.bgImg; delete t.bgDim;
+    if (c.bgMode === "color" && HEX.test(c.bgColor || "")) { t.bgMode = "color"; t.bgColor = c.bgColor; t.bg = c.bgColor; if (HEX.test(c.bgColor2 || "")) t.bgColor2 = c.bgColor2; }
+    else if (c.bgMode === "photo" && okUrl(c.bgImg)) { t.bgMode = "photo"; t.bgImg = c.bgImg; t.bgDim = Math.max(0, Math.min(85, +c.bgDim || 0)); }
+    if (t.bgMode !== "scene") { var L = lum(t.ink); t.dark = L > 0.6; }
     var isNew = !T[row.id];
     T[row.id] = t;
     cssAll = cssAll.split("\n").filter(function (l) { return l.indexOf('body[data-theme="' + row.id + '"]') !== 0; }).join("\n") + "\n" + themeCss(row.id);
@@ -507,7 +532,6 @@
     themes: T, list: list, ready: ready, fonts: FONT_OK, builtin: BUILTIN, colorSlots: colorSlots, register: register, flush: flush,
     has: function (id) { return !!T[id]; },
     dark: function (id) { return !!(T[id] && T[id].dark); },
-    art: art, uri: uri, image: image,
-    card: function (id) { return T[id] ? '<img class="tp-art" src="' + uri(id) + '" alt="" loading="lazy" decoding="async">' : ""; }
+    art: art, uri: uri, image: image, hero: hero, card: card, washOf: washOf
   };
 })();

@@ -10,62 +10,43 @@
   var SLOT = { sky: "Асман", m: "Тоолор", water: "Суу", tree: "Дарак", stone: "Таш", bal: "Корпус", balSh: "Көлөкө", glow: "Жарык", p: "Тоо", sun: "Күн", bg: "Фон", snow: "Кар", grass: "Чөп", hill: "Дөбө", ridge: "Тоо", petal: "Гүл", flower: "Гүл", wood: "Бутак", yw: "Боз үй", yr: "Үстү", yb: "Кемер", yd: "Эшик", moon: "Ай", heart: "Жүрөк", edge: "Чек", ribbon: "Кадак", arch: "Арка", fig: "Фигура", line: "Сызык", shadow: "Көлөкө", main: "Гүл 1", acc: "Гүл 2", cols: "" };
   function slotLabel(path) { var parts = path.split("."); var out = []; parts.forEach(function (k) { if (k === "pal" || k === "fl") return; if (/^\d+$/.test(k)) { out.push(String(+k + 1)); return; } var w = SLOT[k]; if (w === "") return; out.push(w || k); }); return out.join(" ") || path; }
 
-  var cur = { id: "", base: "", ov: {}, slots: [] };
-  var EE = window.EnvEdit.mount($("envEd"), function () { $("envOn").checked = true; showEnv = true; preview(); });
+  var cur = { id: "", base: "" };
+  var showEnv = false, ptimer;
+  var SE = window.StyleEdit.mount($("styEd"), function () { preview(); });
+  $("styEd").addEventListener("focusin", function (e) { showEnv = !!(e.target.closest(".sy-env") || e.target.matches('.pal [data-k]')); });
+  $("tName").addEventListener("focus", function () { showEnv = false; });
   var all = [];
 
   // ---------- Шаблон формасы ----------
   function fillSelects() {
     $("tBase").innerHTML = Sc.builtin.map(function (id) { return '<option value="' + id + '">' + esc(Sc.themes[id].name) + "</option>"; }).join("");
-    $("tFont").innerHTML = Sc.fonts.map(function (f) { return '<option value="' + esc(f) + '" style="font-family:\'' + esc(f) + '\'">' + esc(f) + "</option>"; }).join("");
     $("tTypes").innerHTML = TYPES.map(function (t) { return '<label><input type="checkbox" value="' + t[0] + '"><span>' + t[1] + "</span></label>"; }).join("");
   }
-  function loadBase(baseId, keep) {
+  function setTypes(arr) { Array.prototype.forEach.call($("tTypes").querySelectorAll("input"), function (i) { i.checked = arr.indexOf(i.value) > -1; }); }
+  function loadBase(baseId) {
     var t = Sc.themes[baseId]; if (!t) return;
-    cur.base = baseId;
-    if (!keep) {
-      $("tFont").value = t.font; $("tItal").checked = !!t.ital; $("tUpper").checked = !!t.upper;
-      $("cBg").value = t.bg; $("cInk").value = t.ink; $("cAccent").value = t.accent;
-      EE.set(null, { paper: t.bg, lining: t.accent, seal: t.accent, tassel: t.accent }); $("envOn").checked = false;
-      cur.ov = {};
-      Array.prototype.forEach.call($("tTypes").querySelectorAll("input"), function (i) { i.checked = t.types.indexOf(i.value) > -1; });
-    }
-    cur.slots = Sc.colorSlots(baseId);
-    $("slotBox").innerHTML = cur.slots.map(function (s, i) {
-      var v = cur.ov[s.path] || s.val;
-      return '<label>' + esc(slotLabel(s.path)) + ' <input type="color" data-i="' + i + '" value="' + v + '"></label>';
-    }).join("");
+    cur.base = baseId; SE.setBase(baseId, t); setTypes(t.types);
   }
   function config() {
-    var ov = {}; Array.prototype.forEach.call($("slotBox").querySelectorAll("input"), function (inp) {
-      var s = cur.slots[+inp.getAttribute("data-i")]; if (s && inp.value.toLowerCase() !== s.val.toLowerCase()) ov[s.path] = inp.value;
-    });
+    var c = SE.get();
     var types = Array.prototype.filter.call($("tTypes").querySelectorAll("input"), function (i) { return i.checked; }).map(function (i) { return i.value; });
-    var c = { base: cur.base, ov: ov, bg: $("cBg").value, ink: $("cInk").value, accent: $("cAccent").value, font: $("tFont").value, ital: $("tItal").checked, upper: $("tUpper").checked, types: types.length ? types : ["uylonuu"], demo: (Sc.themes[cur.base] || {}).demo };
-    if ($("envOn").checked) c.env = EE.get();
+    c.types = types.length ? types : ["uylonuu"]; c.demo = (Sc.themes[cur.base] || {}).demo;
     return c;
   }
-  var showEnv = false, ptimer;
-  $("tName").addEventListener("focus", function () { showEnv = false; });
   function preview() { clearTimeout(ptimer); ptimer = setTimeout(function () {
-    var c = config(), json = JSON.stringify({ name: $("tName").value || "Шаблон", base: c.base, ov: c.ov, bg: c.bg, ink: c.ink, accent: c.accent, font: c.font, ital: c.ital, upper: c.upper, types: c.types, env: c.env });
-    var b64 = btoa(unescape(encodeURIComponent(json))).replace(/\+/g, "-").replace(/\//g, "_");
-    var demo = c.demo || "demo";
-    $("frame").src = "davet.html?id=" + demo + "&t=ct-preview&lang=ky" + (showEnv ? "" : "&preview=1") + "&ctpl=" + encodeURIComponent(b64);
+    var c = config(), o = {}; Object.keys(c).forEach(function (k) { o[k] = c[k]; }); o.name = $("tName").value || "Шаблон";
+    var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_");
+    $("frame").src = "davet.html?id=" + (c.demo || "demo") + "&t=ct-preview&lang=ky" + (showEnv ? "" : "&preview=1") + "&ctpl=" + encodeURIComponent(b64);
   }, 350); }
 
   function resetForm() {
     cur.id = ""; $("tName").value = ""; $("stEditing").textContent = "";
-    $("tBase").value = Sc.builtin[0]; loadBase(Sc.builtin[0], false); preview();
+    $("tBase").value = Sc.builtin[0]; loadBase(Sc.builtin[0]); preview();
   }
   function editRow(r) {
     var c = r.config || {}; cur.id = r.id; $("stEditing").textContent = "· правка";
-    $("tName").value = r.name; $("tBase").value = c.base; cur.ov = c.ov || {};
-    loadBase(c.base, true);
-    $("tFont").value = c.font || Sc.themes[c.base].font; $("tItal").checked = !!c.ital; $("tUpper").checked = !!c.upper;
-    $("cBg").value = c.bg || Sc.themes[c.base].bg; $("cInk").value = c.ink || Sc.themes[c.base].ink; $("cAccent").value = c.accent || Sc.themes[c.base].accent;
-    $("envOn").checked = !!c.env; var th0 = Sc.themes[c.base]; EE.set(c.env, { paper: th0.bg, lining: th0.accent, seal: th0.accent, tassel: th0.accent });
-    Array.prototype.forEach.call($("tTypes").querySelectorAll("input"), function (i) { i.checked = (c.types || []).indexOf(i.value) > -1; });
+    $("tName").value = r.name; $("tBase").value = c.base; cur.base = c.base;
+    SE.set(c, c.base); setTypes(c.types || []);
     preview(); window.scrollTo({ top: 0, behavior: "smooth" });
   }
   function slugify(s) { var TR = { а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "e", ж: "j", з: "z", и: "i", й: "y", к: "k", л: "l", м: "m", н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "h", ц: "ts", ч: "ch", ш: "sh", щ: "sh", ы: "y", э: "e", ю: "yu", я: "ya", ө: "o", ү: "u", ң: "n" };
@@ -97,10 +78,9 @@
     else if (b.getAttribute("data-act") === "pub") O.templatePublish(id, !r.published).then(function () { try { localStorage.removeItem("samara-ctpl"); } catch (e) {} toast(r.published ? "Скрыт" : "Показан"); loadList(); });
     else if (b.getAttribute("data-act") === "del") { if (confirm("Удалить шаблон «" + r.name + "»? Приглашения, уже сделанные с ним, потеряют оформление.")) O.templateDelete(id).then(function () { try { localStorage.removeItem("samara-ctpl"); } catch (e) {} toast("Удалён"); if (cur.id === id) resetForm(); loadList(); }); }
   });
-  ["tName", "tFont", "tItal", "tUpper", "cBg", "cInk", "cAccent", "envOn"].forEach(function (id) { $(id).addEventListener("input", preview); $(id).addEventListener("change", preview); });
+  $("tName").addEventListener("input", preview);
   $("tTypes").addEventListener("change", preview);
-  $("slotBox").addEventListener("input", preview);
-  $("tBase").addEventListener("change", function () { loadBase($("tBase").value, false); preview(); });
+  $("tBase").addEventListener("change", function () { loadBase($("tBase").value); preview(); });
   $("btnSave").addEventListener("click", save);
   $("btnNew").addEventListener("click", resetForm);
   var be = document.createElement("button"); be.type = "button"; be.className = "btn btn-sm btn-ghost"; be.textContent = "Показать конверт"; be.addEventListener("click", function () { showEnv = !showEnv; be.textContent = showEnv ? "Показать приглашение" : "Показать конверт"; preview(); });
