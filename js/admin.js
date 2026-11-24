@@ -95,13 +95,14 @@
 
   // ---------- Өз стили (түстөр, шрифт, конверт) ----------
   var Sc = window.Scenes, csSlots = [];
+  var csEE = $("csEnv") && window.EnvEdit ? window.EnvEdit.mount($("csEnv"), function () { schedule(); }) : null;
   function csBase() { var t = Sc && Sc.themes[theme]; return t ? (t._base || theme) : ""; }
   function csOk() { return !!csBase() && Sc.builtin.indexOf(csBase()) > -1; }
   function csDefaults() {
     var t = Sc.themes[theme], b = Sc.themes[csBase()];
     $("csFont").value = t.font; $("csItal").checked = !!t.ital;
     $("csBg").value = t.bg; $("csInk").value = t.ink; $("csAcc").value = t.accent;
-    var e = t.env || {}; $("csPaper").value = e.paper || t.bg; $("csLining").value = e.lining || t.accent; $("csSeal").value = e.seal || t.accent;
+    if (csEE) csEE.set(t.env, { paper: t.bg, lining: t.accent, seal: t.accent, tassel: t.accent });
     csSlots = Sc.colorSlots(csBase());
     $("csSlots").innerHTML = csSlots.map(function (s, i) { return '<label>' + (i + 1) + ' <input type="color" data-i="' + i + '" value="' + s.val + '"></label>'; }).join("");
   }
@@ -115,7 +116,7 @@
   function csCollect() {
     if (!$("csBox") || !$("csOn").checked || !csOk()) return null;
     var ov = {}; Array.prototype.forEach.call($("csSlots").querySelectorAll("input"), function (i) { var s = csSlots[+i.getAttribute("data-i")]; if (s && i.value.toLowerCase() !== s.val.toLowerCase()) ov[s.path] = i.value; });
-    return { base: csBase(), ov: ov, bg: $("csBg").value, ink: $("csInk").value, accent: $("csAcc").value, font: $("csFont").value, ital: $("csItal").checked, types: (Sc.themes[theme] || {}).types || ["uylonuu"], env: { paper: $("csPaper").value, lining: $("csLining").value, seal: $("csSeal").value } };
+    return { base: csBase(), ov: ov, bg: $("csBg").value, ink: $("csInk").value, accent: $("csAcc").value, font: $("csFont").value, ital: $("csItal").checked, types: (Sc.themes[theme] || {}).types || ["uylonuu"], env: csEE ? csEE.get() : undefined };
   }
   function csFill(cs) {
     if (!$("csBox")) return;
@@ -124,7 +125,7 @@
     $("csOn").checked = true; csDefaults();
     $("csFont").value = cs.font || $("csFont").value; $("csItal").checked = !!cs.ital;
     $("csBg").value = cs.bg || $("csBg").value; $("csInk").value = cs.ink || $("csInk").value; $("csAcc").value = cs.accent || $("csAcc").value;
-    if (cs.env) { $("csPaper").value = cs.env.paper || $("csPaper").value; $("csLining").value = cs.env.lining || $("csLining").value; $("csSeal").value = cs.env.seal || $("csSeal").value; }
+    if (csEE && cs.env) csEE.set(cs.env, { paper: cs.bg, lining: cs.accent, seal: cs.accent, tassel: cs.accent });
     Array.prototype.forEach.call($("csSlots").querySelectorAll("input"), function (i) { var s = csSlots[+i.getAttribute("data-i")]; if (s && cs.ov && cs.ov[s.path]) i.value = cs.ov[s.path]; });
   }
   if ($("csOn")) $("csOn").addEventListener("change", function () { if (this.checked) csDefaults(); });

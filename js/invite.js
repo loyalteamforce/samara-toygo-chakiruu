@@ -149,17 +149,23 @@
     '<g fill="currentColor"><rect x="24" y="40" width="12" height="14" rx="5"/><rect x="84" y="40" width="12" height="14" rx="5"/></g>' +
     '<g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M26 56 L24 96 M30 56 L29 98 M34 56 L34 98 M38 56 L39 96"/><path d="M86 56 L84 96 M90 56 L89 98 M94 56 L94 98 M98 56 L99 96"/></g>';
   function zEnvelope(t, guest, initials, heading) {
-    return '<div class="envelope zenv" id="envelope" role="button" tabindex="0" aria-label="' + t.open + '">' +
+    var th = window.Scenes && window.Scenes.themes[document.body.getAttribute("data-theme")], E = (th && th.env) || {};
+    var cls = "envelope zenv" + (E.frame === "none" ? " ef-none" : E.frame === "simple" ? " ef-simple" : "") + (E.tassels === false ? " nt" : "") + " es-" + (E.sealShape || "round") + (E.paperImg ? " has-pimg" : "") + (E.bgImg ? " has-bgimg" : "");
+    var style = (E.bgImg ? ' style="--bgimg:url(&quot;' + esc(E.bgImg) + '&quot;)"' : "");
+    var pimg = E.paperImg ? "background-image:url(&quot;" + esc(E.paperImg) + "&quot;)" : "";
+    var sealIn = E.sealImg ? '<img src="' + esc(E.sealImg) + '" alt="">' : "<span>" + esc(E.sealText != null && E.sealText !== "" ? E.sealText : initials) + "</span>";
+    var orn = (E.frame === "full" || !E.frame) ? '<svg class="zenv-orn" viewBox="0 0 300 200" aria-hidden="true">' + ZORN + "</svg>" : "";
+    var flapOrn = E.frame === "none" ? "" : ZFLAP;
+    return '<div class="' + cls + '" id="envelope" role="button" tabindex="0" aria-label="' + t.open + '"' + style + ">" +
       '<div class="zenv-stage">' +
-        '<div class="zenv-card"><svg class="zenv-orn" viewBox="0 0 300 200" aria-hidden="true">' + ZORN + "</svg>" +
-          "</div>" +
+        '<div class="zenv-card"' + (pimg ? ' style="' + pimg + '"' : "") + ">" + orn + "</div>" +
         '<div class="zenv-lining"></div>' +
-        '<div class="zenv-flap"><svg class="zf-front" viewBox="0 0 300 132" preserveAspectRatio="none" aria-hidden="true"><path class="zf-fill" d="M2 2 L298 2 L150 128 Z"/><path class="zf-edge" d="M2 2 L298 2 L150 128 Z" fill="none"/>' + ZFLAP + '</svg><div class="zf-back"></div></div>' +
+        '<div class="zenv-flap"><div class="zf-front">' + (pimg ? '<div class="zf-img" style="' + pimg + '"></div>' : "") + '<svg viewBox="0 0 300 132" preserveAspectRatio="none" aria-hidden="true"><path class="zf-fill" d="M2 2 L298 2 L150 128 Z"/><path class="zf-edge" d="M2 2 L298 2 L150 128 Z" fill="none"/>' + flapOrn + '</svg></div><div class="zf-back"></div></div>' +
         '<svg class="zenv-tassels" viewBox="0 0 120 100" aria-hidden="true">' + ZTASSEL + "</svg>" +
-        '<div class="zenv-seal"><span>' + esc(initials) + "</span></div>" +
+        '<div class="zenv-seal">' + sealIn + "</div>" +
       "</div>" +
       '<div class="zenv-text"><p class="zenv-head">' + esc(heading) + "</p>" + (guest ? '<p class="zenv-guest">' + esc(guest) + "</p>" : "") + "</div>" +
-      '<p class="env-hint">' + t.open + "</p></div>";
+      '<p class="env-hint">' + esc(E.hint || t.open) + "</p></div>";
   }
 
   function render(d) {
@@ -416,7 +422,8 @@
       if (!/^#[0-9a-f]{6}$/i.test(base)) base = (Sc && Sc.themes[document.body.getAttribute("data-theme")] && Sc.themes[document.body.getAttribute("data-theme")].accent) || "#115243";
       setTimeout(function () {
         env.classList.add("opened");
-        if (window.SilkFx && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+        var noSweep = (Sc && Sc.themes[document.body.getAttribute("data-theme")] && Sc.themes[document.body.getAttribute("data-theme")].env && Sc.themes[document.body.getAttribute("data-theme")].env.sweep === false);
+        if (window.SilkFx && !noSweep && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
           setTimeout(function () { window.SilkFx.sweep(window.SilkFx.mix(base, "#000000", 0.15), function () { document.body.classList.remove("locked"); env.remove(); }); }, 1100);
         } else {
           document.body.classList.remove("locked");

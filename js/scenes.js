@@ -390,6 +390,31 @@
   var styleEl = null, cssAll = "";
   var BUILTIN = Object.keys(T);
 
+
+  // ---------- Конверт жөндөөлөрү ----------
+  var ENV_ENUM = { pattern: ["lattice", "stripes", "dots", "none"], frame: ["full", "simple", "none"], sealShape: ["round", "scallop", "diamond", "heart"] };
+  function okUrl(u) { var S0 = (window.SITE && window.SITE.storage) || {}; u = String(u || ""); return !!S0.url && u.indexOf(S0.url + "/storage/v1/object/public/") === 0 && u.length < 400; }
+  function cleanEnv(e) {
+    if (!e || typeof e !== "object") return null;
+    var o = {};
+    ["paper", "lining", "seal", "tassel"].forEach(function (k) { if (HEXC.test(e[k] || "")) o[k] = e[k]; });
+    Object.keys(ENV_ENUM).forEach(function (k) { if (ENV_ENUM[k].indexOf(e[k]) > -1) o[k] = e[k]; });
+    if (typeof e.sealText === "string") o.sealText = e.sealText.slice(0, 3);
+    if (typeof e.hint === "string") o.hint = e.hint.slice(0, 40);
+    ["tassels", "sweep"].forEach(function (k) { if (e[k] === false) o[k] = false; });
+    ["paperImg", "bgImg", "sealImg"].forEach(function (k) { if (okUrl(e[k])) o[k] = e[k]; });
+    return o;
+  }
+  var HEXC = /^#[0-9a-f]{6}$/i;
+  function patUri(kind, c) {
+    c = String(c).replace("#", "%23");
+    if (kind === "none") return "none";
+    var svg = kind === "stripes" ? "%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Cpath d='M4.500 0V9' stroke='" + c + "' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E"
+      : kind === "dots" ? "%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Ccircle cx='7' cy='7' r='1.400' fill='" + c + "' fill-opacity='.65'/%3E%3C/svg%3E"
+      : "%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M11 1L21 11L11 21L1 11Z' fill='none' stroke='" + c + "' stroke-opacity='.55' stroke-width='1'/%3E%3C/svg%3E";
+    return 'url("data:image/svg+xml,' + svg + '")';
+  }
+
   function themeCss(id) {
     var t = T[id], dark = !!t.dark;
     t.fonts = [FONT_Q[t.font] || "Bad+Script"];
@@ -398,7 +423,7 @@
     var zc1 = e.paper || "color-mix(in srgb," + t.bg + " 60%,#fff)", zc2 = e.paper ? "color-mix(in srgb," + e.paper + " 88%,#000)" : t.bg, seal = e.seal || t.accent;
     return 'body[data-theme="' + id + '"]{--bg:' + t.bg + ";--bg2:color-mix(in srgb," + t.bg + " 70%,#fff);--ink:" + t.ink + ";--muted:color-mix(in srgb," + t.ink + " 68%," + t.bg + ");--accent:" + t.accent + ";--accent-ink:" + (dark ? t.bg : "#fff") +
       ";--line:color-mix(in srgb," + t.accent + " 42%,transparent);--f-names:" + fam + ";--f-head:" + (dark ? fam : "'Cormorant Garamond',serif") + ";--names-style:" + (t.ital ? "italic" : "normal") + ";--names-k:" + (NK[t.kind] ? NK[t.kind] * (t.font === "Bad Script" ? 1 : 1.1) : t.font === "Bad Script" ? 1.15 : t.upper ? 0.82 : 1.25) + ";--hpt:" + (TOP[t.kind] || 15) + "svh;--tsh:" + (dark ? "0 2px 16px rgba(0,0,0,.5)" : "0 1px 14px rgba(255,255,255,.65)") +
-      ";--zlin:" + (e.lining || "color-mix(in srgb," + t.accent + " 62%,#000)") + ";--zgold:" + t.accent + ";--zcard1:" + zc1 + ";--zcard2:" + zc2 + ";--zseal1:color-mix(in srgb," + seal + " 70%,#fff);--zseal2:" + seal + ";--env:" + (e.paper || t.bg) + ";--env2:" + (e.lining || "color-mix(in srgb," + t.bg + " 88%,#000)") + ";--seal:" + seal + "}";
+      ";--zlin:" + (e.lining || "color-mix(in srgb," + t.accent + " 62%,#000)") + ";--ztas:" + (e.tassel || t.accent) + ";--zpat:" + patUri(e.pattern || "lattice", e.pattern === "lattice" || !e.pattern ? "#d9b36a" : t.accent) + ";--zgold:" + t.accent + ";--zcard1:" + zc1 + ";--zcard2:" + zc2 + ";--zseal1:color-mix(in srgb," + seal + " 70%,#fff);--zseal2:" + seal + ";--env:" + (e.paper || t.bg) + ";--env2:" + (e.lining || "color-mix(in srgb," + t.bg + " 88%,#000)") + ";--seal:" + seal + "}";
   }
   function entry(id) {
     var t = T[id];
@@ -443,7 +468,7 @@
     t.ital = !!c.ital; t.upper = !!c.upper;
     if (c.seed) t.seed = (+c.seed || t.seed) | 0;
     var ov = c.ov || {}; Object.keys(ov).forEach(function (pth) { if (HEX.test(ov[pth]) && getPath({ pal: t.pal, fl: t.fl }, pth) !== undefined) setPath({ pal: t.pal, fl: t.fl }, pth, ov[pth]); });
-    if (c.env) { t.env = {}; ["paper", "lining", "seal"].forEach(function (k) { if (HEX.test(c.env[k] || "")) t.env[k] = c.env[k]; }); }
+    var ce = cleanEnv(c.env); if (ce) t.env = ce;
     var isNew = !T[row.id];
     T[row.id] = t;
     cssAll = cssAll.split("\n").filter(function (l) { return l.indexOf('body[data-theme="' + row.id + '"]') !== 0; }).join("\n") + "\n" + themeCss(row.id);
@@ -478,6 +503,7 @@
 
   window.SCENE_THEMES = T;
   window.Scenes = {
+    cleanEnv: cleanEnv, okUrl: okUrl,
     themes: T, list: list, ready: ready, fonts: FONT_OK, builtin: BUILTIN, colorSlots: colorSlots, register: register, flush: flush,
     has: function (id) { return !!T[id]; },
     dark: function (id) { return !!(T[id] && T[id].dark); },

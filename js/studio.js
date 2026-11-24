@@ -11,6 +11,7 @@
   function slotLabel(path) { var parts = path.split("."); var out = []; parts.forEach(function (k) { if (k === "pal" || k === "fl") return; if (/^\d+$/.test(k)) { out.push(String(+k + 1)); return; } var w = SLOT[k]; if (w === "") return; out.push(w || k); }); return out.join(" ") || path; }
 
   var cur = { id: "", base: "", ov: {}, slots: [] };
+  var EE = window.EnvEdit.mount($("envEd"), function () { $("envOn").checked = true; showEnv = true; preview(); });
   var all = [];
 
   // ---------- Шаблон формасы ----------
@@ -25,7 +26,7 @@
     if (!keep) {
       $("tFont").value = t.font; $("tItal").checked = !!t.ital; $("tUpper").checked = !!t.upper;
       $("cBg").value = t.bg; $("cInk").value = t.ink; $("cAccent").value = t.accent;
-      $("cPaper").value = t.bg; $("cLining").value = t.bg; $("cSeal").value = t.accent; $("envOn").checked = false;
+      EE.set(null, { paper: t.bg, lining: t.accent, seal: t.accent, tassel: t.accent }); $("envOn").checked = false;
       cur.ov = {};
       Array.prototype.forEach.call($("tTypes").querySelectorAll("input"), function (i) { i.checked = t.types.indexOf(i.value) > -1; });
     }
@@ -41,10 +42,11 @@
     });
     var types = Array.prototype.filter.call($("tTypes").querySelectorAll("input"), function (i) { return i.checked; }).map(function (i) { return i.value; });
     var c = { base: cur.base, ov: ov, bg: $("cBg").value, ink: $("cInk").value, accent: $("cAccent").value, font: $("tFont").value, ital: $("tItal").checked, upper: $("tUpper").checked, types: types.length ? types : ["uylonuu"], demo: (Sc.themes[cur.base] || {}).demo };
-    if ($("envOn").checked) c.env = { paper: $("cPaper").value, lining: $("cLining").value, seal: $("cSeal").value };
+    if ($("envOn").checked) c.env = EE.get();
     return c;
   }
   var showEnv = false, ptimer;
+  $("tName").addEventListener("focus", function () { showEnv = false; });
   function preview() { clearTimeout(ptimer); ptimer = setTimeout(function () {
     var c = config(), json = JSON.stringify({ name: $("tName").value || "Шаблон", base: c.base, ov: c.ov, bg: c.bg, ink: c.ink, accent: c.accent, font: c.font, ital: c.ital, upper: c.upper, types: c.types, env: c.env });
     var b64 = btoa(unescape(encodeURIComponent(json))).replace(/\+/g, "-").replace(/\//g, "_");
@@ -62,7 +64,7 @@
     loadBase(c.base, true);
     $("tFont").value = c.font || Sc.themes[c.base].font; $("tItal").checked = !!c.ital; $("tUpper").checked = !!c.upper;
     $("cBg").value = c.bg || Sc.themes[c.base].bg; $("cInk").value = c.ink || Sc.themes[c.base].ink; $("cAccent").value = c.accent || Sc.themes[c.base].accent;
-    $("envOn").checked = !!c.env; if (c.env) { $("cPaper").value = c.env.paper || $("cPaper").value; $("cLining").value = c.env.lining || $("cLining").value; $("cSeal").value = c.env.seal || $("cSeal").value; }
+    $("envOn").checked = !!c.env; var th0 = Sc.themes[c.base]; EE.set(c.env, { paper: th0.bg, lining: th0.accent, seal: th0.accent, tassel: th0.accent });
     Array.prototype.forEach.call($("tTypes").querySelectorAll("input"), function (i) { i.checked = (c.types || []).indexOf(i.value) > -1; });
     preview(); window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -95,7 +97,7 @@
     else if (b.getAttribute("data-act") === "pub") O.templatePublish(id, !r.published).then(function () { try { localStorage.removeItem("samara-ctpl"); } catch (e) {} toast(r.published ? "Скрыт" : "Показан"); loadList(); });
     else if (b.getAttribute("data-act") === "del") { if (confirm("Удалить шаблон «" + r.name + "»? Приглашения, уже сделанные с ним, потеряют оформление.")) O.templateDelete(id).then(function () { try { localStorage.removeItem("samara-ctpl"); } catch (e) {} toast("Удалён"); if (cur.id === id) resetForm(); loadList(); }); }
   });
-  ["tName", "tFont", "tItal", "tUpper", "cBg", "cInk", "cAccent", "cPaper", "cLining", "cSeal", "envOn"].forEach(function (id) { $(id).addEventListener("input", preview); $(id).addEventListener("change", preview); });
+  ["tName", "tFont", "tItal", "tUpper", "cBg", "cInk", "cAccent", "envOn"].forEach(function (id) { $(id).addEventListener("input", preview); $(id).addEventListener("change", preview); });
   $("tTypes").addEventListener("change", preview);
   $("slotBox").addEventListener("input", preview);
   $("tBase").addEventListener("change", function () { loadBase($("tBase").value, false); preview(); });

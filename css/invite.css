@@ -592,10 +592,11 @@ body[data-scn="dark"] .btn-solid, body[data-scn="dark"] .btn:hover { color: var(
 /* ---------- Видеодогудай конверт: торчолуу уч, 3D мөөр, жип ---------- */
 .zenv-flap { transform-style: preserve-3d; }
 .zenv-flap .zf-front { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.zenv-flap .zf-front > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .zenv-flap .zf-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateX(180deg); clip-path: polygon(0 0, 100% 0, 50% 97%); }
 .zenv-lining, .zenv-flap .zf-back {
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M11 1L21 11L11 21L1 11Z' fill='none' stroke='%23d9b36a' stroke-opacity='.55' stroke-width='1'/%3E%3C/svg%3E") 0 0 / 22px 22px,
+    var(--zpat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M11 1L21 11L11 21L1 11Z' fill='none' stroke='%23d9b36a' stroke-opacity='.55' stroke-width='1'/%3E%3C/svg%3E")) 0 0 / 22px 22px,
     linear-gradient(170deg, var(--zlin, color-mix(in srgb, var(--zcard2) 55%, #000)), color-mix(in srgb, var(--zlin, var(--zcard2)) 80%, #000));
 }
 .zenv-lining { position: absolute; left: 0; top: 0; width: 100%; height: 66%; clip-path: polygon(0 0, 100% 0, 50% 97%); z-index: 1; }
@@ -608,3 +609,20 @@ body[data-scn="dark"] .btn-solid, body[data-scn="dark"] .btn:hover { color: var(
 .zenv-seal::before { content: ""; position: absolute; inset: 9px; border-radius: 50%; border: 2px dotted rgba(255,255,255,.5); }
 .zenv-seal::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); }
 .zenv-seal span { text-shadow: 0 1px 0 rgba(255,255,255,.45), 0 -1px 0 rgba(0,0,0,.35); font-size: 25px; }
+
+/* ---------- Конверт: өз жөндөөлөр ---------- */
+.zenv-tassels { color: var(--ztas, var(--zgold)); }
+.zenv.nt .zenv-tassels { display: none; }
+.zenv.ef-none .zenv-card, .zenv.ef-simple .zenv-card { border-color: transparent; }
+.zenv.ef-simple .zenv-card { border-color: var(--zgold); }
+.zenv.ef-none .zenv-flap .zf-edge { stroke: none; }
+.zenv.has-bgimg { background: var(--bgimg) center / cover; }
+.zenv.has-pimg .zenv-card { background-size: 100% 100%; background-position: 0 0; }
+.zenv.has-pimg .zf-fill { fill: transparent; }
+.zenv-flap .zf-img { position: absolute; inset: 0; background-size: 100% 151.5%; background-position: 0 0; clip-path: polygon(0 0, 100% 0, 50% 97%); }
+.zenv-seal img { width: 70%; height: 70%; object-fit: cover; border-radius: 50%; position: relative; z-index: 1; }
+.zenv.es-scallop .zenv-seal { border-radius: 50%; clip-path: polygon(50% 0, 62% 6%, 75% 3%, 83% 14%, 96% 18%, 96% 31%, 100% 43%, 96% 57%, 99% 70%, 88% 79%, 83% 92%, 69% 93%, 57% 100%, 43% 96%, 31% 100%, 21% 90%, 8% 86%, 6% 72%, 0 57%, 4% 44%, 1% 30%, 10% 20%, 14% 8%, 28% 7%, 38% 0); }
+.zenv.es-diamond .zenv-seal { border-radius: 14%; transform: rotate(45deg); }
+.zenv.es-diamond .zenv-seal span, .zenv.es-diamond .zenv-seal img { transform: rotate(-45deg); }
+.zenv.es-heart .zenv-seal { border-radius: 0; clip-path: path("M38 70 C-6 38 6 2 26 6 C34 8 38 14 38 18 C38 14 42 8 50 6 C70 2 82 38 38 70Z"); }
+.zenv.es-heart .zenv-seal::before, .zenv.es-heart .zenv-seal::after, .zenv.es-scallop .zenv-seal::after, .zenv.es-diamond .zenv-seal::after { display: none; }
