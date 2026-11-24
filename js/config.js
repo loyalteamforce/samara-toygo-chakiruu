@@ -62,7 +62,6 @@ window.SITE = {
     { id: "zumurut", name: "Зумурут", isNew: false, types: ["uylonuu", "yubiley"],                demo: "demo",        font: "'EB Garamond', serif", italic: true, bg: "#0f2a24", ink: "#eef3ea", accent: "#cfae6b" },
     { id: "minimal", name: "Минимал", isNew: true,  types: ["uylonuu", "nikah", "tuulgan-kun", "yubiley"], demo: "demo", font: "'Oswald', sans-serif", upper: true, bg: "#ffffff", ink: "#111111", accent: "#111111" },
     { id: "asman",   name: "Асман",   isNew: false, types: ["sunnot", "tushoo", "yubiley"],       demo: "demo-sunnot", font: "'Lora', serif", italic: true,  bg: "#eef4fa", ink: "#1d3350", accent: "#3d6fa8" },
-    { id: "balalyk", name: "Балалык", isNew: true,  types: ["tushoo", "tuulgan-kun", "beshik", "sunnot"], demo: "demo-beshik", font: "'Pacifico', cursive", small: true, bg: "#f2fbf7", ink: "#23443b", accent: "#f0a63a" },
     { id: "beshik",  name: "Бешик",   isNew: false, types: ["beshik", "tushoo", "tuulgan-kun"],   demo: "demo-beshik", font: "'Bad Script', cursive",        bg: "#fdf3f1", ink: "#4a3a3a", accent: "#c97b7b" }
   ]
 };

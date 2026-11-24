@@ -20,14 +20,14 @@
       var names = (o.names || []).join(" & ") || "—", date = o.date ? String(o.date).slice(0, 10).split("-").reverse().join(".") : "";
       var link = abs("order.html?i=" + o.code);
       var msg = o.status === "paid"
-        ? "Оплата подтверждена ✅ Ваш заказ №" + o.code.toUpperCase() + ". Ваши ссылки здесь: " + link
+        ? "Оплата подтверждена Ваш заказ №" + o.code.toUpperCase() + ". Ваши ссылки здесь: " + link
         : "Здравствуйте! Ваш заказ №" + o.code.toUpperCase() + " ждёт оплаты. Оплатить можно здесь: " + link;
       var wa = digits(o.customer_phone) ? "https://wa.me/" + digits(o.customer_phone) + "?text=" + encodeURIComponent(msg) : "";
       return '<article class="oa-item st-' + o.status + '">' +
         '<div class="oa-h"><b>№ ' + esc(o.code.toUpperCase()) + '</b><span class="ord-chip ' + (o.status === "paid" ? "ok" : o.status === "new" ? "wait" : "off") + '">' + esc(ST[o.status] || o.status) + "</span></div>" +
         '<p class="oa-line"><b>' + esc(names) + "</b> · " + esc(date) + (o.type ? " · " + esc(o.type) : "") + "</p>" +
         '<p class="oa-line muted">' + esc(PROD[o.product] || o.product) + " · <b>" + esc(o.price) + " сом</b> · " + esc(fmt(o.created_at)) + "</p>" +
-        (o.status === "paid" ? '<p class="oa-line">🔗 <a href="' + esc(abs("i/" + o.code)) + '" target="_blank" rel="noopener">' + esc(abs("i/" + o.code).replace(/^https?:\/\//, "")) + "</a></p>" : "") + '<p class="oa-line">' + esc(o.customer_name || "—") + " · " + (wa ? '<a href="' + esc(wa) + '" target="_blank" rel="noopener">' + esc(o.customer_phone) + " (WhatsApp)</a>" : esc(o.customer_phone || "—")) + "</p>" +
+        (o.status === "paid" ? '<p class="oa-line"><a href="' + esc(abs("i/" + o.code)) + '" target="_blank" rel="noopener">' + esc(abs("i/" + o.code).replace(/^https?:\/\//, "")) + "</a></p>" : "") + '<p class="oa-line">' + esc(o.customer_name || "—") + " · " + (wa ? '<a href="' + esc(wa) + '" target="_blank" rel="noopener">' + esc(o.customer_phone) + " (WhatsApp)</a>" : esc(o.customer_phone || "—")) + "</p>" +
         '<div class="oa-btns">' +
           (o.status !== "paid" ? '<button type="button" class="btn btn-sm btn-solid" data-act="paid" data-code="' + esc(o.code) + '">Оплачено ✓</button>' : '<button type="button" class="btn btn-sm btn-ghost" data-act="new" data-code="' + esc(o.code) + '">Вернуть в ожидание</button>') +
           (o.status !== "cancelled" ? '<button type="button" class="btn btn-sm btn-ghost" data-act="cancelled" data-code="' + esc(o.code) + '">Отменить</button>' : "") +

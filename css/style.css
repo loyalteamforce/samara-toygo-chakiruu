@@ -720,3 +720,5 @@ body.dz-page .footer { padding-bottom: 150px; }
 .henv.opened .henv-flap { opacity: 0; }
 .rv-phone { width: min(300px, 62vw, 36dvh); }
 @media (min-width: 900px) { .rv-phone { width: min(300px, 38dvh); } }
+
+.feat .ico svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; display: block; }

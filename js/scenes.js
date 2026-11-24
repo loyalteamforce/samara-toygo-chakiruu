@@ -352,10 +352,6 @@
     "scn-sakura":       { name: "Сакура", kind: "sakura", types: ["kyz-uzatuu", "nikah", "tuulgan-kun", "beshik"], demo: "demo-kyz", seed: 31, ink: "#7a3550", accent: "#d0678a", bg: "#fdeef2", dark: 0, font: "Bad Script",
       pal: { bg: ["#fde6ee", "#fff6f0"], wood: "#6b4a4a", petal: ["#ffd9e3", "#f7aec3", "#e8809f"], hill: ["#e9d3da", "#dcc3cb"] } },
 
-    "scn-field-poppy":  { name: "Мак талаасы", kind: "field", types: ["tuulgan-kun", "kuda", "uylonuu", "beshik"], demo: "demo-beshik", seed: 33, ink: "#3b4a2a", accent: "#d0392d", bg: "#f2f6e6", dark: 0, font: "Bad Script",
-      pal: { type: "poppy", sky: ["#c8e3f5", "#eaf5ee", "#fbf6df"], grass: ["#a8c96a", "#6d9a3e"], hill: ["#a9c7a0", "#86b078"], flower: ["#e0392d", "#f2604f", "#7a1010"] } },
-    "scn-field-tulip":  { name: "Жоогазын", kind: "field", types: ["kyz-uzatuu", "beshik", "tushoo", "tuulgan-kun"], demo: "demo-beshik", seed: 37, ink: "#6b3a5a", accent: "#c25a8a", bg: "#fdf0f2", dark: 0, font: "Bad Script",
-      pal: { type: "tulip", sky: ["#f6dcec", "#fdf0ea", "#fff8e8"], grass: ["#b6d27a", "#7aa648"], hill: ["#c4d8a8", "#a5c585"], flower: [["#f0a6c4", "#e0709f"], ["#ffd96b", "#f0b43a"], ["#d9a6f0", "#b077d6"], ["#fff0f4", "#f0c4d4"]] } },
 
     "scn-night-moon":   { name: "Ай түнү", kind: "night", types: ["sunnot", "tushoo", "beshik", "nikah"], demo: "demo-sunnot", seed: 41, ink: "#eef0fa", accent: "#e7c77d", bg: "#101a3a", dark: 1, font: "Lora", ital: 1,
       pal: { sky: ["#0b1535", "#1d2b63", "#3b4a8a"], moon: "#f3f1e6", ridge: ["#26346a", "#1b2755", "#131d44", "#0b1230"] } },
