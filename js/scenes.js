@@ -343,10 +343,6 @@
     "scn-heart-navy":   { name: "Жүрөк · Көк", kind: "heart", types: ["nikah", "uylonuu", "sunnot"], demo: "demo", seed: 11, ink: "#25395e", accent: "#3d5a8c", bg: "#e8eef6", dark: 0, font: "Bad Script",
       pal: { bg: ["#e9eff7", "#d5dff0"], heart: "#fbfcff", edge: "#b4c3de", ribbon: "#3d5a8c", petal: "#b8c8e6", shadow: "#586a8e" } },
 
-    "scn-couple-rose":  { name: "Бирге", kind: "couple", types: ["nikah", "uylonuu", "kyz-uzatuu"], demo: "demo", seed: 13, ink: "#7a3a3c", accent: "#b5524f", bg: "#f3e1da", dark: 0, font: "Cormorant Garamond", ital: 1,
-      pal: { bg: ["#f6e6df", "#ecd3cb"], line: "#a8706a", fig: "rgba(255,246,240,.7)", petal: "#b5524f" } },
-    "scn-couple-sage":  { name: "Жупташ", kind: "couple", types: ["nikah", "uylonuu"], demo: "demo", seed: 19, ink: "#3f5236", accent: "#6f8a62", bg: "#e9eee2", dark: 0, font: "Cormorant Garamond", ital: 1,
-      pal: { bg: ["#edf1e6", "#dde6d6"], line: "#6f8a62", fig: "rgba(255,255,250,.7)", petal: "#8aa67a" } },
 
     "scn-arch-rose":    { name: "Гүл арка", kind: "arch", types: ["nikah", "kyz-uzatuu", "uylonuu"], demo: "demo", seed: 23, ink: "#6e2f46", accent: "#c45a78", bg: "#fbeee8", dark: 0, fl: ROSE_BLUSH, font: "Bad Script",
       pal: { bg: ["#fcf1ec", "#f6dfd6"], arch: "#c9a37a", grass: "#a3b58a" } },
@@ -391,30 +387,102 @@
   }
 
   // ---------- Сайтка тема катары тиркөө ----------
-  var FONT_Q = { "Cormorant Garamond": "Cormorant+Garamond:ital,wght@0,500;1,500", "Bad Script": "Bad+Script", "Prata": "Prata", "Philosopher": "Philosopher:wght@400;700", "Lora": "Lora:ital,wght@0,400;0,500;1,400" };
+  var FONT_Q = { "Cormorant Garamond": "Cormorant+Garamond:ital,wght@0,500;1,500", "Bad Script": "Bad+Script", "Prata": "Prata", "Philosopher": "Philosopher:wght@400;700", "Lora": "Lora:ital,wght@0,400;0,500;1,400", "Forum": "Forum", "EB Garamond": "EB+Garamond:ital,wght@0,400;1,400", "Pacifico": "Pacifico", "Comfortaa": "Comfortaa:wght@400;600", "Yeseva One": "Yeseva+One", "Oswald": "Oswald:wght@400;600" };
+  var FONT_OK = Object.keys(FONT_Q);
   var NK = { heart: 0.72, arch: 0.8, couple: 1.05 };
   var TOP = { lake: 19, peaks: 15, steppe: 15, heart: 33, couple: 13, arch: 30, sakura: 20, field: 15, night: 15 };
-  var ids = Object.keys(T);
-  var css = "";
-  ids.forEach(function (id) {
+  var styleEl = null, cssAll = "";
+  var BUILTIN = Object.keys(T);
+
+  function themeCss(id) {
     var t = T[id], dark = !!t.dark;
     t.fonts = [FONT_Q[t.font] || "Bad+Script"];
-    var fam = "'" + t.font + "', " + (t.font === "Bad Script" ? "cursive" : "serif");
-    css += 'body[data-theme="' + id + '"]{--bg:' + t.bg + ";--bg2:color-mix(in srgb," + t.bg + " 70%,#fff);--ink:" + t.ink + ";--muted:color-mix(in srgb," + t.ink + " 68%," + t.bg + ");--accent:" + t.accent + ";--accent-ink:" + (dark ? t.bg : "#fff") +
+    var fam = "'" + t.font + "', " + (t.font === "Bad Script" || t.font === "Pacifico" ? "cursive" : "serif");
+    var e = t.env || {};
+    var zc1 = e.paper || "color-mix(in srgb," + t.bg + " 60%,#fff)", zc2 = e.lining || t.bg, seal = e.seal || t.accent;
+    return 'body[data-theme="' + id + '"]{--bg:' + t.bg + ";--bg2:color-mix(in srgb," + t.bg + " 70%,#fff);--ink:" + t.ink + ";--muted:color-mix(in srgb," + t.ink + " 68%," + t.bg + ");--accent:" + t.accent + ";--accent-ink:" + (dark ? t.bg : "#fff") +
       ";--line:color-mix(in srgb," + t.accent + " 42%,transparent);--f-names:" + fam + ";--f-head:" + (dark ? fam : "'Cormorant Garamond',serif") + ";--names-style:" + (t.ital ? "italic" : "normal") + ";--names-k:" + (NK[t.kind] ? NK[t.kind] * (t.font === "Bad Script" ? 1 : 1.1) : t.font === "Bad Script" ? 1.15 : t.upper ? 0.82 : 1.25) + ";--hpt:" + (TOP[t.kind] || 15) + "svh;--tsh:" + (dark ? "0 2px 16px rgba(0,0,0,.5)" : "0 1px 14px rgba(255,255,255,.65)") +
-      ";--zgold:" + t.accent + ";--zcard1:color-mix(in srgb," + t.bg + " 60%,#fff);--zcard2:" + t.bg + ";--zseal1:color-mix(in srgb," + t.accent + " 70%,#fff);--zseal2:" + t.accent + ";--env:" + t.bg + ";--env2:color-mix(in srgb," + t.bg + " 88%,#000);--seal:" + t.accent + "}";
-  });
-  try { var st = document.createElement("style"); st.id = "scene-themes"; st.textContent = css; document.head.appendChild(st); } catch (e) {}
-
-  var list = ids.map(function (id) {
+      ";--zgold:" + t.accent + ";--zcard1:" + zc1 + ";--zcard2:" + zc2 + ";--zseal1:color-mix(in srgb," + seal + " 70%,#fff);--zseal2:" + seal + ";--env:" + (e.paper || t.bg) + ";--env2:" + (e.lining || "color-mix(in srgb," + t.bg + " 88%,#000)") + ";--seal:" + seal + "}";
+  }
+  function entry(id) {
     var t = T[id];
-    return { id: id, name: t.name, isNew: true, types: t.types, demo: t.demo, font: "'" + t.font + "', " + (t.font === "Bad Script" ? "cursive" : "serif"), italic: !!t.ital, upper: !!t.upper, bg: t.bg, ink: t.ink, accent: t.accent, scene: true };
-  });
-  if (window.SITE && Array.isArray(window.SITE.templates)) window.SITE.templates = list.concat(window.SITE.templates);
+    return { id: id, name: t.name, isNew: !t.custom, types: t.types, demo: t.demo, font: "'" + t.font + "', " + (t.font === "Bad Script" || t.font === "Pacifico" ? "cursive" : "serif"), italic: !!t.ital, upper: !!t.upper, bg: t.bg, ink: t.ink, accent: t.accent, scene: true, custom: !!t.custom };
+  }
+  function flush() {
+    try { if (!styleEl) { styleEl = document.createElement("style"); styleEl.id = "scene-themes"; document.head.appendChild(styleEl); } styleEl.textContent = cssAll; } catch (e) {}
+  }
+  BUILTIN.forEach(function (id) { cssAll += themeCss(id); });
+  flush();
+  var list = BUILTIN.map(entry);
+  if (window.SITE) window.SITE.templates = list.concat(window.SITE.templates || []);
+
+  // ---------- Өз шаблондор (студия аркылуу жасалган) ----------
+  var HEX = /^#[0-9a-f]{6}$/i;
+  function setPath(o, path, val) { var k = path.split("."), c = o, i; for (i = 0; i < k.length - 1; i++) { if (c[k[i]] == null) return; c = c[k[i]]; } c[k[k.length - 1]] = val; }
+  function getPath(o, path) { var k = path.split("."), c = o, i; for (i = 0; i < k.length; i++) { if (c == null) return undefined; c = c[k[i]]; } return c; }
+  // Түстөрдү түзөтүү үчүн тизме: [{path, label, val}]
+  function colorSlots(id) {
+    var t = T[id], out = [];
+    (function walk(o, pre) {
+      if (o == null || typeof o !== "object") return;
+      Object.keys(o).forEach(function (k) {
+        var v = o[k], pth = pre ? pre + "." + k : k;
+        if (typeof v === "string" && HEX.test(v)) out.push({ path: pth, val: v });
+        else if (typeof v === "object") walk(v, pth);
+      });
+    })({ pal: t.pal, fl: t.fl || null }, "");
+    return out;
+  }
+  function register(row) {
+    var c = row.config || {}, base = T[c.base];
+    if (!base || !/^ct-[a-z0-9-]+$/.test(row.id)) return false;
+    var t = JSON.parse(JSON.stringify(base));
+    delete t._svg; delete t._uri; delete t.fonts;
+    t.custom = true; t.name = String(row.name || "Шаблон").slice(0, 60);
+    if (c.types && c.types.length) t.types = c.types.slice(0, 9);
+    if (HEX.test(c.bg || "")) t.bg = c.bg;
+    if (HEX.test(c.ink || "")) t.ink = c.ink;
+    if (HEX.test(c.accent || "")) t.accent = c.accent;
+    if (c.font && FONT_OK.indexOf(c.font) > -1) t.font = c.font;
+    t.ital = !!c.ital; t.upper = !!c.upper;
+    if (c.seed) t.seed = (+c.seed || t.seed) | 0;
+    var ov = c.ov || {}; Object.keys(ov).forEach(function (pth) { if (HEX.test(ov[pth]) && getPath({ pal: t.pal, fl: t.fl }, pth) !== undefined) setPath({ pal: t.pal, fl: t.fl }, pth, ov[pth]); });
+    if (c.env) { t.env = {}; ["paper", "lining", "seal"].forEach(function (k) { if (HEX.test(c.env[k] || "")) t.env[k] = c.env[k]; }); }
+    var isNew = !T[row.id];
+    T[row.id] = t;
+    cssAll = cssAll.split("\n").filter(function (l) { return l.indexOf('body[data-theme="' + row.id + '"]') !== 0; }).join("\n") + "\n" + themeCss(row.id);
+    var e = entry(row.id), arr = window.SITE && window.SITE.templates;
+    if (arr) { var ix = -1; arr.forEach(function (x, i) { if (x.id === row.id) ix = i; }); if (ix > -1) arr[ix] = e; else arr.unshift(e); }
+    return isNew;
+  }
+  function loadCache() { try { var c = JSON.parse(localStorage.getItem("samara-ctpl") || "[]"); c.forEach(register); } catch (e) {} }
+  function fetchTemplates() {
+    var S = (window.SITE && window.SITE.storage) || {};
+    if (!S.url) return Promise.resolve();
+    return fetch(S.url + "/rest/v1/rpc/samara_templates_list", { method: "POST", headers: { apikey: S.key, Authorization: "Bearer " + S.key, "Content-Type": "application/json" }, body: "{}" })
+      .then(function (r) { return r.json(); })
+      .then(function (rows) {
+        if (!Array.isArray(rows)) return;
+        // жок болгондорун алып салабыз
+        var keep = {}; rows.forEach(function (r) { keep[r.id] = 1; });
+        Object.keys(T).forEach(function (id) { if (T[id].custom && id !== "ct-preview" && !keep[id]) { delete T[id]; if (window.SITE) window.SITE.templates = window.SITE.templates.filter(function (x) { return x.id !== id; }); } });
+        rows.forEach(register); flush();
+        try { localStorage.setItem("samara-ctpl", JSON.stringify(rows)); } catch (e) {}
+      })
+      .catch(function () {});
+  }
+  loadCache();
+  // Алдын ала көрүү: ?ctpl=<base64 JSON>
+  try {
+    var qp = new URLSearchParams(location.search).get("ctpl");
+    if (qp) { var obj = JSON.parse(decodeURIComponent(escape(atob(qp.replace(/-/g, "+").replace(/_/g, "/"))))); register({ id: "ct-preview", name: obj.name || "Preview", config: obj }); }
+  } catch (e) {}
+  flush();
+  var ready = Promise.race([fetchTemplates(), new Promise(function (res) { setTimeout(res, 2500); })]).then(function () { flush(); });
 
   window.SCENE_THEMES = T;
   window.Scenes = {
-    themes: T, list: list,
+    themes: T, list: list, ready: ready, fonts: FONT_OK, builtin: BUILTIN, colorSlots: colorSlots, register: register, flush: flush,
     has: function (id) { return !!T[id]; },
     dark: function (id) { return !!(T[id] && T[id].dark); },
     art: art, uri: uri, image: image,

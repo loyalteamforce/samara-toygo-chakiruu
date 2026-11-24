@@ -36,11 +36,15 @@
   // ---------- Заполнение статичных частей ----------
   $("type").innerHTML = TYPES.map(function (t) { return '<option value="' + t[0] + '">' + t[1] + "</option>"; }).join("");
 
-  $("themes").innerHTML = S.templates.map(function (t) {
-    return '<button type="button" class="th" data-theme="' + t.id + '" aria-pressed="false" title="' + t.name + '">' +
-      '<span class="th-sw" style="background:' + t.bg + ';color:' + t.ink + '"><b style="color:' + t.ink + '">' + t.name.slice(0, 1) + "&amp;" + t.name.slice(0, 1) + '</b><i style="background:' + t.accent + '"></i></span>' +
-      '<span class="th-n">' + t.name + "</span></button>";
-  }).join("");
+  function renderThemes() {
+    $("themes").innerHTML = S.templates.map(function (t) {
+      return '<button type="button" class="th" data-theme="' + t.id + '" aria-pressed="' + (t.id === theme) + '" title="' + t.name + '">' +
+        '<span class="th-sw" style="background:' + t.bg + ';color:' + t.ink + '"><b style="color:' + t.ink + '">' + t.name.slice(0, 1) + "&amp;" + t.name.slice(0, 1) + '</b><i style="background:' + t.accent + '"></i></span>' +
+        '<span class="th-n">' + t.name + "</span></button>";
+    }).join("");
+  }
+  renderThemes();
+  if (window.Scenes && window.Scenes.ready) window.Scenes.ready.then(function () { renderThemes(); if (typeof applyParams === "function" && PUBLIC) applyParams(); });
 
   function setTheme(id) {
     theme = id;

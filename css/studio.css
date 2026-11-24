@@ -1,0 +1,22 @@
+.st { padding-top: 22px; padding-bottom: 90px; max-width: 1100px; }
+.st-grid { display: grid; grid-template-columns: 1fr minmax(280px, 340px); gap: 22px; align-items: start; }
+.st-form, .st-music .card { gap: 12px; }
+.st-form h3 { margin: 8px 0 0; font: 600 14px "Montserrat", sans-serif; color: var(--muted); }
+.st-colors { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+.st-colors label { display: grid; gap: 4px; font-size: 12px; }
+.st-colors input[type="color"] { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 8px; padding: 2px; background: #fff; cursor: pointer; }
+.chk { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.chk input { width: 18px; height: 18px; }
+.st-types { display: flex; flex-wrap: wrap; gap: 8px; }
+.st-types label { display: inline-flex; gap: 6px; align-items: center; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; background: #fff; cursor: pointer; }
+.st-types input:checked + span { font-weight: 600; }
+.st-side { position: sticky; top: 74px; display: grid; gap: 16px; }
+.st-list { display: grid; gap: 8px; }
+.st-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.st-row b { flex: 1; min-width: 0; font-size: 14px; overflow-wrap: anywhere; }
+.st-row small { display: block; color: var(--muted); font-weight: 400; }
+.st-row audio { height: 32px; max-width: 150px; }
+.st-sw { width: 36px; height: 36px; border-radius: 8px; flex: none; border: 1px solid var(--line); }
+.st-music { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+.st select, .st input[type="text"], .st input:not([type]) { width: 100%; }
+@media (max-width: 860px) { .st-grid, .st-music { grid-template-columns: 1fr; } .st-side { position: static; order: -1; } }

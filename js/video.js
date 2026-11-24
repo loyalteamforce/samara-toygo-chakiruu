@@ -47,7 +47,7 @@
     : dParam
       ? window.CODEC.decode(dParam)
       : fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
-  loading.then(init).catch(function () { document.body.innerHTML = '<p style="padding:40px;text-align:center;color:#9fb7aa">' + UI.ky.notFound + "<br>" + UI.ru.notFound + "</p>"; });
+  Promise.all([loading, (window.Scenes && window.Scenes.ready) || Promise.resolve()]).then(function (r) { return init(r[0]); }).catch(function () { document.body.innerHTML = '<p style="padding:40px;text-align:center;color:#9fb7aa">' + UI.ky.notFound + "<br>" + UI.ru.notFound + "</p>"; });
 
   function safeUrl(u) {
     u = String(u || "").trim();

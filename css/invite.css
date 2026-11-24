@@ -569,3 +569,14 @@ body[data-scn] .hero .eyebrow, body[data-scn] .hero .names, body[data-scn] .hero
 body[data-scn="dark"] { background: radial-gradient(70% 40% at 50% 0%, color-mix(in srgb, var(--accent) 14%, var(--bg)), var(--bg)); background-attachment: fixed; }
 body[data-scn="dark"] .cd-cell { background: rgba(255,255,255,.06); }
 body[data-scn="dark"] .btn-solid, body[data-scn="dark"] .btn:hover { color: var(--accent-ink); }
+
+/* Мөөр сынуу эффекти */
+.zshards { position: absolute; left: 50%; top: 66%; width: 0; height: 0; z-index: 6; pointer-events: none; }
+.zshard { position: absolute; left: 0; top: 0; background: var(--zseal2); opacity: 0; clip-path: polygon(10% 0, 100% 30%, 70% 100%, 0 70%); }
+.zshard.g { background: #f2cf7a; box-shadow: 0 0 8px 2px rgba(242,207,122,.8); border-radius: 50%; clip-path: none; }
+.zenv.crack .zshard { animation: zshardFly .85s cubic-bezier(.2,.7,.3,1) forwards; }
+@keyframes zshardFly { 0% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--r)) scale(.5); } }
+.zenv.crack .zenv-seal { animation: zsealCrack .5s ease-out forwards; }
+@keyframes zsealCrack { 0% { transform: scale(1); } 20% { transform: translate(-3px,0) scale(1.05) rotate(-5deg); } 40% { transform: translate(3px,0) scale(1.08) rotate(5deg); } 100% { transform: scale(1.3); opacity: 0; } }
+.zenv.crack .zenv-seal::after { content: ""; position: absolute; inset: -20%; border-radius: 50%; border: 2px solid rgba(255,235,170,.9); animation: zring .5s ease-out forwards; }
+@keyframes zring { from { transform: scale(.6); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }

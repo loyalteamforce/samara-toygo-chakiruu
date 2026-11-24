@@ -12,6 +12,7 @@
   function tr(k) { return Sh.tr(lang, k); }
   var list = kind === "video" ? S.videos : S.templates;
   var item = list.filter(function (x) { return x.id === id; })[0] || list[0];
+  var pickItem = function () { list = kind === "video" ? S.videos : S.templates; item = list.filter(function (x) { return x.id === id; })[0] || list[0]; };
 
   function vname(v) { return tr("type." + v.type) + " · " + tr("dz.silk") + " " + tr("dz.pal." + v.vp).toLowerCase(); }
   function nameOf(x) { return kind === "video" ? vname(x) : x.name; }
@@ -69,4 +70,5 @@
       '<a class="btn btn-solid" href="' + createUrl + '">' + esc(tr("dz.cta")) + ' →</a><small>' + esc(tr("dz.ctaNote")) + ' · <a class="dz-wa" target="_blank" rel="noopener" href="' + esc(Sh.waUrl(msg)) + '">' + esc(tr("dz.ctaWa")) + "</a></small>";
   }
   render();
+  if (window.Scenes && window.Scenes.ready) window.Scenes.ready.then(function () { var before = item && item.id; pickItem(); if (!item || item.id !== before || (item && item.custom)) render(); });
 })();

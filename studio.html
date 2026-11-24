@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Студия · Samara</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&family=Bad+Script&family=Prata&family=Philosopher:wght@400;700&family=Lora:ital,wght@0,400;1,400&family=EB+Garamond:ital,wght@0,400;1,400&family=Pacifico&family=Comfortaa:wght@400;600&family=Yeseva+One&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=34">
+<link rel="stylesheet" href="css/admin.css?v=34">
+<link rel="stylesheet" href="css/studio.css?v=34">
+</head>
+<body class="adm gated">
+
+<div class="gate" id="gate">
+  <form class="gate-box" id="gateForm">
+    <img src="logo/mark.svg" alt="">
+    <h1>SAMARA</h1>
+    <p>Студия шаблонов и музыки.<br>Введите код доступа.</p>
+    <input id="gatePin" type="password" autocomplete="current-password" placeholder="Код доступа" required>
+    <p class="gate-err" id="gateErr" hidden>Неверный код</p>
+    <button class="btn btn-solid" type="submit">Войти</button>
+  </form>
+</div>
+
+<header class="adm-top">
+  <div class="wrap adm-top-in">
+    <a class="logo" href="index.html"><span class="logo-mark"><img src="logo/mark-sm.svg" alt="" width="30" height="30"></span><span><b>Samara</b><small>студия</small></span></a>
+    <div class="adm-actions">
+      <a class="btn btn-sm btn-ghost" href="admin.html">Конструктор</a>
+      <a class="btn btn-sm btn-ghost" href="orders.html">Заказы</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap st">
+  <div class="tpl-filter" id="stTabs">
+    <button type="button" class="chip on" data-tab="tpl">🎨 Шаблоны</button>
+    <button type="button" class="chip" data-tab="music">🎵 Музыка</button>
+  </div>
+
+  <!-- ШАБЛОНЫ -->
+  <section id="tabTpl">
+    <div class="st-grid">
+      <div class="st-form card">
+        <h2>Шаблон <small id="stEditing"></small></h2>
+        <label>Название шаблона <input id="tName" maxlength="40" placeholder="Мой шаблон"></label>
+        <label>Основа <small>(рисунок фона)</small>
+          <select id="tBase"></select>
+        </label>
+        <div class="row2">
+          <label>Шрифт имён <select id="tFont"></select></label>
+          <label class="chk"><input type="checkbox" id="tItal"> Курсив</label>
+        </div>
+        <label class="chk"><input type="checkbox" id="tUpper"> ЗАГЛАВНЫЕ БУКВЫ</label>
+
+        <h3>Цвета страницы</h3>
+        <div class="st-colors">
+          <label>Фон <input type="color" id="cBg"></label>
+          <label>Текст <input type="color" id="cInk"></label>
+          <label>Акцент <input type="color" id="cAccent"></label>
+        </div>
+
+        <h3>Конверт (то, что открывает гость)</h3>
+        <div class="st-colors">
+          <label>Бумага <input type="color" id="cPaper"></label>
+          <label>Подкладка <input type="color" id="cLining"></label>
+          <label>Печать <input type="color" id="cSeal"></label>
+        </div>
+        <label class="chk"><input type="checkbox" id="envOn"> Использовать свои цвета конверта</label>
+
+        <h3>Цвета рисунка</h3>
+        <p class="hint">Небо, горы, вода, цветы — меняйте как хотите.</p>
+        <div class="st-colors" id="slotBox"></div>
+
+        <h3>Для каких тоев</h3>
+        <div class="st-types" id="tTypes"></div>
+
+        <div class="out-btns">
+          <button type="button" class="btn btn-solid" id="btnSave">Сохранить шаблон</button>
+          <button type="button" class="btn btn-ghost" id="btnNew">Новый</button>
+        </div>
+        <p class="hint" id="stMsg"></p>
+      </div>
+
+      <aside class="st-side">
+        <div class="phone" id="phoneWrap"><div class="phone-notch"></div><iframe id="frame" title="Предпросмотр"></iframe></div>
+        <div class="card">
+          <h2>Мои шаблоны</h2>
+          <div id="myList" class="st-list"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- МУЗЫКА -->
+  <section id="tabMusic" hidden>
+    <div class="st-music">
+      <div class="card">
+        <h2>Добавить песню</h2>
+        <label>Название <input id="sTitle" maxlength="100" placeholder="Бүгүн сенин туулган күнүң"></label>
+        <div class="row2">
+          <label>Исполнитель <input id="sArtist" maxlength="100"></label>
+          <label>Язык
+            <select id="sLang"><option value="KG">KG</option><option value="RU">RU</option><option value="">—</option></select>
+          </label>
+        </div>
+        <label>Раздел <small>(любой, можно новый)</small>
+          <input id="sCat" list="catList" maxlength="40" placeholder="Той ырлары">
+          <datalist id="catList"><option value="Той ырлары"><option value="Love Story"><option value="Махабат"><option value="С днём рождения"></datalist>
+        </label>
+        <div class="pick">
+          <label class="btn btn-sm btn-ghost pick-btn">🎵 Выбрать файл (mp3/m4a, до 8 МБ)<input type="file" id="sFile" accept="audio/*,.mp3,.m4a,.aac" hidden></label>
+          <div class="bar" id="sBar" hidden><i></i></div>
+          <p class="hint" id="sFileName"></p>
+        </div>
+        <label>или ссылка <small>(https://…mp3)</small><input id="sUrl" inputmode="url" placeholder="https://..."></label>
+        <button type="button" class="btn btn-solid" id="btnSong">Добавить в библиотеку</button>
+        <p class="hint" id="sMsg"></p>
+        <p class="hint">Используйте музыку, на которую у вас есть права.</p>
+      </div>
+      <div class="card">
+        <h2>Библиотека <small id="sCount"></small></h2>
+        <div id="songList" class="st-list"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="js/config.js?v=34"></script>
+<script src="js/scenes.js?v=34"></script>
+<script src="js/orders.js?v=34"></script>
+<script src="js/photos.js?v=34"></script>
+<script src="js/studio.js?v=34"></script>
+</body>
+</html>

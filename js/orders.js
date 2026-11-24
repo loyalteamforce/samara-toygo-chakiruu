@@ -49,6 +49,13 @@
     adminCheck: function (v) { return rpc("samara_admin_check", { p_secret: v }); },
     list: function () { return rpc("samara_admin_list", { p_secret: secret() }); },
     setStatus: function (code, status) { return rpc("samara_admin_set_status", { p_secret: secret(), p_code: code, p_status: status }); },
+    songsList: function () { return rpc("samara_songs_list"); },
+    templatesAll: function () { return rpc("samara_admin_templates_all", { p_secret: secret() }); },
+    templateSave: function (id, name, config) { return rpc("samara_admin_template_save", { p_secret: secret(), p_id: id, p_name: name, p_config: config }); },
+    templatePublish: function (id, pub) { return rpc("samara_admin_template_set_published", { p_secret: secret(), p_id: id, p_pub: pub }); },
+    templateDelete: function (id) { return rpc("samara_admin_template_delete", { p_secret: secret(), p_id: id }); },
+    songAdd: function (title, artist, lang, cat, url) { return rpc("samara_admin_song_add", { p_secret: secret(), p_title: title, p_artist: artist, p_lang: lang, p_category: cat, p_url: url }); },
+    songDelete: function (id) { return rpc("samara_admin_song_delete", { p_secret: secret(), p_id: id }); },
     publish: function (slug, data) { return rpc("samara_admin_publish", { p_secret: secret(), p_slug: slug, p_data: data }); },
     update: function (code, data) { return rpc("samara_admin_update", { p_secret: secret(), p_code: code, p_data: data }); },
     setPrices: function (p) { return rpc("samara_admin_set_prices", { p_secret: secret(), p_prices: p }); }

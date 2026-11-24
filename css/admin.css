@@ -165,3 +165,16 @@ body[data-mode="public"] .card.out { display: none; }
 .slugrow span { padding: 0 8px 0 12px; color: #6b7a72; font-size: 13px; white-space: nowrap; }
 .slugrow input { border: 0; flex: 1; min-width: 0; padding: 11px 10px 11px 0; font-size: 15px; background: transparent; outline: 0; }
 #shortInfo.ok { color: #1d6b52; } #shortInfo.err { color: #b3283a; }
+
+/* Музыка китепканасы */
+.lib { position: fixed; inset: 0; z-index: 300; background: rgba(5,20,15,.6); display: flex; align-items: flex-end; justify-content: center; }
+.lib[hidden] { display: none; }
+.lib-box { width: min(560px, 100%); max-height: 82dvh; display: grid; grid-template-rows: auto auto 1fr; background: #fbf6ea; border-radius: 22px 22px 0 0; padding: 16px; gap: 10px; }
+@media (min-width: 700px) { .lib { align-items: center; } .lib-box { border-radius: 22px; } }
+.lib-h { display: flex; align-items: center; justify-content: space-between; font: 600 20px "Cormorant Garamond", serif; }
+.lib-h button { border: 0; background: rgba(0,0,0,.08); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; }
+.lib-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.lib-list { overflow-y: auto; display: grid; gap: 8px; align-content: start; }
+.lib-row { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 8px 10px; }
+.lib-play { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; background: #1d6b52; color: #fff; cursor: pointer; }
+.lib-t { flex: 1; min-width: 0; } .lib-t b { display: block; font-size: 14px; overflow-wrap: anywhere; } .lib-t small { color: var(--muted); }

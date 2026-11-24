@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=26">
-<link rel="stylesheet" href="css/admin.css?v=32">
+<link rel="stylesheet" href="css/style.css?v=34">
+<link rel="stylesheet" href="css/admin.css?v=34">
 </head>
 <body class="adm gated">
 
@@ -32,6 +32,7 @@
     <div class="adm-actions">
       <a class="btn btn-sm btn-ghost" href="index.html">← На сайт</a>
       <a class="btn btn-sm btn-solid" href="orders.html">Заказы</a>
+      <a class="btn btn-sm btn-ghost" href="studio.html">Студия</a>
       <button type="button" class="btn btn-sm btn-solid" id="btnSaveOrder" hidden></button>
       <button type="button" class="btn btn-sm btn-ghost" id="btnReset" title="Начать новое приглашение">Новое</button>
     </div>
@@ -157,6 +158,7 @@
           <button type="button" class="btn btn-sm btn-ghost" id="musicDel">Удалить</button>
         </div>
         <label class="btn btn-sm btn-ghost pick-btn" data-need="storage">🎵 Выбрать музыку с телефона<input type="file" id="musicFile" accept="audio/*,.mp3,.m4a,.aac" hidden></label>
+        <button type="button" class="btn btn-sm btn-solid pick-btn" id="btnLib">🎼 Готовая музыка (библиотека)</button>
         <div class="bar" id="musicBar" hidden><i></i></div>
         <details id="musicMore"><summary>или вставить ссылку</summary>
           <input id="music" inputmode="url" placeholder="https://... или music/song.mp3">
@@ -235,11 +237,20 @@
   </aside>
 </main>
 
-<script src="js/config.js?v=26"></script>
-<script src="js/scenes.js?v=26"></script>
-<script src="js/orders.js?v=33"></script>
-<script src="js/codec.js?v=26"></script>
-<script src="js/photos.js?v=26"></script>
-<script src="js/admin.js?v=33"></script>
+
+<div class="lib" id="lib" hidden>
+  <div class="lib-box" role="dialog" aria-modal="true" aria-label="Музыка">
+    <div class="lib-h"><b>Музыка</b><button type="button" id="libX" aria-label="Закрыть">✕</button></div>
+    <div class="lib-chips" id="libChips"></div>
+    <div class="lib-list" id="libList"></div>
+  </div>
+</div>
+<script src="js/config.js?v=34"></script>
+<script src="js/scenes.js?v=34"></script>
+<script src="js/orders.js?v=34"></script>
+<script src="js/codec.js?v=34"></script>
+<script src="js/photos.js?v=34"></script>
+<script src="js/admin.js?v=34"></script>
+<script src="js/library.js?v=34"></script>
 </body>
 </html>

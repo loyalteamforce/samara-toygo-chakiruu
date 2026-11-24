@@ -127,8 +127,8 @@
       ? window.CODEC.decode(dParam)
       : fetch("data/" + id + ".json", { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
 
-  loading
-    .then(render)
+  Promise.all([loading, (window.Scenes && window.Scenes.ready) || Promise.resolve()])
+    .then(function (r) { return render(r[0]); })
     .catch(function () {
       app.innerHTML = '<p class="loading">' + L.ky.notFound + "<br>" + L.ru.notFound + "</p>";
     });
@@ -389,11 +389,26 @@
   function setupEnvelope() {
     var env = document.getElementById("envelope");
     if (!env) return;
+    var busy = false;
     function open() {
-      env.classList.add("opened");
-      document.body.classList.remove("locked");
+      if (busy) return; busy = true;
       playMusic();
-      setTimeout(function () { env.remove(); }, 1400);
+      var seal = env.querySelector(".zenv-seal"), stage = env.querySelector(".zenv-stage"), delay = 0;
+      if (seal && stage && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+        // мөөр сынат: сыныктар жана учкундар
+        env.classList.add("crack"); delay = 520;
+        var sh = "";
+        for (var i = 0; i < 12; i++) {
+          var a = (i / 12) * 6.283 + Math.random() * 0.5, d = 50 + Math.random() * 90, sp = 4 + Math.random() * 7, gold = i % 3 === 0;
+          sh += '<i class="zshard' + (gold ? " g" : "") + '" style="--dx:' + Math.round(Math.cos(a) * d) + "px;--dy:" + Math.round(Math.sin(a) * d + 24) + "px;--r:" + Math.round(Math.random() * 540 - 270) + "deg;width:" + sp.toFixed(1) + "px;height:" + sp.toFixed(1) + 'px"></i>';
+        }
+        var box = document.createElement("div"); box.className = "zshards"; box.innerHTML = sh; stage.appendChild(box);
+      }
+      setTimeout(function () {
+        env.classList.add("opened");
+        document.body.classList.remove("locked");
+        setTimeout(function () { env.remove(); }, 1500);
+      }, delay);
     }
     env.addEventListener("click", open);
     env.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
