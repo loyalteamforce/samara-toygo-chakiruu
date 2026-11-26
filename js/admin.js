@@ -116,6 +116,17 @@
   }
   if ($("csOn")) $("csOn").addEventListener("change", function () { if (this.checked && csOk()) csSE.setBase(csBase(), Sc.themes[theme]); });
 
+
+  // ---------- Өлчөм жана жайгашуу ----------
+  var LAY = [["layN", "n", 100], ["layD", "d", 100], ["layY", "y", 0], ["layZ", "z", 100], ["layFx", "fx", 50], ["layFy", "fy", 50], ["layDim", "dim", 100]];
+  function layOut() { LAY.forEach(function (r) { var el = $(r[0]); if (!el) return; var o = el.parentNode.querySelector("output"); if (o) o.textContent = el.value + (r[1] === "y" ? "" : "%"); }); }
+  function layCollect() { var o = {}; LAY.forEach(function (r) { var el = $(r[0]); if (el && +el.value !== r[2]) o[r[1]] = +el.value; }); return Object.keys(o).length ? o : null; }
+  function layFill(l) { l = l || {}; LAY.forEach(function (r) { var el = $(r[0]); if (el) el.value = l[r[1]] != null ? l[r[1]] : r[2]; }); layOut(); }
+  if ($("layBox")) { $("layBox").addEventListener("input", layOut); $("layReset").addEventListener("click", function () { layFill(null); schedule(); }); layOut(); }
+
+  // WhatsApp номерин тууралоо: 0550... же 550... же +996... → 996550...
+  function waNorm(v) { var d = String(v || "").replace(/\D/g, ""); if (d.length === 9) d = "996" + d; else if (d.length === 10 && d.charAt(0) === "0") d = "996" + d.slice(1); return d; }
+
   function collect() {
     var names = [$("name1").value.trim(), $("name2").value.trim()].filter(Boolean);
     var dt = $("date").value;
@@ -129,7 +140,7 @@
     if (venue.name || venue.address || venue.map) { Object.keys(venue).forEach(function (k) { if (!venue[k]) delete venue[k]; }); d.venue = venue; }
     put("dresscode", $("dress").value);
     put("rsvpUntil", $("rsvpUntil").value);
-    var wa = $("rsvpWa").value.replace(/\D/g, "");
+    var wa = waNorm($("rsvpWa").value);
     if (wa) d.rsvpWhatsapp = wa;
     put("music", $("music").value);
     var photos = $("photos").value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 6);
@@ -139,6 +150,7 @@
     put("cover", $("cover").value);
     put("video", $("video").value);
     var cs = csCollect(); if (cs) d.cs = cs;
+    var ly = layCollect(); if (ly) d.lay = ly;
     put("album", $("album").value);
     return d;
   }
@@ -159,7 +171,7 @@
     $("vname").value = v.name || ""; $("vaddr").value = v.address || ""; $("vmap").value = v.map || "";
     $("dress").value = d.dresscode || "";
     $("rsvpUntil").value = d.rsvpUntil || "";
-    $("rsvpWa").value = d.rsvpWhatsapp || "";
+    $("rsvpWa").value = d.rsvpWhatsapp || ""; layFill(d.lay);
     $("music").value = d.music || "";
     $("photos").value = (d.photos || []).join("\n");
     $("cover").value = d.cover || "";
@@ -300,6 +312,12 @@
     ["btnCopy", "btnOpen", "btnVCopy", "btnVOpen"].forEach(function (id) { $(id).disabled = !ok; });
     $("btnWa").setAttribute("aria-disabled", ok ? "false" : "true");
     $("phoneWrap").classList.toggle("has", !!ok);
+    (function () {
+      var h = $("rsvpHint"); if (!h) return; var n = waNorm($("rsvpWa").value);
+      if (!n) { h.className = "hint"; h.textContent = "Впишите номер WhatsApp: сюда придут ответы гостей (приду / не смогу, количество, пожелания)."; }
+      else if (n.length < 11) { h.className = "hint err"; h.textContent = "Номер выглядит неполным. Пример: 996 550 123 456."; }
+      else { h.className = "hint ok"; h.innerHTML = "Ответы гостей придут в WhatsApp на +" + n + ". <a href=\"https://wa.me/" + n + "\" target=\"_blank\" rel=\"noopener\">Проверить номер</a>"; }
+    })();
     if (!ok) { currentLink = ""; videoLink = ""; $("vlink").value = ""; $("link").value = ""; $("linkInfo").textContent = ""; $("btnWa").removeAttribute("href"); $("frame").removeAttribute("src"); return; }
     window.CODEC.encode(d).then(function (code) {
       var base = new URL("davet.html", location.href).href;

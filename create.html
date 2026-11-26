@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=42">
-<link rel="stylesheet" href="css/admin.css?v=42">
+<link rel="stylesheet" href="css/style.css?v=44">
+<link rel="stylesheet" href="css/admin.css?v=44">
 </head>
 <body class="adm" data-mode="public">
 
@@ -101,6 +101,7 @@
         </label>
         <label>Ответить до <input id="rsvpUntil" maxlength="30" placeholder="10 декабря"></label>
       </div>
+      <p class="hint" id="rsvpHint"></p>
     </section>
 
     <section class="card">
@@ -111,6 +112,23 @@
         <p class="hint">Измените цвета выбранного дизайна под себя: фон, текст, рисунок и конверт. Работает для дизайнов с рисунком (Олива, Көк көл, Чоку и др.).</p>
         <label class="chk"><input type="checkbox" id="csOn"> Использовать свой стиль</label>
         <div class="cs-body" id="csBody"><div id="csStyle"></div></div>
+      </details>
+      <details class="cs" id="layBox">
+        <summary>Размер и положение текста и фото</summary>
+        <p class="hint">Если цифры или имена закрывают лицо на фото, уменьшите их или сдвиньте. Результат сразу виден справа.</p>
+        <div class="lay-grid">
+          <label>Размер имён <output></output><input type="range" id="layN" min="50" max="150" step="5" value="100"></label>
+          <label>Размер даты и цифр <output></output><input type="range" id="layD" min="40" max="150" step="5" value="100"></label>
+          <label>Положение текста (выше / ниже) <output></output><input type="range" id="layY" min="-40" max="40" step="2" value="0"></label>
+        </div>
+        <p class="cs-t">Фото на фоне</p>
+        <div class="lay-grid">
+          <label>Приближение <output></output><input type="range" id="layZ" min="100" max="250" step="5" value="100"></label>
+          <label>Сдвиг фото влево / вправо <output></output><input type="range" id="layFx" min="0" max="100" step="2" value="50"></label>
+          <label>Сдвиг фото вверх / вниз <output></output><input type="range" id="layFy" min="0" max="100" step="2" value="50"></label>
+          <label>Затемнение фото <output></output><input type="range" id="layDim" min="0" max="150" step="5" value="100"></label>
+        </div>
+        <button type="button" class="btn btn-sm btn-ghost" id="layReset">Сбросить</button>
       </details>
 
       <div class="row2">
@@ -248,14 +266,14 @@
     <div class="lib-list" id="libList"></div>
   </div>
 </div>
-<script src="js/config.js?v=42"></script>
-<script src="js/scenes.js?v=42"></script>
-<script src="js/orders.js?v=42"></script>
-<script src="js/codec.js?v=42"></script>
-<script src="js/photos.js?v=42"></script>
-<script src="js/envedit.js?v=42"></script>
-<script src="js/styleedit.js?v=42"></script>
-<script src="js/admin.js?v=42"></script>
-<script src="js/library.js?v=42"></script>
+<script src="js/config.js?v=44"></script>
+<script src="js/scenes.js?v=44"></script>
+<script src="js/orders.js?v=44"></script>
+<script src="js/codec.js?v=44"></script>
+<script src="js/photos.js?v=44"></script>
+<script src="js/envedit.js?v=44"></script>
+<script src="js/styleedit.js?v=44"></script>
+<script src="js/admin.js?v=44"></script>
+<script src="js/library.js?v=44"></script>
 </body>
 </html>

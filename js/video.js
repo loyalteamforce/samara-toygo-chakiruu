@@ -71,6 +71,7 @@
     var names = (Array.isArray(d.names) ? d.names : []).map(String).filter(Boolean);
     var m = String(d.date).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
     if (!m || !names.length) { document.body.innerHTML = '<p style="padding:40px;text-align:center;color:#9fb7aa">' + U.notFound + "</p>"; return; }
+    var LAY = d.lay || {}, nK = (+LAY.n || 100) / 100, dK = (+LAY.d || 100) / 100, yS = 0;
     var year = +m[1], mon = +m[2] - 1, day = +m[3], timeStr = m[4] + ":" + m[5];
     var weekday = new Date(Date.UTC(year, mon, day)).getUTCDay();
 
@@ -173,12 +174,13 @@
 
     function drawCover(t, wash) {
       var iw = coverImg.naturalWidth, ih = coverImg.naturalHeight;
-      var z = 1.04 + 0.07 * Math.min(1, t / DUR);                     // жай жакындоо (Ken Burns)
+      var zoomK = Math.max(1, (+LAY.z || 100) / 100), fx = (LAY.fx != null ? +LAY.fx : 50) / 100, fy = (LAY.fy != null ? +LAY.fy : 50) / 100, dimK = (LAY.dim != null ? +LAY.dim : 100) / 100;
+      var z = (1.04 + 0.07 * Math.min(1, t / DUR)) * zoomK;                     // жай жакындоо (Ken Burns)
       var sc = Math.max(W / iw, H / ih) * z, dw = iw * sc, dh = ih * sc;
-      ctx.globalAlpha = 1; ctx.drawImage(coverImg, (W - dw) / 2, (H - dh) / 2 - 14 * Math.min(1, t / DUR), dw, dh);
+      ctx.globalAlpha = 1; ctx.drawImage(coverImg, (W - dw) * fx, (H - dh) * fy - 14 * Math.min(1, t / DUR), dw, dh);
       if (wash) { ctx.fillStyle = wash; ctx.fillRect(0, 0, W, H); return; }
       var g = ctx.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, "rgba(0,0,0,.55)"); g.addColorStop(0.4, "rgba(0,0,0,.34)"); g.addColorStop(1, "rgba(0,0,0,.68)");
+      g.addColorStop(0, "rgba(0,0,0," + 0.55 * dimK + ")"); g.addColorStop(0.4, "rgba(0,0,0," + 0.34 * dimK + ")"); g.addColorStop(1, "rgba(0,0,0," + 0.68 * dimK + ")");
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     }
 
@@ -219,37 +221,40 @@
       spacing(0);
     }
 
+    function yShift() { return ((+LAY.y || 0) / 100) * H; }
     function scene2(a, t) {
+      yS = yShift();
       font("normal", 500, 26, T.fb); spacing(8);
       var hl = wrap(heading, 560);
-      hl.forEach(function (l, i) { txt(l, W / 2, H * 0.22 + i * 38, T.accent, a * rev(t, 0.2, 0.8)); });
+      hl.forEach(function (l, i) { txt(l, W / 2, H * 0.22 + yS + i * 38, T.accent, a * rev(t, 0.2, 0.8)); });
       spacing(0);
-      var base = 150 * T.k, n = names.length, sizes = [], i;
+      var base = 150 * T.k * nK, n = names.length, sizes = [], i;
       for (i = 0; i < n; i++) sizes.push(fitSize(nm(names[i]), T.ns, 400, T.fn, base, W - 130, 34));
       var sz = Math.min.apply(null, sizes), step = sz * 1.12;
       var total = n === 1 ? 0 : (n - 1) * step * 2;
-      var y = H * 0.5 - total / 2;
+      var y = H * 0.5 + yS - total / 2;
       for (i = 0; i < n; i++) {
         var p = rev(t, 0.5 + i * 0.7, 1.0), yy = y + i * step * 2 + (1 - p) * 40;
         font(T.ns, 400, sz, T.fn); ctx.save(); ctx.translate(W / 2, yy); var sc = 0.94 + 0.06 * p; ctx.scale(sc, sc);
         ctx.globalAlpha = clamp(a * p); ctx.fillStyle = T.ink; ctx.fillText(nm(names[i]), 0, 0); ctx.restore();
         if (i < n - 1) { font("normal", 400, sz * 0.5, T.fn); txt("&", W / 2, yy + step, T.accent, a * rev(t, 0.9 + i * 0.7, 0.8)); }
       }
-      divider(W / 2, H * 0.5 + total / 2 + sz * 0.95, 360, rev(t, 2.6, 1.1), a * rev(t, 2.4, 0.6));
+      divider(W / 2, H * 0.5 + yS + total / 2 + sz * 0.95, 360, rev(t, 2.6, 1.1), a * rev(t, 2.4, 0.6));
     }
 
     function scene3(a, t) {
-      font("normal", 500, 32, T.fb); spacing(10);
-      txt(U.wd[weekday].toUpperCase(), W / 2, H * 0.31, T.ink, a * rev(t, 0.2, 0.8));
+      yS = yShift();
+      font("normal", 500, 32 * Math.min(1, dK + 0.2), T.fb); spacing(10);
+      txt(U.wd[weekday].toUpperCase(), W / 2, H * 0.31 + yS, T.ink, a * rev(t, 0.2, 0.8));
       spacing(0);
-      var p = rev(t, 0.5, 1.1), sz = 330 * (T.fh.indexOf("Pacifico") > -1 ? 0.8 : 1);
-      ctx.save(); ctx.translate(W / 2, H * 0.47); var sc = 1.12 - 0.12 * p; ctx.scale(sc, sc);
+      var p = rev(t, 0.5, 1.1), sz = 330 * dK * (T.fh.indexOf("Pacifico") > -1 ? 0.8 : 1);
+      ctx.save(); ctx.translate(W / 2, H * 0.47 + yS); var sc = 1.12 - 0.12 * p; ctx.scale(sc, sc);
       font("normal", 500, sz, T.fh); ctx.globalAlpha = clamp(a * p); ctx.fillStyle = T.accent; ctx.fillText(String(day), 0, 0); ctx.restore();
       font("normal", 500, 54, T.fb); spacing(14);
-      txt(U.mon[mon].toUpperCase(), W / 2, H * 0.63, T.ink, a * rev(t, 1.0, 0.8));
-      divider(W / 2, H * 0.69, 300, rev(t, 1.4, 1), a * rev(t, 1.2, 0.6));
+      txt(U.mon[mon].toUpperCase(), W / 2, H * 0.47 + yS + (H * 0.16) * Math.max(0.55, dK), T.ink, a * rev(t, 1.0, 0.8));
+      divider(W / 2, H * 0.47 + yS + (H * 0.22) * Math.max(0.6, dK), 300, rev(t, 1.4, 1), a * rev(t, 1.2, 0.6));
       font("normal", 500, 34, T.fb); spacing(6);
-      txt(year + "  ·  " + U.at + " " + timeStr, W / 2, H * 0.75, T.muted, a * rev(t, 1.6, 0.8));
+      txt(year + "  ·  " + U.at + " " + timeStr, W / 2, H * 0.47 + yS + (H * 0.28) * Math.max(0.65, dK), T.muted, a * rev(t, 1.6, 0.8));
       spacing(0);
     }
 

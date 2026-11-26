@@ -39,7 +39,7 @@
       waitYou: "Сиздерди күтөбүз!",
       respect: "Урматтоо менен,",
       music: "Музыка",
-      msgYes: "Келем", msgNo: "Келе албайм",
+      rsvpOpen: "WhatsApp ачылган жок болсо, ушул жерди басыңыз", msgYes: "Келем", msgNo: "Келе албайм",
       msgCount: "Киши саны", msgWish: "Каалоо",
       notFound: "Чакыруу табылган жок.",
       weekdays: ["Дш", "Шш", "Шр", "Бш", "Жм", "Иш", "Жк"],
@@ -76,7 +76,7 @@
       waitYou: "Ждём вас!",
       respect: "С уважением,",
       music: "Музыка",
-      msgYes: "Приду", msgNo: "Не смогу",
+      rsvpOpen: "Если WhatsApp не открылся, нажмите здесь", msgYes: "Приду", msgNo: "Не смогу",
       msgCount: "Количество", msgWish: "Пожелание",
       notFound: "Приглашение не найдено.",
       weekdays: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
@@ -168,6 +168,13 @@
       '<p class="env-hint">' + esc(E.hint || t.open) + "</p></div>";
   }
 
+  function layStyle(L) {
+    L = L || {}; function num(v, def, lo, hi) { v = +v; return isFinite(v) && v >= lo && v <= hi ? v : def; }
+    var n = num(L.n, 100, 40, 160), dd = num(L.d, 100, 30, 160), y = num(L.y, 0, -50, 50), z = num(L.z, 100, 100, 300), fx = num(L.fx, 50, 0, 100), fy = num(L.fy, 50, 0, 100), dim = num(L.dim, 100, 0, 150);
+    if (n === 100 && dd === 100 && y === 0 && z === 100 && fx === 50 && fy === 50 && dim === 100) return "";
+    return ' style="--lay-n:' + n / 100 + ";--lay-d:" + dd / 100 + ";--lay-y:" + y + ";--czoom:" + z / 100 + ";--cpos:" + fx + "% " + fy + "%;--cdim:" + dim / 100 + '"';
+  }
+
   function render(d) {
     var lang = (qs.get("lang") || d.lang) === "ru" ? "ru" : "ky";
     var t = L[lang];
@@ -233,10 +240,11 @@
     // ---------- Башкы бөлүк ----------
     html +=
       '<article class="invite">' +
-      '<section class="hero' + (safeUrl(d.cover) ? " has-cover" : "") + '">' +
+      '<section class="hero' + (safeUrl(d.cover) ? " has-cover" : "") + '"' + layStyle(d.lay) + '>' + (safeUrl(d.cover) ? '<div class="hero-photo"></div>' : "") +
         (isScn && !safeUrl(d.cover) ? '<div class="scene-art">' + window.Scenes.hero(theme) + "</div>" : "") +
         (isGarden ? '<div class="garland top">' + window.Botanic.garland(390, 150, gpal, 7, false) + "</div>" : "") +
         '<span class="corner tl">' + O.corner + '</span><span class="corner tr">' + O.corner + "</span>" +
+        '<div class="hero-body">' +
         '<p class="eyebrow reveal">' + esc(d.heading) + "</p>" +
         (/^\d{1,3}$/.test(String(d.age || "").trim()) ? '<div class="hero-age reveal"><b>' + String(d.age).trim() + "</b><span>" + t.age + "</span></div>" : "") +
         '<h1 class="names reveal" style="--nl:' + Math.max(8, Math.max.apply(null, names.map(function (n) { return n.length; }).concat([0]))) + '">' + names.map(esc).join('<span class="amp">&amp;</span>') + "</h1>" +
@@ -248,6 +256,7 @@
         "</div>" +
         '<p class="hero-sub reveal">' + year + " · " + t.at + " " + timeStr + "</p>" +
         (d.city ? '<p class="hero-city reveal">' + esc(d.city) + "</p>" : "") +
+        '</div>' +
         '<span class="corner bl">' + O.corner + '</span><span class="corner br">' + O.corner + "</span>" +
         (isGarden ? '<div class="garland bot">' + window.Botanic.garland(390, 150, gpal, 19, true) + "</div>" : "") +
       "</section>";
@@ -419,12 +428,15 @@
         var box = document.createElement("div"); box.className = "zshards"; box.innerHTML = sh; stage.appendChild(box);
       }
       var Sc = window.Scenes, base = (Sc && Sc.themes[document.body.getAttribute("data-theme")] && Sc.themes[document.body.getAttribute("data-theme")].env && Sc.themes[document.body.getAttribute("data-theme")].env.lining) || getComputedStyle(document.body).getPropertyValue("--env2").trim() || "#115243";
-      if (!/^#[0-9a-f]{6}$/i.test(base)) base = (Sc && Sc.themes[document.body.getAttribute("data-theme")] && Sc.themes[document.body.getAttribute("data-theme")].accent) || "#115243";
+      if (!/^#[0-9a-f]{6}$/i.test(base)) {
+        var th = Sc && Sc.themes[document.body.getAttribute("data-theme")];
+        base = th && window.SilkFx ? window.SilkFx.mix(th.bg, th.accent, th.dark ? 0.25 : 0.35) : "#115243";
+      }
       setTimeout(function () {
         env.classList.add("opened");
         var noSweep = (Sc && Sc.themes[document.body.getAttribute("data-theme")] && Sc.themes[document.body.getAttribute("data-theme")].env && Sc.themes[document.body.getAttribute("data-theme")].env.sweep === false);
         if (window.SilkFx && !noSweep && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
-          setTimeout(function () { window.SilkFx.sweep(window.SilkFx.mix(base, "#000000", 0.15), function () { document.body.classList.remove("locked"); env.remove(); }); }, 1100);
+          setTimeout(function () { window.SilkFx.sweep(base, function () { document.body.classList.remove("locked"); env.remove(); }); }, 1100);
         } else {
           document.body.classList.remove("locked");
           setTimeout(function () { env.remove(); }, 1500);
@@ -458,6 +470,8 @@
     tick();
   }
 
+  function waNum(v) { var d = String(v || "").replace(/\D/g, ""); if (d.length === 9) d = "996" + d; else if (d.length === 10 && d.charAt(0) === "0") d = "996" + d.slice(1); return d; }
+
   function setupRsvp(d, t, title) {
     var form = document.getElementById("rsvpForm");
     if (!form) return;
@@ -480,8 +494,11 @@
       if (yes) lines.push("👥 " + t.msgCount + ": " + form.count.value);
       var wish = form.wish.value.trim();
       if (wish) lines.push("💐 " + t.msgWish + ": " + wish);
-      var url = "https://wa.me/" + String(d.rsvpWhatsapp).replace(/\D/g, "") + "?text=" + encodeURIComponent(lines.join("\n"));
-      window.open(url, "_blank", "noopener");
+      var url = "https://wa.me/" + waNum(d.rsvpWhatsapp) + "?text=" + encodeURIComponent(lines.join("\n"));
+      var a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
+      var note = document.getElementById("rsvpNote");
+      if (!note) { note = document.createElement("p"); note.id = "rsvpNote"; note.className = "body-text"; form.appendChild(note); }
+      note.innerHTML = '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(t.rsvpOpen || "WhatsApp") + "</a>";
     });
   }
 

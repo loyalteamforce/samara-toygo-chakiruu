@@ -215,3 +215,7 @@ body[data-mode="public"] .card.out { display: none; }
 .sy-env summary { cursor: pointer; font-weight: 600; font-size: 13px; padding: 6px 0; }
 .sy-env > div { display: grid; gap: 10px; padding-top: 6px; }
 input[type="range"] { width: 100%; }
+
+.lay-grid { display: grid; gap: 12px; margin: 8px 0; }
+.lay-grid label { display: grid; gap: 4px; font-size: 13px; position: relative; }
+.lay-grid output { position: absolute; right: 0; top: 0; color: var(--muted); font-weight: 600; }

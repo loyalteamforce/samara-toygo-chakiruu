@@ -80,7 +80,7 @@ h1, h2, .hd-day, .venue-name { font-family: var(--f-head); font-weight: 500; }
 }
 .names {
   /* --nl = эң узун аттын тамга саны (JS коёт) — узун аттар кичирейет */
-  font-size: calc(min(68px, 15vw, 150vw / var(--nl, 8), 720px / var(--nl, 8)) * var(--names-k));
+  font-size: calc(min(68px, 15vw, 150vw / var(--nl, 8), 720px / var(--nl, 8)) * var(--names-k) * var(--lay-n, 1));
   line-height: 1.05;
   overflow-wrap: anywhere;
   max-width: 100%;
@@ -98,7 +98,7 @@ h1, h2, .hd-day, .venue-name { font-family: var(--f-head); font-weight: 500; }
   border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
   padding: 6px 4px; min-width: 96px;
 }
-.hd-day { font-size: 64px; line-height: 1; color: var(--accent); }
+.hd-day { font-size: calc(64px * var(--lay-d, 1)); line-height: 1; color: var(--accent); }
 .hero-sub { margin-top: 12px; font-size: 14px; letter-spacing: .12em; color: var(--muted); }
 .hero-city { margin-top: 6px; font-size: 13px; letter-spacing: .3em; text-transform: uppercase; }
 
@@ -358,7 +358,7 @@ body[data-theme="minimal"] .names { text-transform: uppercase; font-weight: 600;
 body[data-theme="minimal"] .names .amp { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: .8em; text-transform: none; color: var(--muted); }
 body[data-theme="minimal"] .block { border-radius: 0; border-width: 0 0 1px; background: transparent; }
 body[data-theme="minimal"] .block h2 { font-size: 20px; text-transform: uppercase; letter-spacing: .08em; }
-body[data-theme="minimal"] .hd-day { font-size: 72px; }
+body[data-theme="minimal"] .hd-day { font-size: calc(72px * var(--lay-d, 1)); }
 
 /* Балалык — балдар тойлору үчүн, түстүү */
 body[data-theme="balalyk"] {
@@ -411,9 +411,7 @@ body.has-sitebar .music-btn { bottom: 16px; }
 .hero.has-cover {
   --ink: #ffffff; --muted: rgba(255,255,255,.86); --accent: #f1dba6; --line: rgba(255,255,255,.35);
   color: #fff;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.52) 0%, rgba(0,0,0,.30) 38%, rgba(0,0,0,.62) 100%),
-    var(--cover) center / cover no-repeat;
+  position: relative; overflow: hidden;
 }
 .hero.has-cover .names, .hero.has-cover .hd-day, .hero.has-cover .hero-sub, .hero.has-cover .hero-city, .hero.has-cover .eyebrow { text-shadow: 0 2px 18px rgba(0,0,0,.45); }
 .hero.has-cover .hd-side { border-color: rgba(255,255,255,.45); }
@@ -422,7 +420,7 @@ body.has-sitebar .music-btn { bottom: 16px; }
    «Жибек» темалары: ипек, алтын чарчы, мөөрлүү конверт
    ============================================================ */
 .hero-age { display: flex; flex-direction: column; align-items: center; margin: 4px 0 0; }
-.hero-age b { font-family: var(--f-head); font-weight: 400; font-size: clamp(96px, 30vw, 148px); line-height: 1; color: var(--accent); }
+.hero-age b { font-family: var(--f-head); font-weight: 400; font-size: calc(clamp(96px, 30vw, 148px) * var(--lay-d, 1)); line-height: 1; color: var(--accent); }
 .hero-age span { font-family: var(--f-names); font-style: var(--names-style); font-size: 34px; margin-top: -2px; color: var(--ink); }
 
 body[data-theme^="zhibek"] {
@@ -563,7 +561,7 @@ body:is([data-theme^="garden"],[data-scn]) .zenv {
 .scene-art { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .scene-art svg { width: 100%; height: 100%; display: block; }
 body[data-scn] .hero { justify-content: flex-start; padding-top: var(--hpt, 16svh); overflow: hidden; }
-body[data-scn] .hero > *:not(.scene-art) { position: relative; z-index: 1; }
+body[data-scn] .hero > *:not(.scene-art):not(.hero-photo):not(.corner):not(.garland) { position: relative; z-index: 1; }
 body[data-scn] .hero .corner { display: none; }
 body[data-scn] .hero .eyebrow, body[data-scn] .hero .names, body[data-scn] .hero .hd-day, body[data-scn] .hero .hd-side, body[data-scn] .hero .hero-sub, body[data-scn] .hero .hero-city, body[data-scn] .hero .hero-age b, body[data-scn] .hero .hero-age span { text-shadow: var(--tsh); }
 body[data-scn="dark"] { background: radial-gradient(70% 40% at 50% 0%, color-mix(in srgb, var(--accent) 14%, var(--bg)), var(--bg)); background-attachment: fixed; }
@@ -630,3 +628,11 @@ body[data-scn="dark"] .btn-solid, body[data-scn="dark"] .btn:hover { color: var(
 /* Фон: түс / фото */
 .scene-art .sa-fill, .scene-art .sa-photo, .scene-art .sa-dim { position: absolute; inset: 0; width: 100%; height: 100%; }
 .scene-art .sa-photo { object-fit: cover; display: block; }
+
+/* Өлчөм жана жайгашуу */
+.hero-body { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; max-width: 100%; transform: translateY(calc(var(--lay-y, 0) * 1svh)); }
+.hero .corner { z-index: 2; }
+.hero-photo { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero-photo::before { content: ""; position: absolute; inset: 0; background: var(--cover) var(--cpos, 50% 50%) / cover no-repeat; transform: scale(var(--czoom, 1)); transform-origin: var(--cpos, 50% 50%); }
+.hero-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,calc(.52 * var(--cdim, 1))) 0%, rgba(0,0,0,calc(.30 * var(--cdim, 1))) 38%, rgba(0,0,0,calc(.62 * var(--cdim, 1))) 100%); }
+.scene-art .sa-photo { object-position: var(--cpos, 50% 50%); transform: scale(var(--czoom, 1)); transform-origin: var(--cpos, 50% 50%); }
