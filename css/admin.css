@@ -219,3 +219,6 @@ input[type="range"] { width: 100%; }
 .lay-grid { display: grid; gap: 12px; margin: 8px 0; }
 .lay-grid label { display: grid; gap: 4px; font-size: 13px; position: relative; }
 .lay-grid output { position: absolute; right: 0; top: 0; color: var(--muted); font-weight: 600; }
+
+.gate-box .gate-logo { width: min(240px, 70%); height: auto; margin: 0 auto 6px; }
+.adm-top .logo-full { height: 36px; }

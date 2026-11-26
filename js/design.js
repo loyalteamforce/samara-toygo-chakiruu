@@ -48,7 +48,7 @@
       price = S.prices.site; feats = ["dz.f1", "dz.f2", "dz.f3"]; hint = tr("dz.hint");
       tags = item.types.map(function (k) { return tr("type." + k); }).join(" · ");
     }
-    document.title = title + " · Samara";
+    document.title = title + " · Toigo.kettik";
 
     var others = list.filter(function (x) { return x.id !== item.id; });
     var msg = kind === "video" ? tr("wa.videoTpl").replace("{t}", title) : tr("wa.tpl").replace("{t}", title);

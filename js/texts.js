@@ -92,7 +92,7 @@
     document.documentElement.lang = lang;
     Sh.header(document.getElementById("hdr"), lang, { fallback: "index.html", onLang: function (l) { lang = l; render(); } });
     Sh.footer(document.getElementById("siteFooter"), lang);
-    document.title = tr("tx.title") + " · Samara";
+    document.title = tr("tx.title") + " · Toigo.kettik";
     if (!T.ky[cur]) cur = "uylonuu";
     var pg = document.getElementById("pg");
     pg.innerHTML =

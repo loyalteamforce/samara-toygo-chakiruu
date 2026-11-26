@@ -10,7 +10,7 @@
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function waUrl(text) { return "https://wa.me/" + S.whatsapp + "?text=" + encodeURIComponent(text); }
   function igName(u) { var m = String(u || "").match(/instagram\.com\/([^/?#]+)/i); return m ? "@" + m[1] : "Instagram"; }
-  var LOGO = '<a class="logo" href="index.html"><span class="logo-mark"><img src="logo/mark-sm.svg" alt="" width="30" height="30"></span><span><b>Samara</b><small>ТОЙ ЧАКЫРУУ</small></span></a>';
+  var LOGO = '<a class="logo" href="index.html"><img class="logo-full" src="logo/toigo-logo.png" alt="Toigo.kettik"></a>';
 
   // Ички барактардын жогорку тилкеси: артка • логотип • тил
   function header(el, lang, opts) {
@@ -33,7 +33,7 @@
     var typeLinks = TYPES.map(function (k) { return '<li><a href="index.html?type=' + k + '#templates">' + esc(tr(lang, "type." + k)) + "</a></li>"; }).join("");
     el.innerHTML =
       '<div class="wrap">' +
-        '<div class="foot-brand">' + LOGO + '<p class="brand-kg">Самара · Той чакыруу</p><p class="muted">' + esc(tr(lang, "foot.about")) + "</p></div>" +
+        '<div class="foot-brand">' + LOGO + '<p class="brand-kg">Toigo.kettik · Той чакыруу</p><p class="muted">' + esc(tr(lang, "foot.about")) + "</p></div>" +
         '<div class="foot-grid">' +
           '<div class="foot-col"><h4>' + esc(tr(lang, "foot.col.site")) + "</h4><ul>" +
             '<li><a href="index.html#templates">' + esc(tr(lang, "nav.templates")) + "</a></li>" +
@@ -47,7 +47,7 @@
             '<li><a href="' + esc(waUrl(tr(lang, "wa.general"))) + '" target="_blank" rel="noopener">WhatsApp</a></li>' +
             (S.instagram ? '<li><a href="' + esc(S.instagram) + '" target="_blank" rel="noopener">' + esc(igName(S.instagram)) + "</a></li>" : "") + "</ul></div>" +
         "</div>" +
-        '<p class="copy">© ' + new Date().getFullYear() + " Samara · Кыргызстан. " + esc(tr(lang, "foot.rights")) +
+        '<p class="copy">© ' + new Date().getFullYear() + " Toigo.kettik · Кыргызстан. " + esc(tr(lang, "foot.rights")) +
         ' <span class="legal"><a href="terms.html">' + esc(tr(lang, "foot.terms")) + '</a><a href="privacy.html">' + esc(tr(lang, "foot.privacy")) + "</a></span></p>" +
       "</div>";
   }

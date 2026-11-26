@@ -74,10 +74,10 @@
     if (/\.aac$/.test(n) || t === "audio/aac") return { ext: "aac", type: "audio/aac" };
     return null;
   }
-  function music(file, onProgress) {
+  function music(file, onProgress, maxOverride) {
     var k = audioKind(file);
     if (!k) return Promise.reject(new Error("format"));
-    var maxMB = S.maxMusicMB || 8;
+    var maxMB = maxOverride || S.maxMusicMB || 15;
     if (file.size > maxMB * 1024 * 1024) { var e = new Error("size"); e.maxMB = maxMB; return Promise.reject(e); }
     return put(S.musicBucket || "samara-music", "u/" + rid() + "." + k.ext, file, k.type, onProgress);
   }

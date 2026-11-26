@@ -754,3 +754,10 @@ body.dz-page .footer { padding-bottom: 150px; }
 .tp-dim { position: absolute; inset: 0; z-index: 0; display: block; pointer-events: none; }
 
 .rv-card[class*=" tp-ct-"] { padding-top: 14%; }
+
+/* Toigo.kettik логотиби */
+.logo-full { height: 44px; width: auto; display: block; }
+.topbar .logo-full, .tb-in .logo-full { height: 40px; }
+.logo .logo-sub { margin-top: 0; margin-left: 10px; align-self: center; }
+.footer .logo-full { height: 56px; }
+@media (max-width: 420px) { .logo-full { height: 36px; } }

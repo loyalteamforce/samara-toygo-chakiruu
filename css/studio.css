@@ -20,3 +20,7 @@
 .st-music { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
 .st select, .st input[type="text"], .st input:not([type]) { width: 100%; }
 @media (max-width: 860px) { .st-grid, .st-music { grid-template-columns: 1fr; } .st-side { position: static; order: -1; } }
+
+.s-log { display: grid; gap: 4px; }
+.s-row { font-size: 13px; padding: 6px 10px; border-radius: 8px; background: #fff; border: 1px solid var(--line); overflow-wrap: anywhere; }
+.s-row.ok { color: #1d6b52; } .s-row.bad { color: #b3283a; }

@@ -15,7 +15,7 @@
       dearGuests: "Кадырлуу коноктор!",
       back: "Артка", orderBtn: "Заказ", age: "жаш",
       video: "Видео", album: "Тойдун сүрөттөрү", albumText: "Тойдо тарткан сүрөттөрүңүздү бул жерге жүктөңүз", albumBtn: "Сүрөттөрдү жүктөө",
-      madeBy: "Чакырууну даярдаган", madeName: "Самара", madeText: "Той, кыз узатуу, үйлөнүү үлпөтү жана башка өзгөчө күндөрүңүзгө кооз, заманбап электрондук чакырууларды жасап беребиз!",
+      madeBy: "Чакырууну даярдаган", madeName: "Toigo.kettik", madeText: "Той, кыз узатуу, үйлөнүү үлпөтү жана башка өзгөчө күндөрүңүзгө кооз, заманбап электрондук чакырууларды жасап беребиз!",
       calendar: "Той күнү",
       addCal: "Күнтизбеге кошуу",
       at: "саат",
@@ -52,7 +52,7 @@
       dearGuests: "Дорогие гости!",
       back: "Назад", orderBtn: "Заказать", age: "лет",
       video: "Видео", album: "Фото с торжества", albumText: "Загрузите сюда фотографии, снятые на тое", albumBtn: "Загрузить фото",
-      madeBy: "Приглашение подготовила", madeName: "Самара", madeText: "Создаём красивые современные электронные приглашения на той, кыз узатуу, свадьбу и другие торжества!",
+      madeBy: "Приглашение подготовила", madeName: "Toigo.kettik", madeText: "Создаём красивые современные электронные приглашения на той, кыз узатуу, свадьбу и другие торжества!",
       calendar: "Дата торжества",
       addCal: "Добавить в календарь",
       at: "в",
@@ -106,7 +106,7 @@
   }
   function agencyCard(t) {
     var S = window.SITE;
-    if (!S || !S.whatsapp) return '<footer class="made">Samara · той чакыруу</footer>';
+    if (!S || !S.whatsapp) return '<footer class="made">Toigo.kettik · той чакыруу</footer>';
     return '<section class="agency reveal"><p class="ag-k">' + t.madeBy + "</p><h3>" + t.madeName + "</h3><p>" + t.madeText + "</p>" +
       '<a class="btn btn-solid" href="https://wa.me/' + esc(S.whatsapp) + '" target="_blank" rel="noopener">WhatsApp</a>' +
       (S.instagram ? '<a class="btn" href="' + esc(S.instagram) + '" target="_blank" rel="noopener">' + esc(igName(S.instagram)) + "</a>" : "") + "</section>";

@@ -100,13 +100,27 @@
     var b = e.target.closest("[data-act=del]"); if (!b) return; var id = b.closest(".st-row").getAttribute("data-id");
     if (confirm("Удалить песню из библиотеки?")) O.songDelete(id).then(function () { toast("Удалено"); loadSongs(); });
   });
+  function titleOf(f) { return f.name.replace(/\.[^.]+$/, "").replace(/[_]+/g, " ").trim(); }
+  function logLine(txt, cls) { var r = document.createElement("div"); r.className = "s-row" + (cls ? " " + cls : ""); r.textContent = txt; $("sFileName").appendChild(r); return r; }
   $("sFile").addEventListener("change", function () {
-    var f = this.files && this.files[0]; if (!f) return; var bar = $("sBar"), nm = $("sFileName");
-    if (!P || !P.enabled()) { nm.textContent = "Загрузка файлов не настроена."; return; }
-    bar.hidden = false; bar.firstElementChild.style.width = "0%"; nm.textContent = "Загружаем " + f.name + "…";
-    P.music(f, function (p) { bar.firstElementChild.style.width = Math.round(p * 100) + "%"; }).then(function (url) {
-      fileUrl = url; nm.textContent = "Загружено ✓ " + f.name; bar.hidden = true; if (!$("sTitle").value) $("sTitle").value = f.name.replace(/\.[^.]+$/, "");
-    }).catch(function (er) { bar.hidden = true; nm.textContent = er.message === "format" ? "Нужен mp3, m4a или aac." : er.message === "size" ? "Файл больше " + (er.maxMB || 8) + " МБ." : "Не удалось загрузить."; });
+    var files = Array.prototype.slice.call(this.files || []); if (!files.length) return; this.value = "";
+    var bar = $("sBar"), box = $("sFileName"); box.innerHTML = "";
+    if (!P || !P.enabled()) { logLine("Загрузка файлов не настроена.", "bad"); return; }
+    var multi = files.length > 1, ok = 0, i = 0;
+    bar.hidden = false;
+    function next() {
+      if (i >= files.length) { bar.hidden = true; if (multi) { logLine("Готово: добавлено " + ok + " из " + files.length, ok === files.length ? "ok" : ""); loadSongs(); } return; }
+      var f = files[i++], row = logLine((multi ? i + "/" + files.length + " " : "") + f.name + " …");
+      bar.firstElementChild.style.width = "0%";
+      P.music(f, function (p) { bar.firstElementChild.style.width = Math.round(p * 100) + "%"; }, (window.SITE && window.SITE.storage && window.SITE.storage.maxLibMB) || 25).then(function (url) {
+        if (!multi) { fileUrl = url; row.textContent = "Загружено: " + f.name; row.className = "s-row ok"; if (!$("sTitle").value) $("sTitle").value = titleOf(f); return; }
+        return O.songAdd(titleOf(f), $("sArtist").value, $("sLang").value, $("sCat").value, url).then(function () { ok++; row.textContent = "Добавлено: " + f.name; row.className = "s-row ok"; });
+      }).catch(function (er) {
+        row.className = "s-row bad";
+        row.textContent = f.name + ": " + (er.message === "format" ? "нужен mp3, m4a или aac" : er.message === "size" ? "файл больше " + (er.maxMB || 25) + " МБ" : "не удалось загрузить");
+      }).then(next);
+    }
+    next();
   });
   $("btnSong").addEventListener("click", function () {
     var url = fileUrl || $("sUrl").value.trim(), title = $("sTitle").value.trim(), m = $("sMsg");
@@ -114,7 +128,7 @@
     if (!/^https:\/\//.test(url)) { m.textContent = "Выберите файл или вставьте ссылку https://…"; return; }
     $("btnSong").disabled = true; m.textContent = "Сохраняем…";
     O.songAdd(title, $("sArtist").value, $("sLang").value, $("sCat").value, url).then(function () {
-      m.textContent = "Добавлено ✓"; fileUrl = ""; $("sFileName").textContent = ""; ["sTitle", "sArtist", "sUrl"].forEach(function (i) { $(i).value = ""; }); $("sFile").value = ""; return loadSongs();
+      m.textContent = "Добавлено ✓"; fileUrl = ""; $("sFileName").innerHTML = ""; ["sTitle", "sArtist", "sUrl"].forEach(function (i) { $(i).value = ""; }); $("sFile").value = ""; return loadSongs();
     }).catch(function (er) { m.textContent = "Не удалось сохранить: " + er.message; }).then(function () { $("btnSong").disabled = false; });
   });
 

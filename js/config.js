@@ -3,12 +3,12 @@
 //  Бул жерди гана өзгөртүңүз. Меняйте только здесь.
 // ============================================================
 window.SITE = {
-  brand: "Samara",
+  brand: "Toigo.kettik",
   tagline: "Той чакыруу",
 
   // WhatsApp номери: + жана боштуксуз / без + и пробелов
   whatsapp: "996550481989",
-  instagram: "https://www.instagram.com/priglasitelny.samara/",
+  instagram: "https://www.instagram.com/toigo.kettik/",
 
 
   // Сүрөт сактагыч (Supabase Storage). Бош калтырса — сүрөт жүктөө жашырылат.
@@ -19,7 +19,8 @@ window.SITE = {
     bucket: "samara-photos",
     maxSide: 1600,
     musicBucket: "samara-music",   // музыка (mp3/m4a/aac)
-    maxMusicMB: 8
+    maxMusicMB: 15,
+    maxLibMB: 25
   },
 
   // Төлөм (ELQR QR): заказ барагында көрсөтүлөт
