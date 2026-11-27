@@ -44,6 +44,7 @@
     }).join("");
   }
   renderThemes();
+  window.addEventListener("scenes:templates", renderThemes);
   if (window.Scenes && window.Scenes.ready) window.Scenes.ready.then(function () { renderThemes(); if (typeof applyParams === "function" && PUBLIC) applyParams(); });
 
   function setTheme(id) {

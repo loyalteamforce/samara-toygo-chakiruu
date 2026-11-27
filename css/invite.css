@@ -524,11 +524,11 @@ body:is([data-theme^="garden"],[data-scn]) .invite { background: transparent; }
 .hero .garland.top, .hero .garland.bot { position: absolute; left: 0; right: 0; }
 .hero .garland.top { top: -4px; } .hero .garland.bot { bottom: -4px; }
 body:is([data-theme^="garden"],[data-scn]) .corner { display: none; }
-body:is([data-theme^="garden"],[data-scn]) .eyebrow { color: var(--accent); letter-spacing: .28em; }
+body:is([data-theme^="garden"],[data-scn]) .eyebrow { color: var(--c-small, var(--accent)); letter-spacing: .28em; }
 body:is([data-theme^="garden"],[data-scn]) .names { color: var(--ink); text-shadow: none; }
 body:is([data-theme^="garden"],[data-scn]) .names .amp { color: var(--accent); }
-body:is([data-theme^="garden"],[data-scn]) .hd-day { color: var(--accent); font-family: var(--f-head); }
-body:is([data-theme^="garden"],[data-scn]) .hero-age b { color: var(--accent); }
+body:is([data-theme^="garden"],[data-scn]) .hd-day { color: var(--c-date, var(--accent)); font-family: var(--f-head); }
+body:is([data-theme^="garden"],[data-scn]) .hero-age b { color: var(--c-date, var(--accent)); }
 body:is([data-theme^="garden"],[data-scn]) .ornament { color: var(--accent); }
 /* бөлүмдөр: кагазсыз, борборлоштурулган, ичке сызык менен бөлүнгөн */
 body:is([data-theme^="garden"],[data-scn]) .block { background: transparent; border: 0; border-radius: 0; box-shadow: none; padding: 34px 28px; margin: 0 14px; position: relative; }
@@ -636,3 +636,6 @@ body[data-scn="dark"] .btn-solid, body[data-scn="dark"] .btn:hover { color: var(
 .hero-photo::before { content: ""; position: absolute; inset: 0; background: var(--cover) var(--cpos, 50% 50%) / cover no-repeat; transform: scale(var(--czoom, 1)); transform-origin: var(--cpos, 50% 50%); }
 .hero-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,calc(.52 * var(--cdim, 1))) 0%, rgba(0,0,0,calc(.30 * var(--cdim, 1))) 38%, rgba(0,0,0,calc(.62 * var(--cdim, 1))) 100%); }
 .scene-art .sa-photo { object-position: var(--cpos, 50% 50%); transform: scale(var(--czoom, 1)); transform-origin: var(--cpos, 50% 50%); }
+
+body[data-scn] .hero .hero-sub, body[data-scn] .hero .hero-city, body[data-scn] .hero .hd-side { color: var(--c-small, var(--muted)); }
+.scene-art video.sa-photo { pointer-events: none; }

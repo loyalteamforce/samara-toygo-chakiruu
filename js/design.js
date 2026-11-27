@@ -70,5 +70,6 @@
       '<a class="btn btn-solid" href="' + createUrl + '">' + esc(tr("dz.cta")) + ' →</a><small>' + esc(tr("dz.ctaNote")) + ' · <a class="dz-wa" target="_blank" rel="noopener" href="' + esc(Sh.waUrl(msg)) + '">' + esc(tr("dz.ctaWa")) + "</a></small>";
   }
   render();
+  window.addEventListener("scenes:templates", function () { var before = item && item.id; pickItem(); render(); });
   if (window.Scenes && window.Scenes.ready) window.Scenes.ready.then(function () { var before = item && item.id; pickItem(); if (!item || item.id !== before || (item && item.custom)) render(); });
 })();

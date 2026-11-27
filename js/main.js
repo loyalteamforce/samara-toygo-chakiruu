@@ -318,6 +318,7 @@
     function cycle() { if (!auto) return; setOpen(true); setTimeout(function () { if (!auto) return; setOpen(false); setTimeout(cycle, 3800); }, 6500); }
     setTimeout(cycle, 2200);
   })();
+  window.addEventListener("scenes:templates", function () { renderTemplates(); document.querySelectorAll('[data-count="templates"]').forEach(function (el) { el.textContent = S.templates.length; }); });
   if (window.Scenes && window.Scenes.ready) window.Scenes.ready.then(function () { renderTemplates(); document.querySelectorAll('[data-count="templates"]').forEach(function (el) { el.textContent = S.templates.length; }); });
   // Көрүнгөндө гана ойнойт, көрүнбөсө токтойт
   (function () {

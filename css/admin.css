@@ -222,3 +222,6 @@ input[type="range"] { width: 100%; }
 
 .gate-box .gate-logo { width: min(240px, 70%); height: auto; margin: 0 auto 6px; }
 .adm-top .logo-full { height: 36px; }
+
+.sy-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.sy-seg { grid-template-columns: repeat(4, 1fr); }

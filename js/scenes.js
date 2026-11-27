@@ -374,13 +374,16 @@
     var t = T[id]; if (!t) return "";
     if (t.bgMode === "color") { var sv = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + t.bgColor + '"/><stop offset="1" stop-color="' + (t.bgColor2 || t.bgColor) + '"/></linearGradient></defs><rect width="400" height="600" fill="url(#g)"/></svg>'; return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(sv); }
     if (t.bgMode === "photo") return t.bgImg;
+    if (t.bgMode === "video") return "";
     if (!t._uri) t._uri = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(art(id)); return t._uri;
   }
-  function washOf(id) { var t = T[id]; return t && t.bgMode === "photo" && t.bgDim ? "rgba(0,0,0," + (t.bgDim / 100).toFixed(2) + ")" : ""; }
+  function videoOf(id) { var t = T[id]; return t && t.bgMode === "video" ? t.bgVideo : ""; }
+  function washOf(id) { var t = T[id]; return t && (t.bgMode === "photo" || t.bgMode === "video") && t.bgDim ? "rgba(0,0,0," + (t.bgDim / 100).toFixed(2) + ")" : ""; }
   // Приглашениенин башкы бөлүгүнүн фону: рисунок / түс / фото
   function hero(id) {
     var t = T[id]; if (!t) return "";
     if (t.bgMode === "color") return '<div class="sa-fill" style="background:' + fillCss(t) + '"></div>';
+    if (t.bgMode === "video") return '<video class="sa-photo sa-video" src="' + t.bgVideo.replace(/"/g, "") + '" autoplay muted loop playsinline preload="auto"></video><div class="sa-dim" style="background:rgba(0,0,0,' + ((t.bgDim || 0) / 100).toFixed(2) + ')"></div>';
     if (t.bgMode === "photo") return '<img class="sa-photo" src="' + t.bgImg.replace(/"/g, "") + '" alt=""><div class="sa-dim" style="background:rgba(0,0,0,' + ((t.bgDim || 0) / 100).toFixed(2) + ')"></div>';
     return art(id);
   }
@@ -398,6 +401,7 @@
   }
   function card(id) {
     var t = T[id]; if (!t) return "";
+    if (t.bgMode === "video") return '<video class="tp-art" src="' + t.bgVideo.replace(/"/g, "") + '#t=0.5" muted playsinline preload="metadata"></video><i class="tp-dim" style="background:rgba(0,0,0,' + ((t.bgDim || 0) / 100).toFixed(2) + ')"></i>';
     if (t.bgMode === "photo") return '<img class="tp-art" src="' + t.bgImg.replace(/"/g, "") + '" alt="" loading="lazy" decoding="async"><i class="tp-dim" style="background:rgba(0,0,0,' + ((t.bgDim || 0) / 100).toFixed(2) + ')"></i>';
     return '<img class="tp-art" src="' + uri(id) + '" alt="" loading="lazy" decoding="async">';
   }
@@ -443,8 +447,8 @@
     var e = t.env || {};
     var zc1 = e.paper || "color-mix(in srgb," + t.bg + " 60%,#fff)", zc2 = e.paper ? "color-mix(in srgb," + e.paper + " 88%,#000)" : t.bg, seal = e.seal || t.accent;
     return 'body[data-theme="' + id + '"]{--bg:' + t.bg + ";--bg2:color-mix(in srgb," + t.bg + " 70%,#fff);--ink:" + t.ink + ";--muted:color-mix(in srgb," + t.ink + " 68%," + t.bg + ");--accent:" + t.accent + ";--accent-ink:" + (dark ? t.bg : "#fff") +
-      ";--line:color-mix(in srgb," + t.accent + " 42%,transparent);--f-names:" + fam + ";--f-head:" + (dark ? fam : "'Cormorant Garamond',serif") + ";--names-style:" + (t.ital ? "italic" : "normal") + ";--names-k:" + (NK[t.kind] ? NK[t.kind] * (t.font === "Bad Script" ? 1 : 1.1) : t.font === "Bad Script" ? 1.15 : t.upper ? 0.82 : 1.25) + ";--hpt:" + (TOP[t.kind] || 15) + "svh;--tsh:" + (dark ? "0 2px 16px rgba(0,0,0,.5)" : "0 1px 14px rgba(255,255,255,.65)") +
-      ";--zlin:" + (e.lining || "color-mix(in srgb," + t.accent + " 62%,#000)") + ";--ztas:" + (e.tassel || t.accent) + ";--zpat:" + patUri(e.pattern || "lattice", e.pattern === "lattice" || !e.pattern ? "#d9b36a" : t.accent) + ";--zgold:" + t.accent + ";--zcard1:" + zc1 + ";--zcard2:" + zc2 + ";--zseal1:color-mix(in srgb," + seal + " 70%,#fff);--zseal2:" + seal + ";--env:" + (e.paper || t.bg) + ";--env2:" + (e.lining || "color-mix(in srgb," + t.bg + " 88%,#000)") + ";--seal:" + seal + "}";
+      ";--line:color-mix(in srgb," + t.accent + " 42%,transparent);--f-names:" + fam + ";--f-head:" + (dark ? fam : "'Cormorant Garamond',serif") + ";--names-style:" + (t.ital ? "italic" : "normal") + ";--names-k:" + (NK[t.kind] ? NK[t.kind] * (t.font === "Bad Script" ? 1 : 1.1) : t.font === "Bad Script" ? 1.15 : t.upper ? 0.82 : 1.25) + ";--hpt:" + (TOP[t.kind] || 15) + "svh;--tsh:" + (t.tsh === "none" ? "none" : t.tsh === "light" ? "0 1px 14px rgba(255,255,255,.7)" : t.tsh === "dark" ? "0 2px 16px rgba(0,0,0,.6)" : dark ? "0 2px 16px rgba(0,0,0,.5)" : "0 1px 14px rgba(255,255,255,.65)") +
+      ";--zlin:" + (e.lining || "color-mix(in srgb," + t.accent + " 62%,#000)") + (t.cDate ? ";--c-date:" + t.cDate : "") + (t.cSmall ? ";--c-small:" + t.cSmall : "") + ";--ztas:" + (e.tassel || t.accent) + ";--zpat:" + patUri(e.pattern || "lattice", e.pattern === "lattice" || !e.pattern ? "#d9b36a" : t.accent) + ";--zgold:" + t.accent + ";--zcard1:" + zc1 + ";--zcard2:" + zc2 + ";--zseal1:color-mix(in srgb," + seal + " 70%,#fff);--zseal2:" + seal + ";--env:" + (e.paper || t.bg) + ";--env2:" + (e.lining || "color-mix(in srgb," + t.bg + " 88%,#000)") + ";--seal:" + seal + "}";
   }
   function entry(id) {
     var t = T[id];
@@ -476,8 +480,9 @@
     return out;
   }
   function register(row) {
-    var c = row.config || {}, base = T[c.base];
+    var c = row.config || {}, base = T[c.base] || T[BUILTIN[0]];
     if (!base || !/^ct-[a-z0-9-]+$/.test(row.id)) return false;
+    if (!T[c.base]) c = Object.assign({}, c, { base: BUILTIN[0] });
     var t = JSON.parse(JSON.stringify(base));
     delete t._svg; delete t._uri; delete t.fonts;
     t.custom = true; t._base = c.base; t.name = String(row.name || "Шаблон").slice(0, 60);
@@ -490,10 +495,15 @@
     if (c.seed) t.seed = (+c.seed || t.seed) | 0;
     var ov = c.ov || {}; Object.keys(ov).forEach(function (pth) { if (HEX.test(ov[pth]) && getPath({ pal: t.pal, fl: t.fl }, pth) !== undefined) setPath({ pal: t.pal, fl: t.fl }, pth, ov[pth]); });
     var ce = cleanEnv(c.env); if (ce) t.env = ce;
-    t.bgMode = "scene"; delete t.bgColor; delete t.bgColor2; delete t.bgImg; delete t.bgDim;
+    t.bgMode = "scene"; delete t.bgColor; delete t.bgColor2; delete t.bgImg; delete t.bgVideo; delete t.bgDim;
     if (c.bgMode === "color" && HEX.test(c.bgColor || "")) { t.bgMode = "color"; t.bgColor = c.bgColor; t.bg = c.bgColor; if (HEX.test(c.bgColor2 || "")) t.bgColor2 = c.bgColor2; }
     else if (c.bgMode === "photo" && okUrl(c.bgImg)) { t.bgMode = "photo"; t.bgImg = c.bgImg; t.bgDim = Math.max(0, Math.min(85, +c.bgDim || 0)); }
+    else if (c.bgMode === "video" && okUrl(c.bgVideo)) { t.bgMode = "video"; t.bgVideo = c.bgVideo; t.bgDim = Math.max(0, Math.min(85, +c.bgDim || 0)); }
     if (t.bgMode !== "scene") { var L = lum(t.ink); t.dark = L > 0.6; }
+    delete t.cDate; delete t.cSmall; delete t.tsh;
+    if (HEX.test(c.td || "")) t.cDate = c.td;
+    if (HEX.test(c.ts || "")) t.cSmall = c.ts;
+    if (["none", "light", "dark"].indexOf(c.tsh) > -1) t.tsh = c.tsh;
     var isNew = !T[row.id];
     T[row.id] = t;
     cssAll = cssAll.split("\n").filter(function (l) { return l.indexOf('body[data-theme="' + row.id + '"]') !== 0; }).join("\n") + "\n" + themeCss(row.id);
@@ -514,6 +524,7 @@
         Object.keys(T).forEach(function (id) { if (T[id].custom && id !== "ct-preview" && !keep[id]) { delete T[id]; if (window.SITE) window.SITE.templates = window.SITE.templates.filter(function (x) { return x.id !== id; }); } });
         rows.forEach(register); flush();
         try { localStorage.setItem("samara-ctpl", JSON.stringify(rows)); } catch (e) {}
+        try { window.dispatchEvent(new Event("scenes:templates")); } catch (e) {}
       })
       .catch(function () {});
   }
@@ -524,7 +535,7 @@
     if (qp) { var obj = JSON.parse(decodeURIComponent(escape(atob(qp.replace(/-/g, "+").replace(/_/g, "/"))))); register({ id: "ct-preview", name: obj.name || "Preview", config: obj }); }
   } catch (e) {}
   flush();
-  var ready = Promise.race([fetchTemplates(), new Promise(function (res) { setTimeout(res, 2500); })]).then(function () { flush(); });
+  var ready = Promise.race([fetchTemplates(), new Promise(function (res) { setTimeout(res, 2000); })]).then(function () { flush(); });
 
   window.SCENE_THEMES = T;
   window.Scenes = {
@@ -532,6 +543,6 @@
     themes: T, list: list, ready: ready, fonts: FONT_OK, builtin: BUILTIN, colorSlots: colorSlots, register: register, flush: flush,
     has: function (id) { return !!T[id]; },
     dark: function (id) { return !!(T[id] && T[id].dark); },
-    art: art, uri: uri, image: image, hero: hero, card: card, washOf: washOf
+    art: art, uri: uri, image: image, hero: hero, card: card, washOf: washOf, videoOf: videoOf
   };
 })();

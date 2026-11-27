@@ -20,7 +20,9 @@ window.SITE = {
     maxSide: 1600,
     musicBucket: "samara-music",   // музыка (mp3/m4a/aac)
     maxMusicMB: 15,
-    maxLibMB: 25
+    maxLibMB: 25,
+    videoBucket: "samara-video",
+    maxVideoMB: 20
   },
 
   // Төлөм (ELQR QR): заказ барагында көрсөтүлөт

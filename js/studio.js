@@ -11,7 +11,7 @@
   function slotLabel(path) { var parts = path.split("."); var out = []; parts.forEach(function (k) { if (k === "pal" || k === "fl") return; if (/^\d+$/.test(k)) { out.push(String(+k + 1)); return; } var w = SLOT[k]; if (w === "") return; out.push(w || k); }); return out.join(" ") || path; }
 
   var cur = { id: "", base: "" };
-  var showEnv = false, ptimer;
+  var DRAFT = "samara-studio-draft", showEnv = false, ptimer;
   var SE = window.StyleEdit.mount($("styEd"), function () { preview(); });
   $("styEd").addEventListener("focusin", function (e) { showEnv = !!(e.target.closest(".sy-env") || e.target.matches('.pal [data-k]')); });
   $("tName").addEventListener("focus", function () { showEnv = false; });
@@ -34,7 +34,8 @@
     return c;
   }
   function preview() { clearTimeout(ptimer); ptimer = setTimeout(function () {
-    var c = config(), o = {}; Object.keys(c).forEach(function (k) { o[k] = c[k]; }); o.name = $("tName").value || "Шаблон";
+    var c = config(), o = {};
+    try { localStorage.setItem(DRAFT, JSON.stringify({ id: cur.id, name: $("tName").value, cfg: c })); } catch (e) {} Object.keys(c).forEach(function (k) { o[k] = c[k]; }); o.name = $("tName").value || "Шаблон";
     var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_");
     $("frame").src = "davet.html?id=" + (c.demo || "demo") + "&t=ct-preview&lang=ky" + (showEnv ? "" : "&preview=1") + "&ctpl=" + encodeURIComponent(b64);
   }, 350); }
@@ -58,7 +59,7 @@
     var c = config(); $("btnSave").disabled = true; msg.textContent = "Сохраняем…";
     O.templateSave(id, name, c).then(function () {
       Sc.register({ id: id, name: name, config: c }); Sc.flush(); try { localStorage.removeItem("samara-ctpl"); } catch (e) {}
-      cur.id = id; $("stEditing").textContent = "· правка"; msg.textContent = "Сохранено ✓ Шаблон уже на сайте: «" + name + "»."; toast("Шаблон сохранён ✓"); return loadList();
+      cur.id = id; $("stEditing").textContent = "· правка"; msg.innerHTML = "Сохранено ✓ Шаблон уже на сайте: <a href=\"design.html?id=" + id + "\" target=\"_blank\" rel=\"noopener\">открыть «" + esc(name) + "»</a>"; try { localStorage.removeItem(DRAFT); } catch (e) {} toast("Шаблон сохранён ✓"); return loadList();
     }).catch(function (e) { msg.textContent = /forbidden/.test(e.message) ? "Нет доступа — войдите заново." : "Не удалось сохранить: " + e.message; })
       .then(function () { $("btnSave").disabled = false; });
   }
@@ -68,7 +69,7 @@
       $("myList").innerHTML = all.length ? all.map(function (r) {
         var c = r.config || {}, th = Sc.themes[c.base] || {};
         return '<div class="st-row" data-id="' + esc(r.id) + '"><span class="st-sw" style="background:' + esc(c.bg || th.bg) + ";border-color:" + esc(c.accent || th.accent) + '"></span><b>' + esc(r.name) + "<small>" + (r.published ? "виден на сайте" : "скрыт") + "</small></b>" +
-          '<button type="button" class="btn btn-sm btn-ghost" data-act="edit">Изменить</button><button type="button" class="btn btn-sm btn-ghost" data-act="pub">' + (r.published ? "Скрыть" : "Показать") + '</button><button type="button" class="btn btn-sm btn-ghost" data-act="del">✕</button></div>';
+          '<a class="btn btn-sm btn-ghost" href="design.html?id=' + esc(r.id) + '" target="_blank" rel="noopener">Открыть</a><button type="button" class="btn btn-sm btn-ghost" data-act="edit">Изменить</button><button type="button" class="btn btn-sm btn-ghost" data-act="pub">' + (r.published ? "Скрыть" : "Показать") + '</button><button type="button" class="btn btn-sm btn-ghost" data-act="del">✕</button></div>';
       }).join("") : '<p class="hint">Пока нет своих шаблонов. Создайте первый слева.</p>';
     }).catch(function () { $("myList").innerHTML = '<p class="hint">Не удалось загрузить.</p>'; });
   }
@@ -140,7 +141,20 @@
   });
 
   // ---------- Кирүү ----------
-  function open() { document.body.classList.remove("gated"); $("gate").hidden = true; fillSelects(); resetForm(); loadList(); loadSongs(); }
+  function offerDraft() {
+    var d; try { d = JSON.parse(localStorage.getItem(DRAFT) || "null"); } catch (e) {}
+    if (!d || !d.cfg || !d.cfg.base || (!d.name && !d.id)) return;
+    var bar = document.createElement("div"); bar.className = "st-draft";
+    bar.innerHTML = "<span>Есть несохранённый шаблон «" + esc(d.name || "без названия") + "».</span><button type=\"button\" class=\"btn btn-sm btn-solid\" data-d=\"go\">Продолжить</button><button type=\"button\" class=\"btn btn-sm btn-ghost\" data-d=\"x\">Удалить</button>";
+    $("tabTpl").insertBefore(bar, $("tabTpl").firstChild);
+    bar.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-d]"); if (!b) return;
+      if (b.getAttribute("data-d") === "go") { editRow({ id: d.id || "", name: d.name || "", config: d.cfg }); if (!d.id) { cur.id = ""; $("stEditing").textContent = "· черновик"; } }
+      else { try { localStorage.removeItem(DRAFT); } catch (e2) {} }
+      bar.remove();
+    });
+  }
+  function open() { document.body.classList.remove("gated"); $("gate").hidden = true; fillSelects(); resetForm(); offerDraft(); loadList(); loadSongs(); }
   function showGate(msg) {
     var form = $("gateForm"), err = $("gateErr");
     if (msg) { err.textContent = msg; err.hidden = false; }

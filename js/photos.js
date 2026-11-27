@@ -82,5 +82,16 @@
     return put(S.musicBucket || "samara-music", "u/" + rid() + "." + k.ext, file, k.type, onProgress);
   }
 
-  window.Photos = { enabled: enabled, add: add, compress: compress, music: music };
+  // Видео фон: mp4 / webm / mov (H.264) — 20 МБ чейин
+  function video(file, onProgress) {
+    var n = (file.name || "").toLowerCase(), t = (file.type || "").toLowerCase(), ext, type;
+    if (/\.webm$/.test(n) || t === "video/webm") { ext = "webm"; type = "video/webm"; }
+    else if (/\.(mp4|m4v|mov)$/.test(n) || t === "video/mp4" || t === "video/quicktime") { ext = "mp4"; type = "video/mp4"; }
+    else return Promise.reject(new Error("format"));
+    var maxMB = S.maxVideoMB || 20;
+    if (file.size > maxMB * 1024 * 1024) { var e = new Error("size"); e.maxMB = maxMB; return Promise.reject(e); }
+    return put(S.videoBucket || "samara-video", "u/" + rid() + "." + ext, file, type, onProgress);
+  }
+
+  window.Photos = { enabled: enabled, add: add, compress: compress, music: music, video: video };
 })();

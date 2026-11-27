@@ -78,7 +78,7 @@
     var cs = getComputedStyle(document.body);
     function v(n) { return cs.getPropertyValue(n).trim(); }
     var T = {
-      bg: v("--bg"), bg2: v("--bg2"), ink: v("--ink"), muted: v("--muted"), accent: v("--accent"),
+      cd: v("--c-date"), bg: v("--bg"), bg2: v("--bg2"), ink: v("--ink"), muted: v("--muted"), accent: v("--accent"),
       fn: v("--f-names"), fh: v("--f-head"), fb: v("--f-body"), ns: v("--names-style") || "normal", k: parseFloat(v("--names-k")) || 1
     };
     // Өз сүрөтүңүз фон болсо: тексттер ак түскө өтөт
@@ -101,8 +101,20 @@
       });
     }
     var sceneBg = false;
+    function loadVid(url) {
+      return new Promise(function (res) {
+        var el = document.createElement("video"); el.muted = true; el.loop = true; el.playsInline = true; el.crossOrigin = "anonymous"; el.preload = "auto";
+        el.setAttribute("playsinline", ""); el.style.cssText = "position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none";
+        document.body.appendChild(el);
+        var done = false; function fin(ok) { if (done) return; done = true; if (ok) { var p = el.play(); if (p && p.catch) p.catch(function () {}); } res(ok ? el : null); }
+        el.addEventListener("loadeddata", function () { fin(true); }); el.addEventListener("error", function () { fin(false); });
+        el.src = url; setTimeout(function () { fin(el.readyState >= 2); }, 9000);
+      });
+    }
     var coverReady = (!coverUrl && window.Scenes && window.Scenes.has(theme) && !silkMode)
-      ? window.Scenes.image(theme, 540, 810).then(function (im) { if (im) { coverImg = im; sceneBg = true; } })
+      ? (window.Scenes.videoOf(theme)
+        ? loadVid(window.Scenes.videoOf(theme)).then(function (el) { if (el) { coverImg = el; sceneBg = true; } })
+        : window.Scenes.image(theme, 540, 810).then(function (im) { if (im) { coverImg = im; sceneBg = true; } }))
       : loadImg(coverUrl).then(function (im) { coverImg = im; });
     var UP = !!(window.THEME_UPPER && window.THEME_UPPER[theme]);
     function nm(s) { return UP ? s.toUpperCase() : s; }
@@ -173,7 +185,7 @@
     }
 
     function drawCover(t, wash) {
-      var iw = coverImg.naturalWidth, ih = coverImg.naturalHeight;
+      var iw = coverImg.videoWidth || coverImg.naturalWidth, ih = coverImg.videoHeight || coverImg.naturalHeight;
       var zoomK = Math.max(1, (+LAY.z || 100) / 100), fx = (LAY.fx != null ? +LAY.fx : 50) / 100, fy = (LAY.fy != null ? +LAY.fy : 50) / 100, dimK = (LAY.dim != null ? +LAY.dim : 100) / 100;
       var z = (1.04 + 0.07 * Math.min(1, t / DUR)) * zoomK;                     // жай жакындоо (Ken Burns)
       var sc = Math.max(W / iw, H / ih) * z, dw = iw * sc, dh = ih * sc;
@@ -249,7 +261,7 @@
       spacing(0);
       var p = rev(t, 0.5, 1.1), sz = 330 * dK * (T.fh.indexOf("Pacifico") > -1 ? 0.8 : 1);
       ctx.save(); ctx.translate(W / 2, H * 0.47 + yS); var sc = 1.12 - 0.12 * p; ctx.scale(sc, sc);
-      font("normal", 500, sz, T.fh); ctx.globalAlpha = clamp(a * p); ctx.fillStyle = T.accent; ctx.fillText(String(day), 0, 0); ctx.restore();
+      font("normal", 500, sz, T.fh); ctx.globalAlpha = clamp(a * p); ctx.fillStyle = T.cd || T.accent; ctx.fillText(String(day), 0, 0); ctx.restore();
       font("normal", 500, 54, T.fb); spacing(14);
       txt(U.mon[mon].toUpperCase(), W / 2, H * 0.47 + yS + (H * 0.16) * Math.max(0.55, dK), T.ink, a * rev(t, 1.0, 0.8));
       divider(W / 2, H * 0.47 + yS + (H * 0.22) * Math.max(0.6, dK), 300, rev(t, 1.4, 1), a * rev(t, 1.2, 0.6));

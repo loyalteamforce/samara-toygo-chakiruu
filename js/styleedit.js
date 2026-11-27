@@ -12,15 +12,20 @@
     el.innerHTML =
       '<div class="row2"><label>Шрифт имён <select data-s="font"></select></label><div class="sy-chks"><label class="chk"><input type="checkbox" data-s="ital"> Курсив</label><label class="chk"><input type="checkbox" data-s="upper"> ЗАГЛАВНЫЕ</label></div></div>' +
       '<p class="cs-t">Фон приглашения</p>' +
-      '<div class="seg sy-seg" data-s="bgMode"><label><input type="radio" name="sybg' + RID + '" value="scene" checked><span>Рисунок</span></label><label><input type="radio" name="sybg' + RID + '" value="color"><span>Цвет</span></label><label><input type="radio" name="sybg' + RID + '" value="photo"><span>Своё фото</span></label></div>' +
+      '<div class="seg sy-seg" data-s="bgMode"><label><input type="radio" name="sybg' + RID + '" value="scene" checked><span>Рисунок</span></label><label><input type="radio" name="sybg' + RID + '" value="color"><span>Цвет</span></label><label><input type="radio" name="sybg' + RID + '" value="photo"><span>Фото</span></label><label><input type="radio" name="sybg' + RID + '" value="video"><span>Видео</span></label></div>' +
       '<div class="sy-p" data-p="color" hidden><label class="chk"><input type="checkbox" data-s="grad"> Градиент (второй цвет фона)</label></div>' +
-      '<div class="sy-p" data-p="photo" hidden><div class="ee-up" data-up="bgImg"><span class="ee-t">Фото для фона приглашения и видео</span><div class="ee-row"><label class="btn btn-sm btn-ghost">Загрузить фото<input type="file" accept="image/*" hidden></label><button type="button" class="btn btn-sm btn-ghost ee-x" hidden>Убрать</button><img class="ee-th" alt="" hidden></div><small class="ee-st"></small></div>' +
-        '<label>Затемнение фото <input type="range" min="0" max="85" step="5" data-s="bgDim" value="30"></label></div>' +
+      '<div class="sy-p" data-p="photo" hidden><div class="ee-up" data-up="bgImg"><span class="ee-t">Фото для фона приглашения и видео</span><div class="ee-row"><label class="btn btn-sm btn-ghost">Загрузить фото<input type="file" accept="image/*" hidden></label><button type="button" class="btn btn-sm btn-ghost ee-x" hidden>Убрать</button><img class="ee-th" alt="" hidden></div><small class="ee-st"></small></div></div>' +
+      '<div class="sy-p" data-p="video" hidden><div class="ee-up" data-up="bgVideo"><span class="ee-t">Видео для фона (mp4 или webm, до 20 МБ, лучше 5–15 секунд). Играет без звука по кругу.</span><div class="ee-row"><label class="btn btn-sm btn-ghost">Загрузить видео<input type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.mov,.webm" hidden></label><button type="button" class="btn btn-sm btn-ghost ee-x" hidden>Убрать</button><video class="ee-th" muted playsinline preload="metadata" hidden></video></div><small class="ee-st"></small></div></div>' +
+      '<div class="sy-p" data-p="dim" hidden><label>Затемнение фона <input type="range" min="0" max="85" step="5" data-s="bgDim" value="30"></label></div>' +
+      '<p class="cs-t">Цвет текста</p>' +
+      '<div class="sy-presets"><button type="button" class="chip" data-preset="#ffffff">Весь текст белый</button><button type="button" class="chip" data-preset="#1a1a1a">Весь текст чёрный</button><button type="button" class="chip" data-preset="#e8c56a">Весь текст золотой</button></div>' +
+      '<div class="pal" data-s="tpal"></div>' +
+      '<label>Тень под текстом <select data-s="tsh"><option value="">Автоматически</option><option value="none">Без тени</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select></label>' +
       '<p class="cs-t">Цвета</p><div class="pal" data-s="pal"></div>' +
       '<details class="sy-env"><summary>Конверт: форма, узор, мөөр, фото</summary><div data-s="envHost"></div></details>';
     var q = function (k) { return el.querySelector('[data-s="' + k + '"]'); };
     q("font").innerHTML = Sc.fonts.map(function (f) { return '<option value="' + esc(f) + '">' + esc(f) + "</option>"; }).join("");
-    var pal = q("pal"), base = "", slots = [], envDirty = false, bgImg = "", theme0 = null;
+    var pal = q("pal"), tpal = q("tpal"), base = "", slots = [], envDirty = false, bgImg = "", bgVideo = "", theme0 = null, touched = {};
     var swatches = {};   // key -> input
     function fire() { vis(); if (onChange) onChange(); }
     function sw(key, label) {
@@ -31,18 +36,26 @@
     var ee = window.EnvEdit.mount(q("envHost"), function () { envDirty = true; fire(); }, { palette: true });
     function build(baseId) {
       base = baseId; slots = Sc.colorSlots(baseId); swatches = {}; pal.innerHTML = "";
-      [["bg", "Фон"], ["bg2", "Фон 2"], ["ink", "Текст"], ["accent", "Акцент"]].forEach(function (k) { pal.appendChild(sw(k[0], k[1])); });
+      tpal.innerHTML = "";
+      [["ink", "Имена"], ["td", "Дата и цифры"], ["ts", "Надписи"]].forEach(function (k) { tpal.appendChild(sw(k[0], k[1])); });
+      [["bg", "Фон"], ["bg2", "Фон 2"], ["accent", "Акцент и линии"]].forEach(function (k) { pal.appendChild(sw(k[0], k[1])); });
       ee.colorEls().forEach(function (l, i) { l.classList.add("sw"); var inp = l.querySelector("input"); var t = l.textContent.trim(); l.innerHTML = ""; l.appendChild(inp); var it = document.createElement("i"); it.textContent = t; l.appendChild(it); l.title = t; pal.appendChild(l); });
       slots.forEach(function (s, i) { var l = sw("s" + i, slotLabel(s.path)); pal.appendChild(l); });
     }
     function vis() {
       var m = mode();
       el.querySelector('[data-p="color"]').hidden = m !== "color"; el.querySelector('[data-p="photo"]').hidden = m !== "photo";
+      el.querySelector('[data-p="video"]').hidden = m !== "video"; el.querySelector('[data-p="dim"]').hidden = !(m === "photo" || m === "video");
       swatches.bg2 && (swatches.bg2.parentNode.hidden = !(m === "color" && q("grad").checked));
     }
     function mode() { var r = q("bgMode").querySelector("input:checked"); return r ? r.value : "scene"; }
     function showImg() { var box = el.querySelector('[data-up="bgImg"]'), im = box.querySelector(".ee-th"), x = box.querySelector(".ee-x"); im.hidden = !bgImg; x.hidden = !bgImg; if (bgImg) im.src = bgImg; }
-    el.addEventListener("input", function (e) { if (e.target.matches('input[type="file"]')) return; if (e.target.closest(".sy-env") && !e.target.matches("[data-c]")) return; if (e.target.matches('[data-k="paper"],[data-k="lining"],[data-k="seal"],[data-k="tassel"]')) envDirty = true; fire(); });
+    el.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-preset]"); if (!b) return; var v = b.getAttribute("data-preset");
+      swatches.ink.value = v; swatches.td.value = v; swatches.ts.value = v; touched.td = true; touched.ts = true; fire();
+    });
+    el.addEventListener("input", function (e) {
+      if (e.target.matches('[data-c="td"]')) touched.td = true; if (e.target.matches('[data-c="ts"]')) touched.ts = true; if (e.target.matches('input[type="file"]')) return; if (e.target.closest(".sy-env") && !e.target.matches("[data-c]")) return; if (e.target.matches('[data-k="paper"],[data-k="lining"],[data-k="seal"],[data-k="tassel"]')) envDirty = true; fire(); });
     el.addEventListener("change", function (e) { if (e.target.matches('input[type="file"]')) return; fire(); });
     // палитранын ичиндеги конверт түстөрү ee ичинде эмес болгондуктан өзүнчө байлайбыз
     var upBox = el.querySelector('[data-up="bgImg"]');
@@ -52,12 +65,21 @@
       st.textContent = "Загружаем…"; P.add(f).then(function (u) { bgImg = u; st.textContent = ""; showImg(); fire(); }).catch(function () { st.textContent = "Не удалось загрузить."; });
     });
     upBox.querySelector(".ee-x").addEventListener("click", function () { bgImg = ""; showImg(); fire(); });
+    var vBox = el.querySelector('[data-up="bgVideo"]');
+    function showVid() { var th = vBox.querySelector(".ee-th"), x = vBox.querySelector(".ee-x"); th.hidden = !bgVideo; x.hidden = !bgVideo; if (bgVideo) th.src = bgVideo + "#t=0.5"; }
+    vBox.querySelector('input[type="file"]').addEventListener("change", function () {
+      var f = this.files && this.files[0], st = vBox.querySelector(".ee-st"); if (!f) return;
+      if (!P || !P.video) { st.textContent = "Загрузка не настроена."; return; }
+      st.textContent = "Загружаем видео…"; P.video(f, function (p) { st.textContent = "Загрузка " + Math.round(p * 100) + "%"; }).then(function (u) { bgVideo = u; st.textContent = ""; showVid(); fire(); })
+        .catch(function (er) { st.textContent = er.message === "format" ? "Нужен mp4, mov или webm." : er.message === "size" ? "Видео больше " + (er.maxMB || 20) + " МБ. Сожмите его." : "Не удалось загрузить."; });
+    });
+    vBox.querySelector(".ee-x").addEventListener("click", function () { bgVideo = ""; showVid(); fire(); });
 
     function setDefaults(t) {
       theme0 = t;
       q("font").value = t.font; q("ital").checked = !!t.ital; q("upper").checked = !!t.upper; q("grad").checked = false; q("bgDim").value = 30;
       q("bgMode").querySelector('input[value="scene"]').checked = true; bgImg = ""; showImg();
-      swatches.bg.value = t.bg; swatches.bg2.value = t.bg; swatches.ink.value = t.ink; swatches.accent.value = t.accent;
+      swatches.bg.value = t.bg; swatches.bg2.value = t.bg; swatches.ink.value = t.ink; swatches.accent.value = t.accent; swatches.td.value = t.accent; swatches.ts.value = t.accent; touched = {}; q("tsh").value = ""; bgVideo = ""; showVid();
       envDirty = false; ee.set(null, { paper: t.bg, lining: t.accent, seal: t.accent, tassel: t.accent });
       slots.forEach(function (s, i) { swatches["s" + i].value = s.val; });
       vis();
@@ -71,7 +93,11 @@
         if (/^#[0-9a-f]{6}$/i.test(cfg.bg || "")) swatches.bg.value = cfg.bg;
         if (/^#[0-9a-f]{6}$/i.test(cfg.ink || "")) swatches.ink.value = cfg.ink;
         if (/^#[0-9a-f]{6}$/i.test(cfg.accent || "")) swatches.accent.value = cfg.accent;
-        var m = cfg.bgMode === "color" || cfg.bgMode === "photo" ? cfg.bgMode : "scene";
+        if (/^#[0-9a-f]{6}$/i.test(cfg.td || "")) { swatches.td.value = cfg.td; touched.td = true; }
+        if (/^#[0-9a-f]{6}$/i.test(cfg.ts || "")) { swatches.ts.value = cfg.ts; touched.ts = true; }
+        q("tsh").value = cfg.tsh || "";
+        if (cfg.bgVideo) { bgVideo = cfg.bgVideo; showVid(); }
+        var m = ["color", "photo", "video"].indexOf(cfg.bgMode) > -1 ? cfg.bgMode : "scene";
         q("bgMode").querySelector('input[value="' + m + '"]').checked = true;
         if (cfg.bgColor2) { q("grad").checked = true; swatches.bg2.value = cfg.bgColor2; }
         if (cfg.bgImg) { bgImg = cfg.bgImg; showImg(); }
@@ -85,6 +111,8 @@
         var ov = {}; slots.forEach(function (s, i) { var v = swatches["s" + i].value; if (v.toLowerCase() !== s.val.toLowerCase()) ov[s.path] = v; }); c.ov = ov;
         if (m === "color") { c.bgMode = "color"; c.bgColor = swatches.bg.value; if (q("grad").checked) c.bgColor2 = swatches.bg2.value; }
         else if (m === "photo" && bgImg) { c.bgMode = "photo"; c.bgImg = bgImg; c.bgDim = +q("bgDim").value; }
+        else if (m === "video" && bgVideo) { c.bgMode = "video"; c.bgVideo = bgVideo; c.bgDim = +q("bgDim").value; }
+        if (touched.td) c.td = swatches.td.value; if (touched.ts) c.ts = swatches.ts.value; if (q("tsh").value) c.tsh = q("tsh").value;
         if (envDirty) c.env = ee.get();
         return c;
       }
